@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 21:53:06 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/29 01:00:18 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/29 13:13:01 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,10 @@ void	signal_exit(int sig)
 
 int	main(void)
 {
-	signal(SIGINT, signal_exit);
 	
 	while(1)
 	{
 		g_signal = 0;
-		
 
 		char	*input = readline("minishell$ ");
 		if (input)
@@ -35,16 +33,9 @@ int	main(void)
 			add_history(input);
 			printf("entered : %s\n", input);
 			free(input);
-			// if (*input == 'Z')
-			// {
-			// 	printf("exit\n");
-			// 	exit(1);
-			// }
+			
 		}
-		else
-		{
-			printf("exit\n");
-			exit(1);
-		}
+		signal(SIGINT, signal_exit);
+
 	}
 }
