@@ -1,12 +1,13 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -g
+# CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 SRCDIR = src/
 OBJDIR = obj/
 HEADER = minishell.h
 
-SRCS = $(SRCDIR)main.c
+SRCS = $(SRCDIR)main.c $(SRCDIR)envp_set.c
 OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
 .PHONY : all clean fclean re

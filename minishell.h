@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/29 00:29:57 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:38:40 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,22 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "./libft/libft.h"
+
+typedef struct	s_envp
+{
+	char	**envp;
+	char	*user;
+	char	*host;
+	char	*root;
+	char	*pwd;
+	char	*where;
+	int		is_su;
+}				t_envp;
+
+
+char	*set_envp(t_envp *envp);
+char	*get_word(char *word, t_envp *envp);
+
+
 
 #endif
