@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/30 00:38:40 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/30 18:00:35 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 typedef struct	s_envp
 {
 	char	**envp;
+	char	*cmd;
 	char	*user;
 	char	*host;
 	char	*root;
