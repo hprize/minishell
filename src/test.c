@@ -17,6 +17,7 @@ static void	*free_split_list(t_split *list)
 	return (NULL);
 }
 
+// 검토 필요.
 static int	validate_tokens(t_token *tokens)
 {
 	t_token	*current = tokens;
