@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp_set.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 20:57:49 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/30 19:13:38 by junlee           ###   ########.fr       */
+/*   Updated: 2024/10/31 01:35:05 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,10 @@ char	*set_envp(t_envp *envp)
 	// 	envp->is_su = '$';
 
 	// return (join(usr, host, where, ...));//하나씩 받아온거 한꺼번에 조합하면서 return
-	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup(envp->host));
+	envp->cmd = ft_strjoin(envp->user, "@");
+	envp->cmd = ft_strjoin_free(envp->cmd, envp->host);
 	envp->cmd = ft_strjoin_free(envp->cmd, envp->where);
 	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup("$"));
-
-
 	return (envp->cmd);
 }
 
@@ -49,7 +48,6 @@ char	*get_word(char *word, t_envp *envp)
 		cur_line++;
 	}
 	*cur_line = *cur_line + word_len + 1;
-	envp->cmd = ft_strjoin(*cur_line, "@");
 	return (ft_strdup(*cur_line));
 }
 
