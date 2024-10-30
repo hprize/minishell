@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 21:53:06 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/31 01:01:39 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/31 01:43:56 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	main(int argc, char **argv, const char **envp)
 		{
 			add_history(input);
 			printf("entered : %s\n", input);
+			test(input);
 			free(input);
 			
 		}

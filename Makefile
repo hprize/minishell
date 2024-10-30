@@ -3,8 +3,8 @@ CFLAGS = -g
 # CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
-SRCDIR = src/
-OBJDIR = obj/
+SRCDIR = src
+OBJDIR = obj
 HEADER = minishell.h
 
 SRCS = $(SRCDIR)main.c $(SRCDIR)envp_set.c
@@ -17,7 +17,7 @@ all : $(OBJDIR) $(NAME)
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
-$(OBJDIR)%.o : $(SRCDIR)%.c $(HEADER) | $(OBJDIR)
+$(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME) : $(OBJS)
