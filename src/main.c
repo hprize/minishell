@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 21:53:06 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/29 13:13:01 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/29 22:29:07 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	main(void)
 		{
 			add_history(input);
 			printf("entered : %s\n", input);
+			test(input);
 			free(input);
 			
 		}
