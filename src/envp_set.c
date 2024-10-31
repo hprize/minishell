@@ -6,21 +6,23 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 20:57:49 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/31 01:35:05 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:47:42 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 static char	*get_host_name(t_envp *envp);
-static char	*get_pwd(t_envp *envp);
+static char	*get_pwd(t_envp *envp, const char **r_envp);
 // static int	get_is_su(t_envp *envp);
 
-char	*set_envp(t_envp *envp)
+char	*set_envp(t_envp *envp, const char **r_envp)
 {
-	envp->user = get_word("USER", envp);
+	free_struct(envp);
+	envp->is_first = 1;
+	envp->user = get_word("USER", r_envp);
 	envp->host = get_host_name(envp); // /etc/hostname 파일 안에 있음./
-	envp->where = get_pwd(envp); // 만약 root면 ~로 나오게
+	envp->where = get_pwd(envp, r_envp); // 만약 root면 ~로 나오게
 	// if (get_is_su(envp)) // UID 체크 후 uid == 0 이면 su
 	// 	envp->is_su = '#';
 	// else
@@ -28,18 +30,38 @@ char	*set_envp(t_envp *envp)
 
 	// return (join(usr, host, where, ...));//하나씩 받아온거 한꺼번에 조합하면서 return
 	envp->cmd = ft_strjoin(envp->user, "@");
-	envp->cmd = ft_strjoin_free(envp->cmd, envp->host);
-	envp->cmd = ft_strjoin_free(envp->cmd, envp->where);
-	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup("$"));
+	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup(envp->host));
+	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup(envp->where));
+	envp->cmd = ft_strjoin_free(envp->cmd, ft_strdup("$ "));
 	return (envp->cmd);
 }
 
-char	*get_word(char *word, t_envp *envp)
+void	free_struct(t_envp *s)
 {
-	char	**cur_line;
-	int		word_len;
+	if (s == NULL || s->is_first == 0)
+		return;
+	if (s->cmd != NULL)
+		free(s->cmd);
+	if (s->user != NULL)
+		free(s->user);
+	if (s->host != NULL)
+		free(s->host);
+	if (s->where != NULL)
+		free(s->where);
+	if (s->root != NULL)
+		free(s->root);
+	if (s->pwd != NULL)
+		free(s->pwd);
+	ft_memset(s, 0, sizeof(t_envp));
+	s->is_first == 1;
+}
 
-	cur_line = envp->envp;
+char	*get_word(char *word, const char **r_envp)
+{
+	const char	**cur_line;
+	int			word_len;
+
+	cur_line = r_envp;
 	word_len = ft_strlen(word);
 	while (*cur_line)
 	{
@@ -47,16 +69,15 @@ char	*get_word(char *word, t_envp *envp)
 			break;
 		cur_line++;
 	}
-	*cur_line = *cur_line + word_len + 1;
-	return (ft_strdup(*cur_line));
+	return (ft_strdup(*cur_line + word_len + 1));
 }
 
-static char	*get_pwd(t_envp *envp)
+static char	*get_pwd(t_envp *envp, const char **r_envp)
 {
 	int	i;
 
-	envp->root = get_word("HOME", envp);
-	envp->pwd = get_word("PWD", envp);
+	envp->root = get_word("HOME", r_envp);
+	envp->pwd = get_word("PWD", r_envp);
 	i = 0;
 	while (envp->root[i] == envp->pwd[i])
 		i++;
@@ -68,7 +89,9 @@ static char	*get_host_name(t_envp *envp)
 	int		fd;
 	char	name_leng[256];
 
-	fd = open("/etc/hostname", O_RDONLY);
+	// vscode 디버깅용 파일.
+	// fd = open("/etc/hostname", O_RDONLY);
+	fd = open("for_test_src/test_hostname", O_RDONLY);
 	ft_bzero(name_leng, 256);
 	if (fd < 0)
 	{
