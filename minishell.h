@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/31 01:44:23 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:46:30 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ size_t	lstsize(t_split *lst);
 
 typedef struct	s_envp
 {
-	char	**envp;
+	int		is_first;
+	// char	**envp;
 	char	*cmd;
 	char	*user;
 	char	*host;
@@ -64,8 +65,9 @@ typedef struct	s_envp
 }				t_envp;
 
 
-char	*set_envp(t_envp *envp);
-char	*get_word(char *word, t_envp *envp);
+char	*set_envp(t_envp *envp, const char **r_envp);
+void	free_struct(t_envp *s);
+char	*get_word(char *word, const char **r_envp);
 
 
 

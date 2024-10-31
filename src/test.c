@@ -1,7 +1,5 @@
 #include "../minishell.h"
 
-#include "../minishell.h"
-
 static void	*free_split_list(t_split *list)
 {
 	t_split	*current;
@@ -51,6 +49,7 @@ static void	print_split_list(t_split *head)
 {
 	t_split *current = head;
 
+	printf("\n<<---- cmd split ---->> \n");
 	while (current != NULL)
 	{
 		printf("%s\n", current->line);
@@ -62,6 +61,7 @@ static void	print_token_array(t_token **tokens)
 {
 	int i = 0;
 
+	printf("\n<<---- token type ---->> \n");
 	while ((*tokens)[i].type != T_NULL)
 	{
 		printf("%s -- %d\n", (*tokens)[i].value, (*tokens)[i].type);
@@ -76,7 +76,7 @@ int	test(const char *input)
 	int		result;
 
 	result = split_input(input, &split_list);
-	if (result == MALLOC_ERROR || FAILURE)
+	if (result == MALLOC_ERROR || result == FAILURE)
 	{
 		free_split_list(split_list);
 		return (result);

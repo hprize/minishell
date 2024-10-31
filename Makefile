@@ -7,8 +7,10 @@ SRCDIR = src
 OBJDIR = obj
 HEADER = minishell.h
 
-SRCS = $(SRCDIR)main.c $(SRCDIR)envp_set.c
-OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
+# SRCS = $(SRCDIR)/main.c $(SRCDIR)/envp_set.c
+# 일단 와일드 카드 써둠.
+SRCS = $(wildcard $(SRCDIR)/*.c)
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 .PHONY : all clean fclean re
 
