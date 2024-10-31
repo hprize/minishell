@@ -5,9 +5,9 @@ CFLAGS = -g
 NAME = minishell
 SRCDIR = src
 OBJDIR = obj
-HEADER = minishell.h
+HEADER = $(wildcard)*.h
 
-# SRCS = $(SRCDIR)/main.c $(SRCDIR)/envp_set.c
+# SRCS = $(SRCDIR)/main.c 
 # 일단 와일드 카드 써둠.
 SRCS = $(wildcard $(SRCDIR)/*.c)
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

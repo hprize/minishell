@@ -6,13 +6,13 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 15:04:58 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/31 15:05:00 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/11/01 01:43:44 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	get_token_type(char *token)
+static int	get_token_type(char *token, char **envp)
 {
 	if (token[0] == '|')
 		return (T_PIPE);
@@ -21,10 +21,15 @@ static int	get_token_type(char *token)
 	else if (token[0] == '\0')
 		return (T_NULL);
 	else
-		return (T_WORD);
+	{
+		if (is_cmd(token, envp))
+			return (T_CMD);
+		else
+			return (T_WORD);
+	}
 }
 
-int	lexing(t_split *splitted, t_token **tokens)
+int	lexing(t_split *splitted, t_token **tokens, char **envp)
 {
 	int		i;
 	t_split	*tmp;
@@ -38,7 +43,7 @@ int	lexing(t_split *splitted, t_token **tokens)
 	tmp = splitted;
 	while (tmp != NULL)
 	{
-		(*tokens)[i].type = get_token_type(tmp->line);
+		(*tokens)[i].type = get_token_type(tmp->line, envp);
 		(*tokens)[i].value = ft_strdup(tmp->line);
 		tmp = tmp->next;
 		++i;

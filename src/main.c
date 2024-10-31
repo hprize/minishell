@@ -18,15 +18,24 @@ void	exit_func(t_envp *s)
 
 int	main(int argc, char **argv, const char **envp)
 {
-	t_envp	*u_envp;
-	char	*cmd;
+	t_envp		*u_envp;
+	t_master	*master;
+	char		*cmd;
 
+
+//
 	u_envp = malloc(sizeof(t_envp));
 	if (u_envp == NULL)
 		exit(1);
 
 	ft_memset(u_envp, 0, sizeof(t_envp));
-	
+
+	master = malloc(sizeof(t_master));
+	if (master == NULL)
+		exit(1);
+	master->envp = (char **)envp;
+// - 함수로 따로 빼기
+
 	while(1)
 	{
 		g_signal = 0;
@@ -39,7 +48,7 @@ int	main(int argc, char **argv, const char **envp)
 		{
 			add_history(input);
 			printf("entered : %s\n", input);
-			test(input);
+			test(input, master);
 			free(input);
 			
 		}
