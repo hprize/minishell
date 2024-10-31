@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/30 18:22:53 by junlee           ###   ########.fr       */
+/*   Updated: 2024/10/31 01:44:23 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,23 @@ t_split	*lstnew(char *line);
 void	lstadd_back(t_split **lst, t_split *new);
 void	delete_node(t_split *lst);
 size_t	lstsize(t_split *lst);
+
+typedef struct	s_envp
+{
+	char	**envp;
+	char	*cmd;
+	char	*user;
+	char	*host;
+	char	*root;
+	char	*pwd;
+	char	*where;
+	int		is_su;
+}				t_envp;
+
+
+char	*set_envp(t_envp *envp);
+char	*get_word(char *word, t_envp *envp);
+
+
 
 #endif
