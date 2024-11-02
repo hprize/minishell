@@ -1,50 +1,28 @@
 #include "../minishell.h"
 
-int	g_signal;
+// 13. 메인 함수 예시
+int main() {
+	const char *input = "echo \"HELLO WORLD\" | cat -e >> test.txt | grep \"pattern\"";
+	printf("Input Command: %s\n\n", input);
 
-void	signal_exit(int sig)
-{
-	printf("caught signal %d\n", sig);
-	g_signal = 1;
-}
+	// 토큰화
+	t_token *tokens = tokenize(input);
 
-void	exit_func(t_envp *s)
-{
-	free_struct(s);
-	free(s);
-	s = NULL;
-	exit(1);
-}
-
-int	main(int argc, char **argv, const char **envp)
-{
-	t_envp	*u_envp;
-	char	*cmd;
-
-	u_envp = malloc(sizeof(t_envp));
-	if (u_envp == NULL)
-		exit(1);
-
-	ft_memset(u_envp, 0, sizeof(t_envp));
-	
-	while(1)
-	{
-		g_signal = 0;
-		
-		//커맨드 창을 받아서 readline에 뱉도록.
-		// printf("%s@%s:%s$", u_envp->user, u_envp->host, u_envp->where);
-		cmd = set_envp(u_envp, envp);
-		char	*input = readline(cmd);
-		if (input)
-		{
-			add_history(input);
-			printf("entered : %s\n", input);
-			test(input);
-			free(input);
-			
-		}
-		signal(SIGINT, signal_exit);
-		if (g_signal == 1)
-			exit_func(u_envp);
+	// 파싱
+	t_tree *parse_tree = parse(tokens);
+	if (parse_tree == NULL) {
+		fprintf(stderr, "Parsing failed.\n");
+		free_tokens(tokens);
+		return 1;
 	}
+
+	// 트리 출력
+	printf("Parsed Tree:\n");
+	print_tree(parse_tree, 0);
+
+	// 메모리 해제
+	free_tree(parse_tree);
+	free_tokens(tokens);
+
+	return 0;
 }

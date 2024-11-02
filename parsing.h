@@ -1,41 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_input.h                                      :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/30 18:31:36 by junlee            #+#    #+#             */
-/*   Updated: 2024/10/30 18:31:39 by junlee           ###   ########.fr       */
+/*   Created: 2024/11/02 20:25:49 by junlee            #+#    #+#             */
+/*   Updated: 2024/11/02 20:25:52 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSE_INPUT_H
 # define PARSE_INPUT_H
 
-# define T_NULL 1
-# define T_PIPE 2
-# define T_REDIRECTION 3
-# define T_WORD 4
+typedef enum {
+	TOKEN_COMMAND,
+	TOKEN_ARG,
+	TOKEN_REDIRECTION,
+	TOKEN_PIPE,
+	TOKEN_FILENAME,
+	TOKEN_END,
+	TOKEN_INVALID
+} token_type;
 
-# define NODE_PIPE 1
-# define NODE_PHRASE 2
-# define NODE_REDIRS 3
-# define NODE_IO_REDIR 4
-# define NODE_COMMAND 5
-# define NODE_REDIR_TYPE 6
-# define NODE_FILE_NAME 7
-# define NODE_FILE_PATH 8
-# define NODE_ARGV 9
+typedef struct s_token {
+	token_type type;
+	char *value;
+	struct s_token *next;
+} t_token;
 
-# define PARSE_ERROR -1
+typedef enum {
+	NODE_PIPE,
+	NODE_EXEC,
+	NODE_REDIRECTION,
+	NODE_ARG,
+	NODE_FILENAME
+} node_type;
 
-typedef struct s_split		t_split;
+typedef struct s_tree {
+	node_type type;
+	char *value;
+	struct s_tree **children;
+	int child_count;
+} t_tree;
 
-typedef struct s_token
-{
-	int			type;
-	char		*value;
-}	t_token;
+
 
 #endif

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/01 19:05:53 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/10/30 18:45:14 by hyebinle         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   libft.h											:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.	+#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/03/01 19:05:53 by hyebinle		  #+#	#+#			 */
+/*   Updated: 2024/10/30 18:45:14 by hyebinle		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
@@ -72,5 +72,7 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+int		ft_isspace(int c);
+char	*ft_strndup(const char *s, size_t n);
 
 #endif

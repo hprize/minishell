@@ -1,78 +1,66 @@
 #include "../minishell.h"
 
-int	free_str(char *str)
-{
-	free(str);
-	str = NULL;
-	return (FAILURE);
-}
+// 9. 트리 출력 함수
+void print_tree(t_tree *node, int level) {
+	if (node == NULL) return;
 
-t_split	*lstlast(t_split *lst)
-{
-	if (lst == 0)
-		return (lst);
-	while (lst->next != 0)
-		lst = lst->next;
-	return (lst);
-}
-
-t_split	*lstnew(char *line)
-{
-	t_split	*new;
-
-	new = malloc(sizeof(t_split));
-	if (new == 0)
-		return (0);
-	new->line = line;
-	new->next = 0;
-	new->prev = 0;
-	return (new);
-}
-
-void	lstadd_back(t_split **lst, t_split *new)
-{
-	if (lst == 0 || new == 0)
-		return ;
-	if (*lst == 0)
-	{
-		*lst = new;
-		if (new->prev != NULL)
-			new->prev = NULL;
-		return ;
+	// 들여쓰기
+	for (int i = 0; i < level; i++) {
+		printf("  ");
 	}
-	new->prev = lstlast(*lst);
-	new->prev->next = new;
+
+	// 노드 정보 출력
+	switch (node->type) {
+		case NODE_PIPE:
+			printf("PIPE\n");
+			break;
+		case NODE_EXEC:
+			printf("EXEC: %s\n", node->value ? node->value : "NULL");
+			break;
+		case NODE_REDIRECTION:
+			printf("REDIR: %s\n", node->value ? node->value : "NULL");
+			break;
+		case NODE_ARG:
+			printf("ARG: %s\n", node->value ? node->value : "NULL");
+			break;
+		case NODE_FILENAME:
+			printf("FILENAME: %s\n", node->value ? node->value : "NULL");
+			break;
+		default:
+			printf("UNKNOWN NODE\n");
+	}
+
+	// 자식 노드 재귀 호출
+	for (int i = 0; i < node->child_count; i++) {
+		print_tree(node->children[i], level + 1);
+	}
 }
 
-void	delete_node(t_split *lst)
-{
-	if (lst->prev == NULL && lst->next == NULL)
-		;
-	else if (lst->prev == NULL)
-		lst->next->prev = NULL;
-	else if (lst->next == NULL)
-		lst->prev->next = NULL;
-	else
-	{
-		lst->prev->next = lst->next;
-		lst->next->prev = lst->prev;
+// 10. 트리 메모리 해제 함수
+void free_tree(t_tree *node) {
+	if (node == NULL) return;
+
+	// 모든 자식 노드 해제
+	for (int i = 0; i < node->child_count; i++) {
+		free_tree(node->children[i]);
 	}
-	free_str(lst->line);
-	free(lst);
-	lst = NULL;
+
+	// 자식 배열 해제
+	free(node->children);
+
+	// 노드의 값 해제
+	free(node->value);
+
+	// 노드 자체 해제
+	free(node);
 }
 
-size_t	lstsize(t_split *lst)
-{
-	size_t	size;
-
-	if (lst == 0)
-		return (0);
-	size = 0;
-	while (lst != NULL)
-	{
-		++size;
-		lst = lst->next;
+// 11. 토큰 메모리 해제 함수
+void free_tokens(t_token *tokens) {
+	while (tokens != NULL) {
+		t_token *next = tokens->next;
+		if (tokens->value) free(tokens->value);
+		free(tokens);
+		tokens = next;
 	}
-	return (size);
 }
