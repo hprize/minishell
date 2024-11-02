@@ -75,22 +75,25 @@ char	*valid_path_fn(char *cmd, int is_abs, char *path)
 }
 
 //cmd == 1 not_cmd == 0
-int		is_cmd(char *token, char **envp)
+int		is_cmd(char *token, t_master *master)
 {
-	char	**path_list;
-	char	*valid_path;
+	// char	**path_list;
+	// char	*valid_path;
 	int		is_abs;
 	int		i;
 
 	i = -1;
-	path_list = find_path(envp);
+	// path_list = find_path(envp);
 	is_abs = strchr_is(token, '/');
-	while (path_list[++i])
+	while ((master->path_list)[++i])
 	{
-		valid_path = valid_path_fn(token, is_abs, path_list[i]);
-		if (access(valid_path, F_OK) == 0)
+		master->valid_path = valid_path_fn(token, is_abs, (master->path_list)[i]);
+		if (access(master->valid_path, F_OK) == 0)
+		{
+			// free(master->valid_path); // 나중에 실행명령어 할 때 이거 살리면 됨.
 			return (1);
-		free(valid_path);
+		}
+		free(master->valid_path);
 	}
 	return (0);
 }

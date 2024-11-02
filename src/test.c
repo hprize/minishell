@@ -81,17 +81,16 @@ int	test(const char *input, t_master *master)
 		free_split_list(split_list);
 		return (result);
 	}
-	// print_split_list(split_list);
+	print_split_list(split_list);
 
-	lexing(split_list, &tokens, master->envp);
+	lexing(split_list, &tokens, master);
 	if (validate_tokens(tokens))
 	{
 		free_token_array(tokens);
 		free_split_list(split_list);
 		return (PARSE_ERROR);
 	}
-	//여기 함수
-	// is_cmd(&tokens, envp);
+
 	print_token_array(&tokens);
 
 	free_token_array(tokens);

@@ -6,13 +6,13 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 15:04:58 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/11/01 01:43:44 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/11/02 18:20:13 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	get_token_type(char *token, char **envp)
+static int	get_token_type(char *token, t_master *master)
 {
 	if (token[0] == '|')
 		return (T_PIPE);
@@ -22,14 +22,14 @@ static int	get_token_type(char *token, char **envp)
 		return (T_NULL);
 	else
 	{
-		if (is_cmd(token, envp))
+		if (is_cmd(token, master))
 			return (T_CMD);
 		else
 			return (T_WORD);
 	}
 }
 
-int	lexing(t_split *splitted, t_token **tokens, char **envp)
+int	lexing(t_split *splitted, t_token **tokens, t_master *master)
 {
 	int		i;
 	t_split	*tmp;
@@ -43,7 +43,7 @@ int	lexing(t_split *splitted, t_token **tokens, char **envp)
 	tmp = splitted;
 	while (tmp != NULL)
 	{
-		(*tokens)[i].type = get_token_type(tmp->line, envp);
+		(*tokens)[i].type = get_token_type(tmp->line, master);
 		(*tokens)[i].value = ft_strdup(tmp->line);
 		tmp = tmp->next;
 		++i;

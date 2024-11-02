@@ -33,7 +33,9 @@ int	main(int argc, char **argv, const char **envp)
 	master = malloc(sizeof(t_master));
 	if (master == NULL)
 		exit(1);
+	//master_init()함수로 빼기
 	master->envp = (char **)envp;
+	master->path_list = find_path(master->envp);
 // - 함수로 따로 빼기
 
 	while(1)
