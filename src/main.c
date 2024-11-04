@@ -1,28 +1,44 @@
 #include "../minishell.h"
 
-// 13. 메인 함수 예시
-int main() {
-	const char *input = "echo \"HELLO WORLD\" | cat -e >> test.txt | grep \"pattern\"";
-	printf("Input Command: %s\n\n", input);
+int	g_signal;
 
-	// 토큰화
-	t_token *tokens = tokenize(input);
+void	signal_exit(int sig)
+{
+	printf("caught signal %d\n", sig);
+	exit(1);
+}
 
-	// 파싱
-	t_tree *parse_tree = parse(tokens);
-	if (parse_tree == NULL) {
-		fprintf(stderr, "Parsing failed.\n");
-		free_tokens(tokens);
-		return 1;
+int	main(void)
+{
+	t_token *tokens;
+	t_tree *parse_tree;
+
+	while(1)
+	{
+		g_signal = 0;
+
+		char	*input = readline("minishell$ ");
+		if (input)
+		{
+			add_history(input);
+			printf("entered : %s\n", input);
+			tokens = tokenize(input);
+			parse_tree = parse(tokens);
+			if (parse_tree == NULL) {
+				fprintf(stderr, "Parsing failed.\n");
+				free_tokens(tokens);
+				return (1);
+			}
+			printf("Parsed Tree:\n");
+			print_tree(parse_tree, 0);
+			print_tree_linear(parse_tree);
+
+			free_tree(parse_tree);
+			free_tokens(tokens);
+			free(input);
+			
+		}
+		signal(SIGINT, signal_exit);
+
 	}
-
-	// 트리 출력
-	printf("Parsed Tree:\n");
-	print_tree(parse_tree, 0);
-
-	// 메모리 해제
-	free_tree(parse_tree);
-	free_tokens(tokens);
-
-	return 0;
 }

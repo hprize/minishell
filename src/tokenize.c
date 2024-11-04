@@ -1,41 +1,8 @@
 #include "../minishell.h"
 
-// 토큰 추가해서 붙이고 현재 포인팅토큰 옮겨주는 함수
-void add_token(t_token **head, t_token **current, t_token *new_token) {
-	if (*head == NULL)
-	{
-		*head = new_token;
-		*current = new_token;
-	} else
-	{
-		(*current)->next = new_token;
-		*current = (*current)->next;
-	}
-}
-
-
-// 새로운 토큰 생성 함수
-t_token *create_token(token_type type, const char *value)
-{
-	t_token	*token;
-	
-	token = malloc(sizeof(t_token));
-	if (!token)
-	{
-		printf("토큰 할당 실패!\n");
-		exit(EXIT_FAILURE);
-	}
-	token->type = type;
-	if (value)
-		token->value = ft_strdup(value);
-	else
-		token->value = NULL;
-	token->next = NULL;
-	return (token);
-}
-
 // 연산자(>, >>, <, <<, |) 처리 함수
-void process_op(t_token **head, t_token **current, const char **input_p) {
+void process_op(t_token **head, t_token **current, const char **input_p)
+{
 	int 		len;
 	char		*op;
 	token_type	type;
@@ -57,7 +24,8 @@ void process_op(t_token **head, t_token **current, const char **input_p) {
 }
 
 // 꿔따! 처리 함수
-void process_quote(t_token **head, t_token **current, const char **input_p) {
+void process_quote(t_token **head, t_token **current, const char **input_p)
+{
 	char 		quote;
 	const char	*start;
 	int			len;
@@ -92,30 +60,36 @@ void process_quote(t_token **head, t_token **current, const char **input_p) {
 }
 
 // 이외에 다른 단어 처리 함수
-void process_word(t_token **head, t_token **current, const char **input_p) {
-	const char *start = *input_p;
-	while (**input_p && !isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|')
-		(*input_p)++;
-	int len = *input_p - start;
-	char *word = ft_strndup(start, len);
-
+void process_word(t_token **head, t_token **current, const char **input_p)
+{
+	const char *start;
+	int len;
+	char *word;
 	token_type type;
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE)) {
-		type = TOKEN_COMMAND;
-	} else if (*current && (*current)->type == TOKEN_REDIRECTION) {
-		type = TOKEN_FILENAME;
-	} else {
-		type = TOKEN_ARG;
-	}
+	t_token *new_token;
+	
+	start = *input_p;
+	while (**input_p && !ft_isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|')
+		(*input_p)++;
+	len = *input_p - start;
+	word = ft_strndup(start, len);
 
-	t_token *new_token = create_token(type, word);
+	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
+		type = TOKEN_COMMAND;
+	else if (*current && (*current)->type == TOKEN_REDIRECTION)
+		type = TOKEN_FILENAME;
+	else
+		type = TOKEN_ARG;
+
+	new_token = create_token(type, word);
 	free(word);
 
 	add_token(head, current, new_token);
 }
 
 // 메인 토큰화 함수
-t_token *tokenize(const char *input) {
+t_token *tokenize(const char *input)
+{
 	t_token		*head;
 	t_token		*current;
 	t_token		*end_token;

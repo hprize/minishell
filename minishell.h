@@ -29,8 +29,24 @@
 t_tree *parse(t_token *tokens);
 t_token *tokenize(const char *input);
 
-void print_tree(t_tree *node, int level);
+void add_token(t_token **head, t_token **current, t_token *new_token);
+t_token *create_token(token_type type, const char *value);
+t_tree *create_tree_node(node_type type, const char *value);
+void add_child(t_tree *parent, t_tree *child);
 void free_tree(t_tree *node);
 void free_tokens(t_token *tokens);
+
+t_tree *parse_pipe(t_token **current);
+t_tree *parse_exec(t_token **current);
+t_tree *parse_reds_opt(t_token **current);
+t_tree *parse_reds(t_token **current);
+t_tree *parse_cmd(t_token **current);
+t_tree *parse_args_opt(t_token **current);
+t_tree *parse_args(t_token **current);
+t_tree *parse_red(t_token **current);
+
+// testing.c
+void print_tree(t_tree *node, int level);
+void print_tree_linear(t_tree *node);
 
 #endif
