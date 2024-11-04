@@ -24,13 +24,13 @@ int	main(int argc, char **argv, const char **envp)
 
 
 //
-	u_envp = malloc(sizeof(t_envp));
+	u_envp = ft_calloc(1, sizeof(t_envp));
 	if (u_envp == NULL)
 		exit(1);
 
-	ft_memset(u_envp, 0, sizeof(t_envp));
+	// ft_memset(u_envp, 0, sizeof(t_envp));
 
-	master = malloc(sizeof(t_master));
+	master = ft_calloc(1, sizeof(t_master));
 	if (master == NULL)
 		exit(1);
 	//master_init()함수로 빼기
@@ -54,8 +54,14 @@ int	main(int argc, char **argv, const char **envp)
 			free(input);
 			
 		}
-		signal(SIGINT, signal_exit);
-		if (g_signal == 1)
-			exit_func(u_envp);
+		else if (!input)
+		{
+			free_struct_envp (u_envp);
+			free_struct_master (master);
+			exit(0);
+		}
+		// signal(SIGINT, signal_exit);
+		// if (g_signal == 1)
+		// 	exit_func(u_envp);
 	}
 }

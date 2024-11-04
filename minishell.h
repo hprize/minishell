@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/11/02 18:32:02 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/11/04 19:24:15 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,10 @@ int		strchr_is(char *s, int c);
 char	*ft_strjoincat(char *s1, char *s2, char c);
 char	*valid_path_fn(char *cmd, int is_abs, char *path);
 
+//main_utils.c
+void	free_struct_envp(t_envp *s);
+void	free_struct_master(t_master *s);
+void	free_split(char **s);
 
 
 
