@@ -10,6 +10,7 @@ HEADER = $(wildcard)*.h
 # SRCS = $(SRCDIR)/main.c 
 # 일단 와일드 카드 써둠.
 SRCS = $(wildcard $(SRCDIR)/*.c)
+# SRCS = $(SRCDIR)/main.c $(SRCDIR)/main_utils.c
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 .PHONY : all clean fclean re
@@ -24,7 +25,9 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 
 $(NAME) : $(OBJS)
 	@make -C libft/
-	$(CC) $(CFLAGS) -o $@ $(OBJS) -L libft/ -lft -lreadline
+	@make -C ft_fprintf/
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -L libft/ -lft -L ft_fprintf/ -lft_fprintf \
+-lreadline
 
 clean : 
 	@make clean -C libft/

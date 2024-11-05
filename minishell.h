@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/28 22:37:02 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/11/04 19:24:15 by hyebinle         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -24,70 +12,19 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "./libft/libft.h"
+# include "./ft_fprintf/ft_fprintf_header.h"
 # include "parse_input.h"
+# include "struct.h"
 
-typedef struct s_master	t_master;
-typedef enum e_status
-{
-	SUCCESS,
-	FAILURE,
-	MALLOC_ERROR
-}	t_status;
+//main_utils
+int	fd_print_exit(char *msg, int fd);
 
-typedef struct s_split
-{
-	char			*line;
-	struct s_split	*next;
-	struct s_split	*prev;
-}	t_split;
+//builtin functions
+int	builtin_cmd(t_env *env, char *input);
 
-int	split_input(const char *input, t_split **splitted);
-int	test(const char *input, t_master *master);
-int	lexing(t_split *splitted, t_token **tokens, t_master *master);
-
-int	free_str(char *str);
-t_split	*lstlast(t_split *lst);
-t_split	*lstnew(char *line);
-void	lstadd_back(t_split **lst, t_split *new);
-void	delete_node(t_split *lst);
-size_t	lstsize(t_split *lst);
-
-typedef struct	s_envp
-{
-	int		is_first;
-	char	*cmd;
-	char	*user;
-	char	*host;
-	char	*root;
-	char	*pwd;
-	char	*where;
-	// int		is_su;
-}				t_envp;
-
-typedef struct	s_master
-{
-	char	**envp;
-	char	**path_list;
-	// char	*valid_path;
-}				t_master;
-
-
-char	*set_envp(t_envp *envp, const char **r_envp);
-void	free_struct(t_envp *s);
-char	*get_word(char *word, const char **r_envp);
-int		is_cmd(char *token, t_master *master);
-
-//path_list 찾는 함수
-char	**find_path(char **envp);
-int		strchr_is(char *s, int c);
-char	*ft_strjoincat(char *s1, char *s2, char c);
-char	*valid_path_fn(char *cmd, int is_abs, char *path);
-
-//main_utils.c
-void	free_struct_envp(t_envp *s);
-void	free_struct_master(t_master *s);
-void	free_split(char **s);
-
+//env
+t_env	*init_env(char** envp);
+int	ft_env(t_env *env);
 
 
 #endif
