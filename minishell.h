@@ -49,4 +49,16 @@ t_tree *parse_red(t_token **current);
 void print_tree(t_tree *node, int level);
 void print_tree_linear(t_tree *node);
 
+// check_path.c
+typedef struct	s_master
+{
+	char	**envp;
+	char	**path_list;
+	// char	*valid_path;
+}				t_master;
+
+char	**find_path(char **envp);
+int	is_cmd(char *token, t_master *master);
+int check_cmd_path(t_token *head, t_master *master);
+
 #endif

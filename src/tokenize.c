@@ -47,13 +47,12 @@ void process_quote(t_token **head, t_token **current, const char **input_p)
 	quoted = ft_strndup(start, len);
 	(*input_p)++;
 
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE)) {
+	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
 		type = TOKEN_COMMAND;
-	} else if (*current && (*current)->type == TOKEN_REDIRECTION) {
+	else if (*current && (*current)->type == TOKEN_REDIRECTION)
 		type = TOKEN_FILENAME;
-	} else {
+	else
 		type = TOKEN_ARG;
-	}
 	new_token = create_token(type, quoted);
 	free(quoted);
 	add_token(head, current, new_token);

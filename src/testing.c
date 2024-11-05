@@ -37,44 +37,44 @@ void print_tree(t_tree *node, int level) {
 
 // 일렬로 트리 출력 함수 (전위 순회)
 void print_tree_linear(t_tree *node) {
-    if (node == NULL)
-        return;
+	if (node == NULL)
+		return;
 
-    // 노드 정보 출력
-    switch (node->type) {
-        case NODE_PIPE:
-            printf("PIPE ");
-            break;
-        case NODE_EXEC:
-            if (node->value)
-                printf("EXEC: %s ", node->value);
-            else
-                printf("EXEC: NULL ");
-            break;
-        case NODE_REDIRECTION:
-            if (node->value)
-                printf("REDIR: %s ", node->value);
-            else
-                printf("REDIR: NULL ");
-            break;
-        case NODE_ARG:
-            if (node->value)
-                printf("ARG: %s ", node->value);
-            else
-                printf("ARG: NULL ");
-            break;
-        case NODE_FILENAME:
-            if (node->value)
-                printf("FILENAME: %s ", node->value);
-            else
-                printf("FILENAME: NULL ");
-            break;
-        default:
-            printf("UNKNOWN_NODE ");
-    }
+	// 노드 정보 출력
+	switch (node->type) {
+		case NODE_PIPE:
+			printf("PIPE ");
+			break;
+		case NODE_EXEC:
+			if (node->value)
+				printf("EXEC: %s ", node->value);
+			else
+				printf("EXEC: NULL ");
+			break;
+		case NODE_REDIRECTION:
+			if (node->value)
+				printf("REDIR: %s ", node->value);
+			else
+				printf("REDIR: NULL ");
+			break;
+		case NODE_ARG:
+			if (node->value)
+				printf("ARG: %s ", node->value);
+			else
+				printf("ARG: NULL ");
+			break;
+		case NODE_FILENAME:
+			if (node->value)
+				printf("FILENAME: %s ", node->value);
+			else
+				printf("FILENAME: NULL ");
+			break;
+		default:
+			printf("UNKNOWN_NODE ");
+	}
 
-    // 자식 노드를 순서대로 재귀적으로 방문
-    for (int i = 0; i < node->child_count; i++) {
-        print_tree_linear(node->children[i]);
-    }
+	// 자식 노드를 순서대로 재귀적으로 방문
+	for (int i = 0; i < node->child_count; i++) {
+		print_tree_linear(node->children[i]);
+	}
 }
