@@ -1,7 +1,6 @@
 #include "../minishell.h"
 
-// 연산자(>, >>, <, <<, |) 처리 함수
-void process_op(t_token **head, t_token **current, const char **input_p)
+void	process_op(t_token **head, t_token **current, const char **input_p)
 {
 	int 		len;
 	char		*op;
@@ -13,18 +12,20 @@ void process_op(t_token **head, t_token **current, const char **input_p)
 		(**input_p == '<' && *(*input_p + 1) == '<'))
 		len = 2;
 	op = strndup(*input_p, len);
-	if (*op == '|')
+	if (*op == '|' && len == 1)
 		type = TOKEN_PIPE;
+	else if (**input_p == '<' && *(*input_p + 1) == '<')
+		type = TOKEN_HEREDOC;
 	else
-		type = TOKEN_REDIRECTION;
+		type = TOKEN_RED;
 	new_token = create_token(type, op);
 	free(op);
 	*input_p += len;
 	add_token(head, current, new_token);
 }
 
-// 꿔따! 처리 함수
-void process_quote(t_token **head, t_token **current, const char **input_p)
+// quote 처리 함수
+void	process_quote(t_token **head, t_token **current, const char **input_p)
 {
 	char 		quote;
 	const char	*start;
@@ -34,7 +35,7 @@ void process_quote(t_token **head, t_token **current, const char **input_p)
 	t_token		*new_token;
 
 	quote = **input_p;
-	start = *input_p + 1; // 시작 인용부호 건너뛰기
+	start = *input_p + 1; // 시작 quote 건너뛰기
 	(*input_p)++;
 	while (**input_p && **input_p != quote)
 		(*input_p)++;
@@ -48,8 +49,8 @@ void process_quote(t_token **head, t_token **current, const char **input_p)
 	(*input_p)++;
 
 	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
-		type = TOKEN_COMMAND;
-	else if (*current && (*current)->type == TOKEN_REDIRECTION)
+		type = TOKEN_CMD;
+	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
 	else
 		type = TOKEN_ARG;
@@ -59,13 +60,13 @@ void process_quote(t_token **head, t_token **current, const char **input_p)
 }
 
 // 이외에 다른 단어 처리 함수
-void process_word(t_token **head, t_token **current, const char **input_p)
+void	process_word(t_token **head, t_token **current, const char **input_p)
 {
-	const char *start;
-	int len;
-	char *word;
-	token_type type;
-	t_token *new_token;
+	const char	*start;
+	int			len;
+	char		*word;
+	token_type	type;
+	t_token		*new_token;
 	
 	start = *input_p;
 	while (**input_p && !ft_isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|')
@@ -73,9 +74,10 @@ void process_word(t_token **head, t_token **current, const char **input_p)
 	len = *input_p - start;
 	word = ft_strndup(start, len);
 
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
-		type = TOKEN_COMMAND;
-	else if (*current && (*current)->type == TOKEN_REDIRECTION)
+	if (*head == NULL || 
+		(*current && ((*current)->type == TOKEN_PIPE || (*current)->type == TOKEN_FILENAME)))
+		type = TOKEN_CMD;
+	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
 	else
 		type = TOKEN_ARG;
@@ -87,7 +89,7 @@ void process_word(t_token **head, t_token **current, const char **input_p)
 }
 
 // 메인 토큰화 함수
-t_token *tokenize(const char *input)
+t_token	*tokenize(const char *input)
 {
 	t_token		*head;
 	t_token		*current;
@@ -120,5 +122,5 @@ t_token *tokenize(const char *input)
 		current->next = end_token;
 	else
 		head = end_token;
-	return head;
+	return (head);
 }

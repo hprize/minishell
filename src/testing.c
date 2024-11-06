@@ -16,11 +16,17 @@ void print_tree(t_tree *node, int level) {
 		case NODE_EXEC:
 			printf("EXEC: %s\n", node->value ? node->value : "NULL");
 			break;
-		case NODE_REDIRECTION:
-			printf("REDIR: %s\n", node->value ? node->value : "NULL");
+		case NODE_CMD:
+			printf("CMD: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_ARG:
 			printf("ARG: %s\n", node->value ? node->value : "NULL");
+			break;
+		case NODE_RED:
+			printf("RED: %s\n", node->value ? node->value : "NULL");
+			break;
+		case NODE_HEREDOC:
+			printf("HEREDOC: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_FILENAME:
 			printf("FILENAME: %s\n", node->value ? node->value : "NULL");
@@ -51,7 +57,7 @@ void print_tree_linear(t_tree *node) {
 			else
 				printf("EXEC: NULL ");
 			break;
-		case NODE_REDIRECTION:
+		case NODE_RED:
 			if (node->value)
 				printf("REDIR: %s ", node->value);
 			else
@@ -76,5 +82,34 @@ void print_tree_linear(t_tree *node) {
 	// 자식 노드를 순서대로 재귀적으로 방문
 	for (int i = 0; i < node->child_count; i++) {
 		print_tree_linear(node->children[i]);
+	}
+}
+
+// 토큰 타입을 문자열로 변환하는 함수
+const char *token_type_to_string(token_type type)
+{
+	switch (type)
+	{
+		case TOKEN_CMD: return "COMMAND";
+		case TOKEN_ARG: return "ARGUMENT";
+		case TOKEN_RED: return "REDIRECTION";
+		case TOKEN_PIPE: return "PIPE";
+		case TOKEN_HEREDOC: return "HEREDOC";
+		case TOKEN_FILENAME: return "FILENAME";
+		case TOKEN_END: return "END";
+		case TOKEN_INVALID: return "INVALID";
+		default: return "UNKNOWN";
+	}
+}
+
+// 토큰들을 출력하는 함수
+void print_tokens(t_token *head)
+{
+	t_token *current = head;
+
+	while (current != NULL)
+	{
+		printf("Type: %s, Value: %s\n", token_type_to_string(current->type), current->value ? current->value : "NULL");
+		current = current->next;
 	}
 }

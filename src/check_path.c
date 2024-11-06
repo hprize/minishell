@@ -102,7 +102,7 @@ int check_cmd_path(t_token *head, t_master *master)
 	current = head;
 	while (current != NULL)
 	{
-		if (current->type == TOKEN_COMMAND)
+		if (current->type == TOKEN_CMD)
 			if (is_cmd(current->value, master))
 				printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else

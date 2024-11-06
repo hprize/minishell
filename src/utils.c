@@ -3,7 +3,7 @@
 // ----- 토큰화 관련 util 함수 -----
 
 // 토큰 추가해서 붙이고 현재 포인팅토큰 옮겨주는 함수
-void add_token(t_token **head, t_token **current, t_token *new_token)
+void	add_token(t_token **head, t_token **current, t_token *new_token)
 {
 	if (*head == NULL)
 	{
@@ -17,7 +17,7 @@ void add_token(t_token **head, t_token **current, t_token *new_token)
 }
 
 // 새로운 토큰 생성 함수
-t_token *create_token(token_type type, const char *value)
+t_token	*create_token(token_type type, const char *value)
 {
 	t_token	*token;
 	
@@ -39,9 +39,9 @@ t_token *create_token(token_type type, const char *value)
 // ----- 파싱 관련 util 함수 -----
 
 // 트리 노드 생성 함수
-t_tree *create_tree_node(node_type type, const char *value)
+t_tree	*create_tree_node(node_type type, const char *value)
 {
-	t_tree *node;
+	t_tree	*node;
 
 	node = malloc(sizeof(t_tree));
 	if (!node)
@@ -60,9 +60,9 @@ t_tree *create_tree_node(node_type type, const char *value)
 }
 
 // 자식 노드 추가 함수
-void add_child(t_tree *parent, t_tree *child)
+void	add_child(t_tree *parent, t_tree *child)
 {
-	parent->children = realloc(parent->children, sizeof(t_tree*) * (parent->child_count + 1));
+	parent->children = ft_realloc(parent->children, sizeof(t_tree*) * (parent->child_count + 1));
 	if (!parent->children)
 	{
 		printf("메모리 할당 실패(자식 노드 추가)\n");
@@ -73,9 +73,9 @@ void add_child(t_tree *parent, t_tree *child)
 
 // ----- free 함수 -----
 
-void free_tree(t_tree *node)
+void	free_tree(t_tree *node)
 {
-	int i;
+	int	i;
 
 	if (node == NULL)
 		return;
@@ -90,8 +90,8 @@ void free_tree(t_tree *node)
 	free(node);
 }
 
-void free_tokens(t_token *tokens) {
-	t_token *next;
+void	free_tokens(t_token *tokens) {
+	t_token	*next;
 
 	while (tokens != NULL)
 	{

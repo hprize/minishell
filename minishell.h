@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   minishell.h										:+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: junlee <junlee@student.42.fr>			  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2024/10/28 22:37:02 by hyebinle		  #+#	#+#			 */
-/*   Updated: 2024/11/02 17:44:30 by junlee		   ###   ########.fr	   */
-/*																			*/
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -26,39 +14,42 @@
 # include "./libft/libft.h"
 # include "parsing.h"
 
-t_tree *parse(t_token *tokens);
-t_token *tokenize(const char *input);
+t_tree	*parse(t_token *tokens);
+t_token	*tokenize(const char *input);
 
-void add_token(t_token **head, t_token **current, t_token *new_token);
-t_token *create_token(token_type type, const char *value);
-t_tree *create_tree_node(node_type type, const char *value);
-void add_child(t_tree *parent, t_tree *child);
-void free_tree(t_tree *node);
-void free_tokens(t_token *tokens);
+// utils.c
+void	add_token(t_token **head, t_token **current, t_token *new_token);
+t_token	*create_token(token_type type, const char *value);
+t_tree	*create_tree_node(node_type type, const char *value);
+void	add_child(t_tree *parent, t_tree *child);
+void	free_tree(t_tree *node);
+void	free_tokens(t_token *tokens);
 
-t_tree *parse_pipe(t_token **current);
-t_tree *parse_exec(t_token **current);
-t_tree *parse_reds_opt(t_token **current);
+// parsing.c
+t_tree	*parse_pipe(t_token **current);
+t_tree	*parse_exec(t_token **current);
+void	parse_reds_opt(t_tree *exec_node, t_token **current);
 t_tree *parse_reds(t_token **current);
 t_tree *parse_cmd(t_token **current);
-t_tree *parse_args_opt(t_token **current);
-t_tree *parse_args(t_token **current);
-t_tree *parse_red(t_token **current);
 
 // testing.c
-void print_tree(t_tree *node, int level);
-void print_tree_linear(t_tree *node);
+void	print_tree(t_tree *node, int level);
+void	print_tree_linear(t_tree *node);
+void	print_tokens(t_token *head);
 
 // check_path.c
 typedef struct	s_master
 {
 	char	**envp;
 	char	**path_list;
-	// char	*valid_path;
 }				t_master;
 
 char	**find_path(char **envp);
-int	is_cmd(char *token, t_master *master);
-int check_cmd_path(t_token *head, t_master *master);
+int		is_cmd(char *token, t_master *master);
+int		check_cmd_path(t_token *head, t_master *master);
+
+
+void execute_tree(t_tree *node);
+int handle_heredoc(const char *delimiter);
 
 #endif

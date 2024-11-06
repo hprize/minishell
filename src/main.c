@@ -31,6 +31,7 @@ int	main(int argc, char **argv, const char **envp)
 			add_history(input);
 			printf("entered : %s\n", input);
 			tokens = tokenize(input);
+			print_tokens(tokens);
 			if (check_cmd_path(tokens, master) == -1)
 			{
 				free_tokens(tokens);
@@ -39,14 +40,14 @@ int	main(int argc, char **argv, const char **envp)
 			}
 			parse_tree = parse(tokens);
 			if (parse_tree == NULL) {
-				fprintf(stderr, "Parsing failed.\n");
+				printf("Parsing failed.\n");
 				free_tokens(tokens);
 				return (1);
 			}
 			printf("Parsed Tree:\n");
 			print_tree(parse_tree, 0);
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
-
+			// execute_tree(parse_tree);
 			free_tree(parse_tree);
 			free_tokens(tokens);
 			free(input);
