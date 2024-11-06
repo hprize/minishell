@@ -13,18 +13,16 @@
 # include <readline/history.h>
 # include "./libft/libft.h"
 # include "./ft_fprintf/ft_fprintf_header.h"
-# include "parse_input.h"
 # include "struct.h"
 
 //main_utils
+t_env	*init_env(char **envp);
 int	fd_print_exit(char *msg, int fd);
 
 //builtin functions
 int	builtin_cmd(t_env *env, char *input);
 
-//env
-t_env	*init_env(char** envp);
-int	ft_env(t_env *env);
+
 
 
 #endif

@@ -1,10 +1,18 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
+//VAR=value
+//name=eontent
+typedef struct s_var
+{
+	char	*name;
+	char	*content;
+}	t_var;
+
 typedef struct s_env
 {
-	char	**envp;
-	char	*u_var;
+	t_var	*var;
+	struct s_env	*next;
 }	t_env;
 
 typedef struct s_inter
