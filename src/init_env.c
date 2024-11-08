@@ -67,11 +67,38 @@ void	free_node(t_env *head)
 	}
 }
 
+char	**sort_arc(char **list)
+{
+	char	**result;
+	char	*temp;
+	int		i;
+	int		j;
+
+	result = list;
+	i = -1;
+	while (result[++i])
+	{
+		j = -1;
+		while (++j < i)
+		{
+			if (result[i][0] < result[j][0])
+			{
+				temp = result[i];
+				result[i] = result[j];
+				result[j] = temp;
+			}
+		}
+	}
+	return (result);
+}
+
 t_env	*init_env(char **envp)
 {
 	t_env	*head;
+	char	**sort_list;
 	int		i;
 
+	sort_list = sort_arc(envp);
 	head = NULL;
 	i = -1;
 	while (envp[++i])
@@ -80,7 +107,7 @@ t_env	*init_env(char **envp)
 	}
 
 //test
-	print_node(head);
+	// print_node(head);
 
 	return (head);
 }

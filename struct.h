@@ -11,7 +11,7 @@ typedef struct s_var
 
 typedef struct s_env
 {
-	t_var	*var;
+	t_var			*var;
 	struct s_env	*next;
 }	t_env;
 
