@@ -12,7 +12,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "./libft/libft.h"
+# include "./ft_fprintf/ft_fprintf_header.h"
 # include "parsing.h"
+# include "struct.h"
+# include "bulitin.h"
 
 t_tree	*parse(t_token *tokens);
 t_token	*tokenize(const char *input);
@@ -51,5 +54,13 @@ int		check_cmd_path(t_token *head, t_master *master);
 
 void execute_tree(t_tree *node);
 int handle_heredoc(const char *delimiter);
+
+
+//main_utils
+t_env	*init_env(char **envp);
+int	fd_print_exit(char *msg, int fd);
+
+//builtin functions
+int	builtin_cmd(t_env **env, char *input);
 
 #endif

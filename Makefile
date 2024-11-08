@@ -24,7 +24,8 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 
 $(NAME) : $(OBJS)
 	@make -C libft/
-	$(CC) $(CFLAGS) -o $@ $(OBJS) -L libft/ -lft -lreadline
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -L libft/ -lft -L ft_fprintf/ -lft_fprintf \
+-lreadline
 
 clean : 
 	@make clean -C libft/
