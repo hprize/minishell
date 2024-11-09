@@ -9,15 +9,15 @@ HEADER = minishell.h
 
 # SRCS = $(SRCDIR)/main.c $(SRCDIR)/envp_set.c
 # 일단 와일드 카드 써둠.
-SRCS = $(wildcard $(SRCDIR)/*.c)
-OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/execute/*.c)
+OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 
 .PHONY : all clean fclean re
 
 all : $(OBJDIR) $(NAME)
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	mkdir -p $(OBJDIR) $(OBJDIR)/execute
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@

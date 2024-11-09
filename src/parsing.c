@@ -6,10 +6,12 @@ t_tree	*parse_pipe(t_token **current)
 	t_tree	*pipe_node;
 	t_tree	*exec_node;
 
-	pipe_node = create_tree_node(NODE_PIPE, NULL);
 	exec_node = parse_exec(current);
 	if (!exec_node)
 		return (NULL);
+	if ((*current)->type != TOKEN_PIPE)
+		return (exec_node);
+	pipe_node = create_tree_node(NODE_PIPE, NULL);
 	add_child(pipe_node, exec_node);
 	while ((*current)->type == TOKEN_PIPE)
 	{

@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "bulitin.h"
 
 t_env	*creat_node(char *data)
 {

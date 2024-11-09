@@ -95,6 +95,7 @@ int	is_cmd(char *token, t_master *master)
 	return (0);
 }
 // 이거 추가됨. 빌트인 함수 확인
+
 int	is_bulitin(char *cmd)
 {
 	if ((ft_strncmp(cmd, "pwd", ft_strlen("pwd")) == 0) || \
