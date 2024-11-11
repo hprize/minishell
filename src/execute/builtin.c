@@ -5,25 +5,19 @@ int	ft_exit_call()
 	exit(0);
 }
 
-//export
-
-int	print_export(t_env *head)
+int	ft_env(char **args, t_env **env)
 {
 	t_env	*cur;
 
-	cur = head;
+	if (*args != NULL)
+		return (127);
+	cur = *env;
 	while (cur)
 	{
-		printf("declare -x %s=\"%s\"\n", cur->var->name, cur->var->content);
+		printf("%s=%s\n", cur->var->name, cur->var->content);
 		cur = cur->next;
 	}
 	return (0);
-}
-int	export(t_tree *node, char **args, t_env **env)
-{
-	if (*args == NULL)
-		print_export(*env);
-	// else if ()
 }
 
 int	builtin_cmd(t_tree *node, t_env **env)
@@ -40,9 +34,12 @@ int	builtin_cmd(t_tree *node, t_env **env)
 			
 			args[cmd_node->child_count] = NULL;
 			for (int j = 0; j < cmd_node->child_count; j++)
+			{
 				args[j] = cmd_node->children[j]->value;
-			// if (ft_strncmp(input, "env", ft_strlen("env")) == 0)
-			// 	ft_env(env);
+				// printf("test %s\n", args[j]);
+			}
+			if (ft_strncmp(cmd_node->value, "env", ft_strlen("env")) == 0)
+				ft_env(args, env);
 			if (ft_strncmp(cmd_node->value, "exit", ft_strlen("exit")) == 0)
 				ft_exit_call();
 			// if (ft_strncmp(input, "pwd", ft_strlen("pwd")) == 0)
