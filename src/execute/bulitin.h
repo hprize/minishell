@@ -10,6 +10,8 @@ void	append_node(t_env **head, char *data);
 void	print_node(t_env *head);
 void	free_node(t_env *head);
 t_env	*init_env(char **envp);
+void	free_env(t_env *node);
+void	add_node_back(t_env **head, t_env *new);
 
 // execute.c
 void	execute_tree(t_tree *node, t_env **env);

@@ -7,6 +7,7 @@ typedef struct s_var
 {
 	char	*name;
 	char	*content;
+	int		flag;
 }	t_var;
 
 typedef struct s_env

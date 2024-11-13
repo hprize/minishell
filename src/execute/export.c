@@ -63,10 +63,81 @@ int	print_export(t_env *head)
 	free_node(sorted);
 	return (0);
 }
+
+int	check_name(char *name)
+{
+	int	i;
+
+	if (ft_isdigit(name[0]) == 1 && ft_isalpha(name[0]) == 0 && name[0] != '_')
+	{
+		printf("\'%s\': not valid identifier\n", name);
+		return (1);
+	}
+	i = 1;
+	while (name[i])
+	{
+		if (ft_isalnum(name[i]) == 0 && name[i] != '_')
+		{
+			printf("\'%s\': not valid identifier\n", name);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_overlap(t_env **head, t_env *new)
+{
+	t_env	*cur;
+	char	*temp;
+
+	if (*head == NULL)
+		return (0);
+	cur = *head;
+	while (cur)
+	{
+		if (ft_strcmp(cur->var->name, new->var->name) == 0)
+		{
+			temp = cur->var->content;
+			cur->var->content = ft_strdup(new->var->content);
+			free_env(new);
+			free(temp);
+			return (1);
+		}
+		cur = cur->next;
+	}
+	return (0);
+}
+
+int	value_export(t_tree *node, char **args, t_env **env)
+{
+	int	result;
+	t_env	*new;
+	int	i;
+
+	i = -1;
+	result = 0;
+	while (args[++i])
+	{
+		new = creat_node(args[i]);
+		if (check_name(new->var->name) == 1)
+		{
+			result = 1;
+			free_env(new);
+		}
+		else if (check_overlap(env, new) == 0)
+		{
+			add_node_back(env, new);
+		}
+	}
+	return (result);
+}
+
 int	export(t_tree *node, char **args, t_env **env)
 {
 	if (*args == NULL)
 		print_export(*env);
 	else
 		value_export(node, args, env);
+	return (0);
 }

@@ -12,11 +12,40 @@ t_env	*creat_node(char *data)
 		perror("malloc error\n");
 		exit(1);
 	}
-	cont = ft_strchr(data, '=') + 1;
-	new->var->name = ft_substr(data, 0, ft_strchr_len(data, '='));
-	new->var->content = ft_strdup(cont);
+	cont = ft_strchr(data, '=');
+	if (cont == 0)
+	{
+		new->var->flag = 0;
+		new->var->name = ft_strdup(data);
+		new->var->content = ft_strdup("");
+	}
+	else
+	{
+		new->var->flag = 1;
+		new->var->name = ft_substr(data, 0, ft_strchr_len(data, '='));
+		new->var->content = ft_strdup(cont + 1);
+	}
 	new->next = NULL;
 	return (new);
+}
+
+// void	delete_node(t_env **head, )
+
+void	add_node_back(t_env **head, t_env *new)
+{
+	t_env	*current;
+
+	if (*head == NULL)
+		*head = new;
+	else
+	{
+		current = *head;
+		while (current -> next)
+		{
+			current = current -> next;
+		}
+		current ->next = new;
+	}
 }
 
 void	append_node(t_env **head, char *data)
@@ -45,7 +74,7 @@ void	print_node(t_env *head)
 	cur = head;
 	while (cur)
 	{
-		printf("%s : %s\n", cur->var->name, cur->var->content);
+		printf("flag = %d || %s : %s\n", cur->var->flag, cur->var->name, cur->var->content);
 		cur = cur->next;
 	}
 }
@@ -65,6 +94,14 @@ void	free_node(t_env *head)
 		free(cur);
 		cur = next;
 	}
+}
+
+void	free_env(t_env *node)
+{
+	free(node->var->name);
+	free(node->var->content);
+	free(node->var);
+	free(node);
 }
 
 t_env	*init_env(char **envp)
