@@ -114,3 +114,21 @@ int check_cmd_path(t_token *head, t_master *master)
 	}
 	return (0);
 }
+
+char	*return_absolute_path(t_tree *node, t_master *master)
+{
+	char	*valid_path;
+	int		is_abs;
+	int		i;
+
+	i = -1;
+	is_abs = strchr_is(node->value, '/');
+	while ((master->path_list)[++i])
+	{
+		valid_path = valid_path_fn(node->value, is_abs, (master->path_list)[i]);
+		if (access(valid_path, F_OK) == 0)
+			return (valid_path);
+		free(valid_path);
+	}
+	return (NULL);
+}
