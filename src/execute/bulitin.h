@@ -19,6 +19,13 @@ void	execute_tree(t_tree *node, t_env **env);
 //export.c
 int		export(t_tree *node, char **args, t_env **env);
 
+// unset.c
+int	unset(char **args, t_env *env);
 
+// pwd.c
+int	ft_pwd(void);
+
+// cd.c
+int ft_cd(t_tree *node, char **args, t_env *env);
 
 #endif

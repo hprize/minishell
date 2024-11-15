@@ -55,8 +55,7 @@ int	print_export(t_env *head)
 	sorted = sorted_envp_list(head);
 	while (sorted)
 	{
-		if (!(ft_strlen(sorted->var->name) == 1 \
-		&& ft_strncmp(sorted->var->name, "_", 1) == 0))
+		if (!(ft_strlen(sorted->var->name) == 1 && ft_strncmp(sorted->var->name, "_", 1) == 0))
 			printf("declare -x %s=\"%s\"\n", sorted->var->name, sorted->var->content);
 		sorted = sorted->next;
 	}
@@ -109,7 +108,7 @@ int	check_overlap(t_env **head, t_env *new)
 	return (0);
 }
 
-int	value_export(t_tree *node, char **args, t_env **env)
+int	value_export(char **args, t_env **env)
 {
 	int	result;
 	t_env	*new;
@@ -138,6 +137,6 @@ int	export(t_tree *node, char **args, t_env **env)
 	if (*args == NULL)
 		print_export(*env);
 	else
-		value_export(node, args, env);
+		value_export(args, env);
 	return (0);
 }

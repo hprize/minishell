@@ -43,10 +43,14 @@ int	builtin_cmd(t_tree *node, t_env **env)
 				ft_env(args, env);
 			if (ft_strncmp(cmd_node->value, "exit", ft_strlen("exit")) == 0)
 				ft_exit_call();
-			// if (ft_strncmp(input, "pwd", ft_strlen("pwd")) == 0)
-			// 	ft_pwd(env);
+			if (ft_strncmp(cmd_node->value, "pwd", ft_strlen("pwd")) == 0)
+				ft_pwd();
 			if (ft_strncmp(cmd_node->value, "export", ft_strlen("export")) == 0)
 				export(cmd_node, args, env);
+			if (ft_strncmp(cmd_node->value, "unset", ft_strlen("unset")) == 0)
+				unset(args, *env);
+			if (ft_strncmp(cmd_node->value, "cd", ft_strlen("cd")) == 0)
+				ft_cd(cmd_node, args, *env);
 		}
 		i++;
 	}
