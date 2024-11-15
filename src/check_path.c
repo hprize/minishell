@@ -107,7 +107,7 @@ int check_cmd_path(t_token *head, t_master *master)
 				printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else
 			{
-				printf("not cmd Token - value: %s, type: %d\n", current->value, current->type);
+				printf("%s: command not found\n", current->value);
 				return (-1);
 			}
 		current = current->next;

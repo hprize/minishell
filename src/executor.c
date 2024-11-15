@@ -1,34 +1,47 @@
 #include "../minishell.h"
 
+int open_and_redirect(const char *filepath, int flags, int redirect_fd)
+{
+	int fd;
+
+	fd = open(filepath, flags, 0644);
+	if (fd < 0)
+	{
+		printf("minishell: %s: %s\n", filepath, strerror(errno));
+		//perror("minishell: ");
+		return (-1);
+	}
+	if (dup2(fd, redirect_fd) < 0)
+	{
+		printf("minishell: %s: dup2 failed\n", filepath);
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
 
 // 리다이렉션 설정 함수
 int setup_redirection(t_tree *node)
 {
-	int fd;
-	int pipefd[2];
-
-	fd = -1;
 	if (node->type == NODE_HEREDOC)
 		handle_heredoc(node->children[0]->value);
 	else if (node->type == NODE_RED)
 	{
 		if (strcmp(node->value, ">") == 0)
 		{
-			fd = open(node->children[0]->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
+			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO) < 0)
+				return (-1);
 		}
 		else if (strcmp(node->value, ">>") == 0)
 		{
-			fd = open(node->children[0]->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
+			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO) < 0)
+				return (-1);
 		}
 		else if (strcmp(node->value, "<") == 0)
 		{
-			fd = open(node->children[0]->value, O_RDONLY);
-			dup2(fd, STDIN_FILENO);
-			close(fd);
+			if (open_and_redirect(node->children[0]->value, O_RDONLY, STDIN_FILENO) < 0)
+				return (-1);
 		}
 	}
 	return (0);

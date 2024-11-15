@@ -18,9 +18,20 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 		type = TOKEN_HEREDOC;
 	else
 		type = TOKEN_RED;
+	
+	*input_p += len;
+
+	while (**input_p == ' ')
+		(*input_p)++;
+	
+	if (type == TOKEN_RED && (**input_p == '\0' || **input_p == '|' || **input_p == '<' || **input_p == '>')) {
+		printf("minishell: syntax error near unexpected token 'newline'\n");
+		free(op);
+		exit(1);
+	}
+
 	new_token = create_token(type, op);
 	free(op);
-	*input_p += len;
 	add_token(head, current, new_token);
 }
 
@@ -41,7 +52,7 @@ void	process_quote(t_token **head, t_token **current, const char **input_p)
 		(*input_p)++;
 	if (**input_p != quote)
 	{
-		printf("꿔뜨 맞춰서 써야지 이자식아!\n");
+		printf("minishell: syntax error unexpected end of file (unclosed quote)\n");
 		exit(EXIT_FAILURE);
 	}
 	len = *input_p - start;
