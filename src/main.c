@@ -44,10 +44,15 @@ int	main(int argc, char **argv, const char **envp)
 			printf("Parsed Tree:\n");
 			print_tree(parse_tree, 0);
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
-			execute_tree(parse_tree, &shell_env);
+
+      //<<<<<<< p_hb
+			//execute_tree(parse_tree, &shell_env);
+
+			execute_tree(parse_tree, master);
 			free_tree(parse_tree);
 			free_tokens(tokens);
 			free(input);
+			unlink(HEREDOC_TMP);
 		}
 		else if (input == NULL)
 		{

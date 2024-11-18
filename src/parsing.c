@@ -106,12 +106,12 @@ t_tree	*parse(t_token *tokens)
 	root = parse_pipe(&current);
 	if (root == NULL)
 	{
-		printf("파싱 실패\n");
+		printf("minishell: parse error\n");
 		return (NULL);
 	}
 	if (current->type != TOKEN_END)
 	{
-		printf("토큰 에러(TOKEN_END)\n");
+		printf("minishell: command terminated unexpectedly\n");
 		free_tree(root);
 		return (NULL);
 	}

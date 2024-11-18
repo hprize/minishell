@@ -13,9 +13,12 @@
 # include <readline/history.h>
 # include "./libft/libft.h"
 # include "./ft_fprintf/ft_fprintf_header.h"
+# include "./gnl/get_next_line_bonus.h"
 # include "parsing.h"
 # include "struct.h"
 # include "src/execute/bulitin.h"
+
+# define HEREDOC_TMP ".heredoc_tmp"
 
 t_tree	*parse(t_token *tokens);
 t_token	*tokenize(const char *input);
@@ -50,10 +53,17 @@ typedef struct	s_master
 char	**find_path(char **envp);
 int		is_cmd(char *token, t_master *master);
 int		check_cmd_path(t_token *head, t_master *master);
+char	*return_absolute_path(t_tree *node, t_master *master);
+
+// executor.c
+void	execute_tree(t_tree *root, t_master *master);
+void	close_all_pipe(int pipe_count, int **pipe_fds);
+void	execute_pipe(t_tree *pipe_node, t_master *master);
 
 
-// void execute_tree(t_tree *node);
-int handle_heredoc(const char *delimiter);
+// heredoc.c
+void	handle_heredoc(const char *delimiter);
+
 
 
 
