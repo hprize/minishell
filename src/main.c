@@ -2,17 +2,14 @@
 
 int	g_signal;
 
-void	signal_exit(int sig)
-{
-	printf("caught signal %d\n", sig);
-	exit(1);
-}
-
 int	main(int argc, char **argv, const char **envp)
 {
 	t_master	*master;
 	t_token		*tokens;
 	t_tree		*parse_tree;
+
+	t_env		*shell_env;
+	char		*input;
 
 
 	master = ft_calloc(1, sizeof(t_master));
@@ -21,6 +18,7 @@ int	main(int argc, char **argv, const char **envp)
 	master->envp = (char **)envp;
 	master->path_list = find_path(master->envp);
 
+	shell_env = init_env((char **)envp);
 	while(1)
 	{
 		g_signal = 0;
@@ -29,7 +27,6 @@ int	main(int argc, char **argv, const char **envp)
 		if (input)
 		{
 			add_history(input);
-			printf("entered : %s\n", input);
 			tokens = tokenize(input);
 			print_tokens(tokens);
 			if (check_cmd_path(tokens, master) == -1)
@@ -47,14 +44,21 @@ int	main(int argc, char **argv, const char **envp)
 			printf("Parsed Tree:\n");
 			print_tree(parse_tree, 0);
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
+
+      //<<<<<<< p_hb
+			//execute_tree(parse_tree, &shell_env);
+
 			execute_tree(parse_tree, master);
 			free_tree(parse_tree);
 			free_tokens(tokens);
 			free(input);
 			unlink(HEREDOC_TMP);
-			
 		}
-		signal(SIGINT, signal_exit);
+		else if (input == NULL)
+		{
+			//사용한 모든 구조체 프리
+			exit(0);
+		}
 
 	}
 }

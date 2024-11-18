@@ -94,6 +94,21 @@ int	is_cmd(char *token, t_master *master)
 	}
 	return (0);
 }
+// 이거 추가됨. 빌트인 함수 확인
+
+int	is_bulitin(char *cmd)
+{
+	if ((ft_strncmp(cmd, "pwd", ft_strlen("pwd")) == 0) || \
+	(ft_strncmp(cmd, "cd", ft_strlen("cd")) == 0) || \
+	(ft_strncmp(cmd, "env", ft_strlen("env")) == 0) || \
+	(ft_strncmp(cmd, "unset", ft_strlen("unset")) == 0) || \
+	(ft_strncmp(cmd, "export", ft_strlen("export")) == 0) || \
+	(ft_strncmp(cmd, "echo", ft_strlen("echo")) == 0) || \
+	(ft_strncmp(cmd, "exit", ft_strlen("exit")) == 0))
+		return (1);
+	else
+		return (0);
+}
 
 int check_cmd_path(t_token *head, t_master *master)
 {
@@ -103,7 +118,8 @@ int check_cmd_path(t_token *head, t_master *master)
 	while (current != NULL)
 	{
 		if (current->type == TOKEN_CMD)
-			if (is_cmd(current->value, master))
+			//여기 수정
+			if (is_cmd(current->value, master) || is_bulitin(current->value))
 				printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else
 			{
