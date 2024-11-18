@@ -51,6 +51,8 @@ int	builtin_cmd(t_tree *node, t_env **env)
 				unset(args, *env);
 			if (ft_strncmp(cmd_node->value, "cd", ft_strlen("cd")) == 0)
 				ft_cd(cmd_node, args, *env);
+			if (ft_strncmp(cmd_node->value, "echo", ft_strlen("echo")) == 0)
+				ft_echo(args, *env);
 		}
 		i++;
 	}

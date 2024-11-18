@@ -10,4 +10,5 @@ int	ft_pwd(void)
 	}
 	else
 		perror("getcwd failed\n");
+	return (0);
 }

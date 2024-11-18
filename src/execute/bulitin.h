@@ -28,4 +28,7 @@ int	ft_pwd(void);
 // cd.c
 int ft_cd(t_tree *node, char **args, t_env *env);
 
+// echo.c
+int	ft_echo(char **args, t_env *env);
+
 #endif

@@ -51,7 +51,7 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 	old = find_envp_content(env, "PWD");
 	way = args[0];
 	if (ft_strcmp(args[0], "-") == 0)
-		way = old;
+		way = find_envp_content(env, "OLDPWD");
 	else if (ft_strcmp(args[0], "~") == 0)
 		way = find_envp_content(env, "HOME");
 	printf("test cd %s\n", way);
