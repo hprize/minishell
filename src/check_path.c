@@ -71,7 +71,6 @@ char	*valid_path_fn(char *cmd, int is_abs, char *path)
 	return (valid);
 }
 
-//cmd == 1 not_cmd == 0
 int	is_cmd(char *token, t_envp *master)
 {
 	// char	**path_list;
@@ -88,26 +87,32 @@ int	is_cmd(char *token, t_envp *master)
 		if (access(valid_path, F_OK) == 0)
 		{
 			free(valid_path); // 나중에 실행명령어 할 때 이거 살리면 됨.
-			return (1);
+			return (0);
 		}
 		free(valid_path);
 	}
-	return (0);
+	return (1);
 }
 // 이거 추가됨. 빌트인 함수 확인
 
 int	is_bulitin(char *cmd)
 {
-	if ((ft_strncmp(cmd, "pwd", ft_strlen("pwd")) == 0) || \
-	(ft_strncmp(cmd, "cd", ft_strlen("cd")) == 0) || \
-	(ft_strncmp(cmd, "env", ft_strlen("env")) == 0) || \
-	(ft_strncmp(cmd, "unset", ft_strlen("unset")) == 0) || \
-	(ft_strncmp(cmd, "export", ft_strlen("export")) == 0) || \
-	(ft_strncmp(cmd, "echo", ft_strlen("echo")) == 0) || \
-	(ft_strncmp(cmd, "exit", ft_strlen("exit")) == 0))
-		return (1);
-	else
+	if (ft_strncmp(cmd, "env", ft_strlen("env")) == 0)
 		return (0);
+	else if (ft_strncmp(cmd, "exit", ft_strlen("exit")) == 0)
+		return (0);
+	else if (ft_strncmp(cmd, "pwd", ft_strlen("pwd")) == 0)
+		return (0);
+	else if (ft_strncmp(cmd, "export", ft_strlen("export")) == 0)
+		return (0);
+	else if (ft_strncmp(cmd, "echo", ft_strlen("echo")) == 0)
+		return (0);
+	else if (ft_strncmp(cmd, "unset", ft_strlen("unset")) == 0)
+		return (0);
+	else if (ft_strncmp(cmd, "cd", ft_strlen("cd")) == 0)
+		return (0);
+	else
+		return (1);
 }
 
 int check_cmd_path(t_token *head, t_envp *master)
@@ -119,7 +124,7 @@ int check_cmd_path(t_token *head, t_envp *master)
 	{
 		if (current->type == TOKEN_CMD)
 			//여기 수정
-			if (is_cmd(current->value, master) || is_bulitin(current->value))
+			if (is_cmd(current->value, master) == 0 || is_bulitin(current->value) == 0)
 				printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else
 			{

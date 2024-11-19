@@ -31,15 +31,15 @@ t_env	*creat_node(char *data)
 
 // void	delete_node(t_env **head, )
 
-void	add_node_back(t_env **head, t_env *new)
+void	add_node_back(t_env *head, t_env *new)
 {
 	t_env	*current;
 
-	if (*head == NULL)
-		*head = new;
+	if (head == NULL)
+		head = new;
 	else
 	{
-		current = *head;
+		current = head;
 		while (current -> next)
 		{
 			current = current -> next;

@@ -53,6 +53,7 @@ typedef struct	s_envp
 
 char	**find_path(char **envp);
 int		is_cmd(char *token, t_envp *master);
+int	is_bulitin(char *cmd);
 int		check_cmd_path(t_token *head, t_envp *master);
 char	*return_absolute_path(t_tree *node, t_envp *master);
 
@@ -60,6 +61,7 @@ char	*return_absolute_path(t_tree *node, t_envp *master);
 void	execute_tree(t_tree *root, t_envp *master);
 void	close_all_pipe(int pipe_count, int **pipe_fds);
 void	execute_pipe(t_tree *pipe_node, t_envp *master);
+char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
@@ -73,7 +75,7 @@ t_env	*init_env(char **envp);
 int	fd_print_exit(char *msg, int fd);
 
 //builtin functions
-int	builtin_cmd(t_tree *node, t_env **env);
+int	builtin_cmd(t_tree *node, t_envp *env);
 
 
 #endif
