@@ -11,7 +11,7 @@ t_tree	*parse_pipe(t_token **current)
 		return (NULL);
 	if ((*current)->type != TOKEN_PIPE)
 		return (exec_node);
-	pipe_node = create_tree_node(NODE_PIPE, NULL);
+	pipe_node = create_tree_node(NODE_PIPE, QUOTE_NONE, NULL);
 	add_child(pipe_node, exec_node);
 	while ((*current)->type == TOKEN_PIPE)
 	{
@@ -30,7 +30,7 @@ t_tree	*parse_exec(t_token **current)
 	t_tree	*exec_node;
 	t_tree	*cmd_node;
 
-	exec_node = create_tree_node(NODE_EXEC, "EXEC");
+	exec_node = create_tree_node(NODE_EXEC, QUOTE_NONE, "EXEC");
 	parse_reds_opt(exec_node, current);
 
 	cmd_node = parse_cmd(current);
@@ -62,14 +62,14 @@ t_tree	*parse_reds(t_token **current)
 	t_tree	*filename_node;
 
 	if ((*current)->type == TOKEN_RED)
-		red_node = create_tree_node(NODE_RED, (*current)->value);
+		red_node = create_tree_node(NODE_RED, (*current)->quote_state, (*current)->value);
 	else
-		red_node = create_tree_node(NODE_HEREDOC, (*current)->value);
+		red_node = create_tree_node(NODE_HEREDOC, (*current)->quote_state, (*current)->value);
 	*current = (*current)->next;
 
 	if ((*current)->type == TOKEN_FILENAME)
 	{
-		filename_node = create_tree_node(NODE_FILENAME, (*current)->value);
+		filename_node = create_tree_node(NODE_FILENAME, (*current)->quote_state, (*current)->value);
 		add_child(red_node, filename_node);
 		*current = (*current)->next;
 	}
@@ -84,12 +84,12 @@ t_tree	*parse_cmd(t_token **current)
 
 	if ((*current)->type != TOKEN_CMD)
 		return (NULL);
-	cmd_node = create_tree_node(NODE_CMD, (*current)->value);
+	cmd_node = create_tree_node(NODE_CMD, (*current)->quote_state, (*current)->value);
 	*current = (*current)->next;
 
 	while (*current && (*current)->type == TOKEN_ARG)
 	{
-		arg_node = create_tree_node(NODE_ARG, (*current)->value);
+		arg_node = create_tree_node(NODE_ARG, (*current)->quote_state, (*current)->value);
 		add_child(cmd_node, arg_node);
 		*current = (*current)->next;
 	}

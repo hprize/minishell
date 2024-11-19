@@ -17,7 +17,7 @@ void	add_token(t_token **head, t_token **current, t_token *new_token)
 }
 
 // 새로운 토큰 생성 함수
-t_token	*create_token(token_type type, const char *value)
+t_token	*create_token(token_type type, quote_type quote_state, const char *value)
 {
 	t_token	*token;
 	
@@ -28,6 +28,7 @@ t_token	*create_token(token_type type, const char *value)
 		exit(EXIT_FAILURE);
 	}
 	token->type = type;
+	token->quote_state = quote_state;
 	if (value)
 		token->value = ft_strdup(value);
 	else
@@ -39,7 +40,7 @@ t_token	*create_token(token_type type, const char *value)
 // ----- 파싱 관련 util 함수 -----
 
 // 트리 노드 생성 함수
-t_tree	*create_tree_node(node_type type, const char *value)
+t_tree	*create_tree_node(node_type type, quote_type quote_state, const char *value)
 {
 	t_tree	*node;
 
@@ -50,6 +51,7 @@ t_tree	*create_tree_node(node_type type, const char *value)
 		exit(EXIT_FAILURE);
 	}
 	node->type = type;
+	node->quote_state = quote_state;
 	if (value)
 		node->value = strdup(value);
 	else

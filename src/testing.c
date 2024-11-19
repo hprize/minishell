@@ -1,5 +1,16 @@
 #include "../minishell.h"
 
+const char *quote_type_to_string(quote_type type)
+{
+	switch (type)
+	{
+		case QUOTE_SINGLE: return "QUOTE_SINGLE";
+		case QUOTE_DOUBLE: return "QUOTE_DOUBLE";
+		case QUOTE_NONE: return "QUOTE_NONE";
+		default: return "UNKNOWN";
+	}
+}
+
 void print_tree(t_tree *node, int level) {
 	if (node == NULL) return;
 
@@ -14,22 +25,22 @@ void print_tree(t_tree *node, int level) {
 			printf("PIPE\n");
 			break;
 		case NODE_EXEC:
-			printf("EXEC: %s\n", node->value ? node->value : "NULL");
+			printf("EXEC: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		case NODE_CMD:
-			printf("CMD: %s\n", node->value ? node->value : "NULL");
+			printf("CMD: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		case NODE_ARG:
-			printf("ARG: %s\n", node->value ? node->value : "NULL");
+			printf("ARG: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		case NODE_RED:
-			printf("RED: %s\n", node->value ? node->value : "NULL");
+			printf("RED: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		case NODE_HEREDOC:
-			printf("HEREDOC: %s\n", node->value ? node->value : "NULL");
+			printf("HEREDOC: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		case NODE_FILENAME:
-			printf("FILENAME: %s\n", node->value ? node->value : "NULL");
+			printf("FILENAME: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
 			break;
 		default:
 			printf("UNKNOWN NODE\n");
@@ -109,7 +120,7 @@ void print_tokens(t_token *head)
 
 	while (current != NULL)
 	{
-		printf("Type: %s, Value: %s\n", token_type_to_string(current->type), current->value ? current->value : "NULL");
+		printf("Type: %s, Value: %s Quoted: %s\n", token_type_to_string(current->type), current->value ? current->value : "NULL", quote_type_to_string(current->quote_state));
 		current = current->next;
 	}
 }

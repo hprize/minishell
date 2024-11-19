@@ -1,13 +1,13 @@
 #include "bulitin.h"
 
-void execute_tree(t_tree *node, t_env **env)
-{
-	//빌트인 먼저
-	if (node->type == NODE_EXEC)
-		builtin_cmd(node, env);
+// void execute_tree(t_tree *node, t_env **env)
+// {
+// 	//빌트인 먼저
+// 	if (node->type == NODE_EXEC)
+// 		builtin_cmd(node, env);
 
-	//execute()
-}
+// 	//execute()
+// }
 
 // void	execute_tree(t_tree *root, t_master *master)
 // {

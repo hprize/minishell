@@ -32,17 +32,19 @@ $(OBJDIR)/%.o : $(GNLDIR)/%.c $(HEADER) | $(OBJDIR)
 
 $(NAME) : $(OBJS) $(GNLOBJS)
 	@make -C libft/
-
-$(CC) $(CFLAGS) -o $@ $(OBJS) -L libft/ -lft -L ft_fprintf/ -lft_fprintf \
--lreadline
+	@make -C ft_fprintf/
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(GNLOBJS) -L libft/ -lft -L ft_fprintf/ -lft_fprintf \
+	-lreadline
 
 
 clean : 
 	@make clean -C libft/
+	@make clean -C ft_fprintf
 	rm -rf $(OBJDIR)
 
 fclean : clean
 	@make fclean -C libft/
+	@make fclean -C ft_fprintf
 	rm -rf $(NAME)
 
 re :

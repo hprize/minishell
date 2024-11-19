@@ -30,7 +30,7 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 		exit(1);
 	}
 
-	new_token = create_token(type, op);
+	new_token = create_token(type, QUOTE_NONE, op);
 	free(op);
 	add_token(head, current, new_token);
 }
@@ -43,9 +43,14 @@ void	process_quote(t_token **head, t_token **current, const char **input_p)
 	int			len;
 	char		*quoted;
 	token_type	type;
+	quote_type	quote_state;
 	t_token		*new_token;
 
 	quote = **input_p;
+	if (quote == '\'')
+		quote_state = QUOTE_SINGLE;
+	else if (quote == '"')
+		quote_state = QUOTE_DOUBLE;
 	start = *input_p + 1; // 시작 quote 건너뛰기
 	(*input_p)++;
 	while (**input_p && **input_p != quote)
@@ -65,7 +70,7 @@ void	process_quote(t_token **head, t_token **current, const char **input_p)
 		type = TOKEN_FILENAME;
 	else
 		type = TOKEN_ARG;
-	new_token = create_token(type, quoted);
+	new_token = create_token(type, quote_state, quoted);
 	free(quoted);
 	add_token(head, current, new_token);
 }
@@ -80,7 +85,8 @@ void	process_word(t_token **head, t_token **current, const char **input_p)
 	t_token		*new_token;
 	
 	start = *input_p;
-	while (**input_p && !ft_isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|')
+	while (**input_p && !ft_isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|' \
+		&& **input_p != '"' && **input_p != '\'')
 		(*input_p)++;
 	len = *input_p - start;
 	word = ft_strndup(start, len);
@@ -93,7 +99,7 @@ void	process_word(t_token **head, t_token **current, const char **input_p)
 	else
 		type = TOKEN_ARG;
 
-	new_token = create_token(type, word);
+	new_token = create_token(type, QUOTE_NONE, word);
 	free(word);
 
 	add_token(head, current, new_token);
@@ -128,7 +134,7 @@ t_token	*tokenize(const char *input)
 		}
 		process_word(&head, &current, &input_p);
 	}
-	end_token = create_token(TOKEN_END, NULL);
+	end_token = create_token(TOKEN_END, QUOTE_NONE, NULL);
 	if (current)
 		current->next = end_token;
 	else
