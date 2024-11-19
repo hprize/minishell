@@ -60,7 +60,7 @@ int	builtin_cmd(t_tree *node, t_env **env)
 	return (1);
 }
 
-// void execute_command(t_tree *exec_node, t_master *master)
+// void execute_command(t_tree *exec_node, t_envp *master)
 // {
 //     int i = 0;
 //     if (fork() == 0) { // 자식 프로세스

@@ -44,21 +44,22 @@ void	print_tree_linear(t_tree *node);
 void	print_tokens(t_token *head);
 
 // check_path.c
-typedef struct	s_master
+typedef struct	s_envp
 {
 	char	**envp;
 	char	**path_list;
-}				t_master;
+	t_env	*u_envp;
+}				t_envp;
 
 char	**find_path(char **envp);
-int		is_cmd(char *token, t_master *master);
-int		check_cmd_path(t_token *head, t_master *master);
-char	*return_absolute_path(t_tree *node, t_master *master);
+int		is_cmd(char *token, t_envp *master);
+int		check_cmd_path(t_token *head, t_envp *master);
+char	*return_absolute_path(t_tree *node, t_envp *master);
 
 // executor.c
-void	execute_tree(t_tree *root, t_master *master);
+void	execute_tree(t_tree *root, t_envp *master);
 void	close_all_pipe(int pipe_count, int **pipe_fds);
-void	execute_pipe(t_tree *pipe_node, t_master *master);
+void	execute_pipe(t_tree *pipe_node, t_envp *master);
 
 
 // heredoc.c

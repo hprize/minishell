@@ -4,21 +4,21 @@ int	g_signal;
 
 int	main(int argc, char **argv, const char **envp)
 {
-	t_master	*master;
+	t_envp	*master;
 	t_token		*tokens;
 	t_tree		*parse_tree;
 
-	t_env		*shell_env;
+	// t_env		*shell_env;
 	char		*input;
 
 
-	master = ft_calloc(1, sizeof(t_master));
+	master = ft_calloc(1, sizeof(t_envp));
 	if (master == NULL)
 		exit(1);
 	master->envp = (char **)envp;
 	master->path_list = find_path(master->envp);
 
-	shell_env = init_env((char **)envp);
+	master->u_envp = init_env((char **)envp);
 	while(1)
 	{
 		g_signal = 0;

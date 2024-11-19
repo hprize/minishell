@@ -49,7 +49,7 @@ int setup_redirection(t_tree *node)
 
 
 // 커맨드 실행
-void execute_command(t_tree *exec_node, t_master *master)
+void execute_command(t_tree *exec_node, t_envp *master)
 {
 	int i;
 	int j;
@@ -101,7 +101,7 @@ void execute_command(t_tree *exec_node, t_master *master)
 }
 
 
-void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_master *master)
+void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
 	int	child_pid;
@@ -148,7 +148,7 @@ void	close_all_pipe(int pipe_count, int **pipe_fds)
 }
 
 // PIPE 실행
-void execute_pipe(t_tree *pipe_node, t_master *master)
+void execute_pipe(t_tree *pipe_node, t_envp *master)
 {
 	int pipe_count;
 	int **pipe_fds;
@@ -186,7 +186,7 @@ void execute_pipe(t_tree *pipe_node, t_master *master)
 }
 
 // 메인 명령어 실행 함수
-void	execute_tree(t_tree *root, t_master *master)
+void	execute_tree(t_tree *root, t_envp *master)
 {
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);

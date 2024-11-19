@@ -9,7 +9,7 @@ void execute_tree(t_tree *node, t_env **env)
 	//execute()
 }
 
-// void	execute_tree(t_tree *root, t_master *master)
+// void	execute_tree(t_tree *root, t_envp *master)
 // {
 // 	if (root->type == NODE_PIPE)
 // 		execute_pipe(root, master);

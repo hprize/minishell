@@ -72,7 +72,7 @@ char	*valid_path_fn(char *cmd, int is_abs, char *path)
 }
 
 //cmd == 1 not_cmd == 0
-int	is_cmd(char *token, t_master *master)
+int	is_cmd(char *token, t_envp *master)
 {
 	// char	**path_list;
 	char	*valid_path;
@@ -110,7 +110,7 @@ int	is_bulitin(char *cmd)
 		return (0);
 }
 
-int check_cmd_path(t_token *head, t_master *master)
+int check_cmd_path(t_token *head, t_envp *master)
 {
 	t_token *current;
 	
@@ -131,7 +131,7 @@ int check_cmd_path(t_token *head, t_master *master)
 	return (0);
 }
 
-char	*return_absolute_path(t_tree *node, t_master *master)
+char	*return_absolute_path(t_tree *node, t_envp *master)
 {
 	char	*valid_path;
 	int		is_abs;
