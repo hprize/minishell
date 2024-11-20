@@ -134,7 +134,7 @@ int	value_export(char **args, t_env *env)
 
 int	export(t_tree *node, char **args, t_env *env)
 {
-	if (*args == NULL)
+	if (args[0] == NULL)
 		print_export(env);
 	else
 		value_export(args, env);

@@ -70,19 +70,21 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 		i++;
 		j++;
 	}
-	args[node->child_count + cnt] == NULL;
+	args[node->child_count + cnt] = NULL;
 	return (args);
 }
 
 t_tree	*find_cmd_node(t_tree *node)
 {
 	int	i;
+	t_tree	*now;
 
+	now = node;
 	i = 0;
-	while (i < node->child_count)
+	while (i < now->child_count)
 	{
-		if (node->children[i]->type == NODE_CMD)
-			return (node->children[i]);
+		if (now->children[i]->type == NODE_CMD)
+			return (now->children[i]);
 		i++;
 	}
 	return (NULL);

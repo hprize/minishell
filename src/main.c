@@ -24,6 +24,7 @@ int	main(int argc, char **argv, const char **envp)
 		g_signal = 0;
 
 		char	*input = readline("minishell$ ");
+		// char	*input = "export | export a=123";
 		if (input)
 		{
 			add_history(input);

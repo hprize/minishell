@@ -28,6 +28,7 @@ typedef struct s_list
 }	t_list;
 
 void	ft_bzero(void *s, size_t n);
+void	ft_arrfree(char **str);
 int		ft_atoi(const char *nptr);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
