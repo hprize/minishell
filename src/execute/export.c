@@ -85,14 +85,14 @@ int	check_name(char *name)
 	return (0);
 }
 
-int	check_overlap(t_env **head, t_env *new)
+int	check_overlap(t_env *head, t_env *new)
 {
 	t_env	*cur;
 	char	*temp;
 
-	if (*head == NULL)
+	if (head == NULL)
 		return (0);
-	cur = *head;
+	cur = head;
 	while (cur)
 	{
 		if (ft_strcmp(cur->var->name, new->var->name) == 0)
@@ -108,7 +108,7 @@ int	check_overlap(t_env **head, t_env *new)
 	return (0);
 }
 
-int	value_export(char **args, t_env **env)
+int	value_export(char **args, t_env *env)
 {
 	int	result;
 	t_env	*new;
@@ -132,10 +132,10 @@ int	value_export(char **args, t_env **env)
 	return (result);
 }
 
-int	export(t_tree *node, char **args, t_env **env)
+int	export(t_tree *node, char **args, t_env *env)
 {
-	if (*args == NULL)
-		print_export(*env);
+	if (args[0] == NULL)
+		print_export(env);
 	else
 		value_export(args, env);
 	return (0);

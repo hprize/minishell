@@ -33,9 +33,9 @@ int	unset(char **args, t_env *env)
 {
 	int	i;
 	t_env	*temp;
-	printf("unset test\n");
+
 	if (env == NULL)
-		return (0);
+		exit(0);
 	i = -1;
 	while (args[++i])
 	{

@@ -47,12 +47,55 @@ int setup_redirection(t_tree *node)
 	return (0);
 }
 
+char	**each_args(t_tree *node, t_envp *master, int cnt)
+{
+	char	**args;
+	int		i;
+	int		j;
+
+	args = malloc(sizeof(char *) * (node->child_count + cnt + 1));
+	if (args == NULL)
+		exit(1);
+	if (cnt == 1)
+	{
+		args[0] = return_absolute_path(node, master);
+		if (args[0] == NULL)
+			exit(EXIT_FAILURE);
+	}
+	i = cnt;
+	j = 0;
+	while (i < node->child_count)
+	{
+		args[i] = node->children[j]->value;
+		i++;
+		j++;
+	}
+	args[node->child_count + cnt] = NULL;
+	return (args);
+}
+
+t_tree	*find_cmd_node(t_tree *node)
+{
+	int	i;
+	t_tree	*now;
+
+	now = node;
+	i = 0;
+	while (i < now->child_count)
+	{
+		if (now->children[i]->type == NODE_CMD)
+			return (now->children[i]);
+		i++;
+	}
+	return (NULL);
+}
 
 // 커맨드 실행
-void execute_command(t_tree *exec_node, t_master *master)
+void execute_command(t_tree *exec_node, t_envp *master)
 {
 	int i;
 	int j;
+	int	bulitin;
 	t_tree *cmd_node;
 	char **args;
 
@@ -68,31 +111,14 @@ void execute_command(t_tree *exec_node, t_master *master)
 			}
 			i++;
 		}
-		i = 0;
-		while (i < exec_node->child_count)
+		cmd_node = find_cmd_node(exec_node);
+		if (cmd_node != NULL)
 		{
-			if (exec_node->children[i]->type == NODE_CMD)
-			{
-				cmd_node = exec_node->children[i];
-				args = malloc(sizeof(char *) * (cmd_node->child_count + 2));
-				if (args == NULL)
-					exit(1);
-				args[0] = return_absolute_path(cmd_node, master);
-				if (args[0] == NULL)
-					exit(EXIT_FAILURE);
-				j = 0;
-				while (j < cmd_node->child_count)
-				{
-					args[j + 1] = cmd_node->children[j]->value;
-					j++;
-				}
-				args[cmd_node->child_count + 1] = NULL;
-
-				execve(args[0], args, master->envp);
-				perror("execve failed");
-				exit(1);
-			}
-			i++;
+			bulitin = is_bulitin(cmd_node->value);
+			args = each_args(cmd_node, master, bulitin);
+			execve(args[0], args, master->envp);
+			perror("execve failed");
+			exit(1);
 		}
 		exit(0);
 	}
@@ -101,10 +127,11 @@ void execute_command(t_tree *exec_node, t_master *master)
 }
 
 
-void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_master *master)
+void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
 	int	child_pid;
+	t_tree	*execute_node;
 
 	i = 0;
 	while (i < pipe_count)
@@ -127,7 +154,12 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_maste
 			}
 
 			close_all_pipe(pipe_count, pipe_fds);
-			execute_command(pipe_node->children[i], master);
+			execute_node = find_cmd_node(pipe_node->children[i]);
+			if (is_bulitin(execute_node->value) == 0)
+				builtin_cmd(execute_node, master);
+			else
+				execute_command(pipe_node->children[i], master);
+
 			exit(0);
 		}
 		i++;
@@ -148,7 +180,7 @@ void	close_all_pipe(int pipe_count, int **pipe_fds)
 }
 
 // PIPE 실행
-void execute_pipe(t_tree *pipe_node, t_master *master)
+void execute_pipe(t_tree *pipe_node, t_envp *master)
 {
 	int pipe_count;
 	int **pipe_fds;
@@ -186,10 +218,20 @@ void execute_pipe(t_tree *pipe_node, t_master *master)
 }
 
 // 메인 명령어 실행 함수
-void	execute_tree(t_tree *root, t_master *master)
+void	execute_tree(t_tree *root, t_envp *master)
 {
+	t_tree	*execute_node;
+
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
-		execute_command(root, master);
+	{
+		execute_node = find_cmd_node(root);
+		if (is_bulitin(execute_node->value) == 0)
+			builtin_cmd(execute_node, master);
+		else
+			execute_command(root, master);
+	}
+
+
 }
