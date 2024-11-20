@@ -1,25 +1,24 @@
 #include "bulitin.h"
 
-int	is_envp(char *arg, t_env *env)
+char	*is_envp(char *arg, t_env *env)
 {
 	t_env	*cur;
 
 	if (env == NULL)
-		return (1);
+		return (NULL);
 	if (*arg != '$')
-		return (1);
+		return (NULL);
 	arg++;
 	cur = env;
 	while (cur)
 	{
 		if (ft_strcmp(cur->var->name, arg) == 0)
 		{
-			printf("%s", cur->var->content);
-			return (0);
+			return (cur->var->content);
 		}
 		cur = cur->next;
 	}
-	return (1);
+	return (NULL);
 }
 
 int	ft_echo(char **args, t_env *env)
@@ -33,15 +32,20 @@ int	ft_echo(char **args, t_env *env)
 		newline = 1;
 	while (args[i])
 	{
-		if (is_envp(args[i], env) == 1)
 			printf("%s", args[i]);
+			printf(" ");
 		if (!args[i + 1])
 		{
 			if (newline == 0)
 				printf("\n");
 		}
-		else
-			printf(" ");
+		// if (is_envp(args[i], env) == 1)
+		// 	printf("%s", args[i]);
+		// if (!args[i + 1])
+		// {
+		// 	if (newline == 0)
+		// 		printf("\n");
+		// }
 		i++;
 	}
 	return (0);
