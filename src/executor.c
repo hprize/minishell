@@ -66,7 +66,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 	j = 0;
 	while (i < node->child_count)
 	{
-		args[i] = node->children[j]->value;
+		args[i] = ft_strdup(node->children[j]->value);
 		i++;
 		j++;
 	}
