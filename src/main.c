@@ -46,9 +46,6 @@ int	main(int argc, char **argv, const char **envp)
 			print_tree(parse_tree, 0);
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
 
-      //<<<<<<< p_hb
-			//execute_tree(parse_tree, &shell_env);
-
 			execute_tree(parse_tree, master);
 			free_tree(parse_tree);
 			free_tokens(tokens);
