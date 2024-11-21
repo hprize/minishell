@@ -64,13 +64,15 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 	}
 	i = cnt;
 	j = 0;
-	while (i < node->child_count)
+	while (j < node->child_count)
 	{
 		args[i] = ft_strdup(node->children[j]->value);
+		if (args[i] == NULL)
+			exit(EXIT_FAILURE);
 		i++;
 		j++;
 	}
-	args[node->child_count + cnt] = NULL;
+	args[i] = NULL;
 	return (args);
 }
 
@@ -116,6 +118,13 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		{
 			bulitin = is_bulitin(cmd_node->value);
 			args = each_args(cmd_node, master, bulitin);
+
+			int debug_i = 0;
+			while (args[debug_i])
+			{
+				printf("args[%d]: %s\n", debug_i, args[debug_i]);
+				debug_i++;
+			}
 			execve(args[0], args, master->envp);
 			perror("execve failed");
 			exit(1);

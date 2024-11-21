@@ -38,6 +38,9 @@ void	parse_reds_opt(t_tree *exec_node, t_token **current);
 t_tree *parse_reds(t_token **current);
 t_tree *parse_cmd(t_token **current);
 
+// replace_env.c
+void	replace_env(t_token *tokens, t_env *u_envp);
+
 // testing.c
 void	print_tree(t_tree *node, int level);
 void	print_tree_linear(t_tree *node);
