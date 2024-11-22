@@ -37,6 +37,18 @@ t_token	*create_token(token_type type, quote_type quote_state, const char *value
 	return (token);
 }
 
+void	merge_token(t_token **current, char *new_value, quote_type new_quote_state)
+{
+	char	*combined;
+
+	combined = ft_strjoin((*current)->value, new_value);
+	free((*current)->value);
+	(*current)->value = combined;
+	if ((*current)->quote_state == QUOTE_NONE)
+		(*current)->quote_state = new_quote_state;
+	else if ((*current)->quote_state != new_quote_state)
+		(*current)->quote_state = QUOTE_NONE;
+}
 // ----- 파싱 관련 util 함수 -----
 
 // 트리 노드 생성 함수
