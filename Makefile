@@ -1,13 +1,16 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -g
+# CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 SRCDIR = src
 OBJDIR = obj
-HEADER = minishell.h
+HEADER = $(wildcard)*.h
 
+# SRCS = $(SRCDIR)/main.c 
+# 일단 와일드 카드 써둠.
 SRCS = $(wildcard $(SRCDIR)/*.c)
-OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS)) 
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 .PHONY : all clean fclean re
 
