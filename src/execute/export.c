@@ -5,9 +5,13 @@ t_env*	new_node(t_var *var)
 	t_env	*new;
 
 	new = malloc(sizeof(t_env));
-	if (new == NULL)
+	new->var = malloc(sizeof(t_var));
+	if (new == NULL || new->var == NULL)
 		exit(1);
-	new->var = var;
+	new->var->name = ft_strdup(var->name);
+	new->var->content = ft_strdup(var->content);
+	// new->var->flag_env = var->flag_env;
+	// new->var->flag_export = var->flag_export;
 	new->next = NULL;
 	return (new);
 }
@@ -51,13 +55,15 @@ t_env	*sorted_envp_list(t_env *head)
 int	print_export(t_env *head)
 {
 	t_env	*sorted;
+	t_env	*temp;
 
 	sorted = sorted_envp_list(head);
-	while (sorted)
+	temp = sorted;
+	while (temp)
 	{
-		if (!(ft_strlen(sorted->var->name) == 1 && ft_strncmp(sorted->var->name, "_", 1) == 0))
-			printf("declare -x %s=\"%s\"\n", sorted->var->name, sorted->var->content);
-		sorted = sorted->next;
+		if (!(ft_strlen(temp->var->name) == 1 && ft_strncmp(temp->var->name, "_", 1) == 0))
+			printf("declare -x %s=\"%s\"\n", temp->var->name, temp->var->content);
+		temp = temp->next;
 	}
 	free_node(sorted);
 	return (0);

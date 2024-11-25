@@ -15,13 +15,13 @@ t_env	*creat_node(char *data)
 	cont = ft_strchr(data, '=');
 	if (cont == 0)
 	{
-		new->var->flag = 0;
+		new->var->flag_env = 0;
 		new->var->name = ft_strdup(data);
 		new->var->content = ft_strdup("");
 	}
 	else
 	{
-		new->var->flag = 1;
+		new->var->flag_env = 1;
 		new->var->name = ft_substr(data, 0, ft_strchr_len(data, '='));
 		new->var->content = ft_strdup(cont + 1);
 	}
@@ -67,6 +67,11 @@ void	append_node(t_env **head, char *data)
 	}
 }
 
+void	append_custom_node_back(t_env *head, char *name, char *value, int flag)
+{
+
+}
+
 void	print_node(t_env *head)
 {
 	t_env	*cur;
@@ -74,7 +79,7 @@ void	print_node(t_env *head)
 	cur = head;
 	while (cur)
 	{
-		printf("flag = %d || %s : %s\n", cur->var->flag, cur->var->name, cur->var->content);
+		printf("flag = %d || %s : %s\n", cur->var->flag_env, cur->var->name, cur->var->content);
 		cur = cur->next;
 	}
 }
@@ -117,7 +122,7 @@ t_env	*init_env(char **envp)
 	{
 		append_node(&head, envp[i]);
 	}
-
+	append_custom_node_back(head, "LAST_EXIT_STATUS", "0", 0);
 //test
 	// print_node(head);
 
