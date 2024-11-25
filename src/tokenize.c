@@ -36,7 +36,7 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 }
 
 // quote 처리 함수
-void	process_quote(t_token **head, t_token **current, const char **input_p, int prev_space)
+void	process_quote(t_token **head, t_token **current, const char **input_p, int prev_space, int *cmd_set)
 {
 	char 		quote;
 	const char	*start;
@@ -72,19 +72,23 @@ void	process_quote(t_token **head, t_token **current, const char **input_p, int 
 		return;
 	}
 
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
-		type = TOKEN_CMD;
-	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
+	if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
+	else if (*cmd_set == 0)
+	{
+		type = TOKEN_CMD;
+		*cmd_set = 1;
+	}
 	else
 		type = TOKEN_ARG;
+
 	new_token = create_token(type, quote_state, quoted);
 	free(quoted);
 	add_token(head, current, new_token);
 }
 
 // 이외에 다른 단어 처리 함수
-void	process_word(t_token **head, t_token **current, const char **input_p, int prev_space)
+void	process_word(t_token **head, t_token **current, const char **input_p, int prev_space, int *cmd_set)
 {
 	const char	*start;
 	int			len;
@@ -107,10 +111,13 @@ void	process_word(t_token **head, t_token **current, const char **input_p, int p
 		return;
 	}
 
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
-		type = TOKEN_CMD;
-	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
+	if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
+	else if (*cmd_set == 0)
+	{
+		type = TOKEN_CMD;
+		*cmd_set = 1;
+	}
 	else
 		type = TOKEN_ARG;
 
@@ -128,11 +135,13 @@ t_token	*tokenize(const char *input)
 	t_token		*end_token;
 	const char	*input_p;
 	int			prev_space;
+	int			cmd_set;
 
 	head = NULL;
 	current = NULL;
 	input_p = input;
 	prev_space = 1; // 처음에는 스페이스로
+	cmd_set = 0;
 	while (*input_p)
 	{
 		while (ft_isspace(*input_p))
@@ -150,11 +159,11 @@ t_token	*tokenize(const char *input)
 		}
 		if (*input_p == '"' || *input_p == '\'')
 		{
-			process_quote(&head, &current, &input_p, prev_space);
+			process_quote(&head, &current, &input_p, prev_space, &cmd_set);
 			prev_space = 0;
 			continue;
 		}
-		process_word(&head, &current, &input_p, prev_space);
+		process_word(&head, &current, &input_p, prev_space, &cmd_set);
 		prev_space = 0;
 	}
 	end_token = create_token(TOKEN_END, QUOTE_NONE, NULL);

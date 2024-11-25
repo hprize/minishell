@@ -41,6 +41,7 @@ t_tree *parse_cmd(t_token **current);
 
 // replace_env.c
 void	replace_env(t_token *tokens, t_env *u_envp);
+void	process_env_replacement(char **value, t_env *u_envp);
 
 // testing.c
 void	print_tree(t_tree *node, int level);
@@ -69,7 +70,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
-void	handle_heredoc(const char *delimiter);
+void	handle_heredoc(const char *delimiter, t_env *u_envp);
 
 
 

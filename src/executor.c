@@ -22,10 +22,10 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 }
 
 // 리다이렉션 설정 함수
-int setup_redirection(t_tree *node)
+int setup_redirection(t_tree *node, t_env *u_envp)
 {
 	if (node->type == NODE_HEREDOC)
-		handle_heredoc(node->children[0]->value);
+		handle_heredoc(node->children[0]->value, u_envp);
 	else if (node->type == NODE_RED)
 	{
 		if (strcmp(node->value, ">") == 0)
@@ -108,7 +108,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		{
 			if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
 			{
-				if (setup_redirection(exec_node->children[i]) != 0)
+				if (setup_redirection(exec_node->children[i], master->u_envp) != 0)
 					exit(1);
 			}
 			i++;

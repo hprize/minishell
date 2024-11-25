@@ -4,18 +4,16 @@ char	*is_envp(char *arg, t_env *env)
 {
 	t_env	*cur;
 
-	if (env == NULL)
+	if (!env || !arg)
 		return (NULL);
-	if (*arg != '$')
-		return (NULL);
-	arg++;
+
+	if (*arg == '$')
+		arg++;
 	cur = env;
 	while (cur)
 	{
 		if (ft_strcmp(cur->var->name, arg) == 0)
-		{
-			return (cur->var->content);
-		}
+			return (ft_strdup(cur->var->content));
 		cur = cur->next;
 	}
 	return (NULL);
