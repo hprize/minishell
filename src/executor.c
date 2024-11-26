@@ -96,6 +96,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	int i;
 	int j;
 	int	bulitin;
+	int	status;
 	t_tree *cmd_node;
 	char **args;
 
@@ -122,8 +123,19 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		}
 		exit(0);
 	}
-	else
-		wait(NULL);
+	wait(&status);
+	if (WIFEXITED(status))
+	{
+		int last_exit_code = WEXITSTATUS(status);
+		printf("exit code : %d\n", last_exit_code);
+	}
+	else if (WIFSIGNALED(status))
+	{
+		int last_exit_code = WEXITSTATUS(status);
+		int signal_num = WTERMSIG(status);
+		printf("ERR exit code : %d, signal : %d\n", last_exit_code, signal_num);
+	}
+	
 }
 
 

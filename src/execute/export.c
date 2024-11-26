@@ -61,7 +61,7 @@ int	print_export(t_env *head)
 	temp = sorted;
 	while (temp)
 	{
-		if (!(ft_strlen(temp->var->name) == 1 && ft_strncmp(temp->var->name, "_", 1) == 0))
+		if (temp->var->flag_export == 0)
 			printf("declare -x %s=\"%s\"\n", temp->var->name, temp->var->content);
 		temp = temp->next;
 	}
@@ -132,7 +132,7 @@ int	value_export(char **args, t_env *env)
 		}
 		else if (check_overlap(env, new) == 0)
 		{
-			add_node_back(env, new);
+			add_node_back(&env, new);
 		}
 	}
 	return (result);

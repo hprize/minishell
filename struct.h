@@ -23,6 +23,5 @@ typedef struct s_inter
 	char	*host;
 	char	*where;
 }	t_inter;
-
-
+	
 #endif

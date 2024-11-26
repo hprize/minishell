@@ -90,6 +90,7 @@ int	main(int argc, char **argv, const char **envp)
 	master->path_list = find_path(master->envp);
 
 	master->u_envp = init_env((char **)envp);
+	// print_node(master->u_envp);
 	while(1)
 	{
 		g_signal = 0;

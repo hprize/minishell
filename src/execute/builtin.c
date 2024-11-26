@@ -14,7 +14,7 @@ int	ft_env(char **args, t_env *env)
 	cur = env;
 	while (cur)
 	{
-		if (cur->var->flag_env == 1)
+		if (cur->var->flag_env == 0)
 			printf("%s=%s\n", cur->var->name, cur->var->content);
 		cur = cur->next;
 	}
