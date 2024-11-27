@@ -132,15 +132,37 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		}
 		exit(0);
 	}
-	else
-		wait(NULL);
+	
+	
 }
 
+int	replace_content(t_env *head, char *name, char *content)
+{
+	t_env	*cur;
+	char	*temp;
+
+	if (head == NULL)
+		return (0);
+	cur = head;
+	while (cur)
+	{
+		if (ft_strcmp(cur->var->name, name) == 0)
+		{
+			temp = cur->var->content;
+			cur->var->content = ft_strdup(content);
+			free(temp);
+			return (1);
+		}
+		cur = cur->next;
+	}
+	return (0);
+}
 
 void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
 	int	child_pid;
+	int	status;
 	t_tree	*execute_node;
 
 	i = 0;
@@ -166,13 +188,26 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 			close_all_pipe(pipe_count, pipe_fds);
 			execute_node = find_cmd_node(pipe_node->children[i]);
 			if (is_bulitin(execute_node->value) == 0)
-				builtin_cmd(execute_node, master);
+				exit(builtin_cmd(execute_node, master));
 			else
 				execute_command(pipe_node->children[i], master);
 
 			exit(0);
 		}
 		i++;
+		wait(&status);
+		if (WIFEXITED(status))
+		{
+			int last_exit_code = WEXITSTATUS(status);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		}
+		else if (WIFSIGNALED(status))
+		{
+			int last_exit_code = WEXITSTATUS(status);
+			int signal_num = WTERMSIG(status);
+			printf("ERR exit code : %d, signal : %d\n", last_exit_code, signal_num);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		}
 	}
 }
 
@@ -232,6 +267,7 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 void	execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*execute_node;
+	int		last_exit_code;
 
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
@@ -239,7 +275,10 @@ void	execute_tree(t_tree *root, t_envp *master)
 	{
 		execute_node = find_cmd_node(root);
 		if (is_bulitin(execute_node->value) == 0)
-			builtin_cmd(execute_node, master);
+		{
+			last_exit_code = builtin_cmd(execute_node, master);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		}
 		else
 			execute_command(root, master);
 	}

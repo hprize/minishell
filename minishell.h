@@ -57,6 +57,8 @@ typedef struct	s_envp
 	t_env	*u_envp;
 }				t_envp;
 
+char	*find_content(char *arg, t_env *env);
+
 char	**find_path(char **envp);
 int		is_cmd(char *token, t_envp *master);
 int	is_bulitin(char *cmd);

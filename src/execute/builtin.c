@@ -10,11 +10,11 @@ int	ft_env(char **args, t_env *env)
 	t_env	*cur;
 
 	if (*args != NULL)
-		exit(127);
+		return (127);
 	cur = env;
 	while (cur)
 	{
-		if (cur->var->flag == 1)
+		if (cur->var->flag_env == 0)
 			printf("%s=%s\n", cur->var->name, cur->var->content);
 		cur = cur->next;
 	}
@@ -27,11 +27,13 @@ int	ft_env(char **args, t_env *env)
 int	builtin_cmd(t_tree *node, t_envp *master)
 {
 	char	**args;
+	int		result;
 
 	args = each_args(node, master, 0);
+	result = 0;
 
 	if (ft_strncmp(node->value, "env", ft_strlen("env")) == 0)
-		ft_env(args, master->u_envp);
+		result = ft_env(args, master->u_envp);
 	else if (ft_strncmp(node->value, "exit", ft_strlen("exit")) == 0)
 		ft_exit_call();
 	else if (ft_strncmp(node->value, "pwd", ft_strlen("pwd")) == 0)
@@ -45,7 +47,7 @@ int	builtin_cmd(t_tree *node, t_envp *master)
 	else if (ft_strncmp(node->value, "echo", ft_strlen("echo")) == 0)
 		ft_echo(args, master->u_envp);
 	ft_arrfree(args);
-	return (1);
+	return (result);
 }
 
 // void execute_command(t_tree *exec_node, t_envp *master)

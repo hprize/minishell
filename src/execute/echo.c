@@ -1,24 +1,5 @@
 #include "bulitin.h"
 
-char	*is_envp(char *arg, t_env *env)
-{
-	t_env	*cur;
-
-	if (!env || !arg)
-		return (NULL);
-
-	if (*arg == '$')
-		arg++;
-	cur = env;
-	while (cur)
-	{
-		if (ft_strcmp(cur->var->name, arg) == 0)
-			return (ft_strdup(cur->var->content));
-		cur = cur->next;
-	}
-	return (NULL);
-}
-
 int	ft_echo(char **args, t_env *env)
 {
 	int	newline;
@@ -30,8 +11,13 @@ int	ft_echo(char **args, t_env *env)
 		newline = 1;
 	while (args[i])
 	{
+		if (ft_strcmp(args[i], "$?") == 0)
+		{
+			printf("tast LEC : %s\n", find_content("$?", env));
+		}
+		else
 			printf("%s", args[i]);
-			printf(" ");
+		printf(" ");
 		if (!args[i + 1])
 		{
 			if (newline == 0)
