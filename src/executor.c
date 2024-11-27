@@ -132,7 +132,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		}
 		exit(0);
 	}
-	
+	wait(NULL);
 	
 }
 
@@ -173,7 +173,7 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 			exit(0);
 		}
 		i++;
-		wait(&status);
+		// wait(&status);
 		// if (WIFEXITED(status))
 		// {
 		// 	int last_exit_code = WEXITSTATUS(status);
