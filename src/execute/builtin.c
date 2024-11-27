@@ -1,29 +1,5 @@
 #include "bulitin.h"
 
-void	ft_exit_call()
-{
-	exit(0);
-}
-
-int	ft_env(char **args, t_env *env)
-{
-	t_env	*cur;
-
-	if (*args != NULL)
-		return (127);
-	cur = env;
-	while (cur)
-	{
-		if (cur->var->flag_env == 0)
-			printf("%s=%s\n", cur->var->name, cur->var->content);
-		cur = cur->next;
-	}
-	return (0);
-}
-
-
-
-
 int	builtin_cmd(t_tree *node, t_envp *master)
 {
 	char	**args;
@@ -49,38 +25,3 @@ int	builtin_cmd(t_tree *node, t_envp *master)
 	ft_arrfree(args);
 	return (result);
 }
-
-// void execute_command(t_tree *exec_node, t_envp *master)
-// {
-//     int i = 0;
-//     if (fork() == 0) { // 자식 프로세스
-//         // 앞 리다이렉션 설정
-//         while (i < exec_node->child_count) {
-//             if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
-//                 setup_redirection(exec_node->children[i]);
-//             else if (exec_node->children[i]->type == NODE_CMD) {
-//                 // CMD와 ARG 배열 준비
-//                 t_tree *cmd_node = exec_node->children[i];
-//                 char *args[cmd_node->child_count + 2];
-//                 args[0] = return_absolute_path(cmd_node, master);
-//                 if (args[0] == NULL)
-//                     exit(EXIT_FAILURE);
-//                 int j = 0;
-//                 while (j < cmd_node->child_count) {
-//                     args[j + 1] = cmd_node->children[j]->value;
-//                     j++;
-//                 }
-//                 args[cmd_node->child_count + 1] = NULL;
-//                 // 명령 실행
-//                 execve(args[0], args, master->envp);
-//                 perror("execvp failed");
-//                 exit(1);
-//             }
-//             i++;
-//         }
-//         exit(0);
-//     }
-//     else {
-//         wait(NULL);
-//     }
-// }

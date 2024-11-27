@@ -3,15 +3,13 @@
 #include "../../struct.h"
 #include "../../parsing.h"
 #include "../../minishell.h"
+#include "../utils/utils.h"
 
-// init_env.c
-t_env	*creat_node(char *data);
-void	append_node(t_env **head, char *data);
-void	print_node(t_env *head);
-void	free_node(t_env *head);
-t_env	*init_env(char **envp);
-void	free_env(t_env *node);
-void	add_node_back(t_env **head, t_env *new);
+//env.c
+int	ft_env(char **args, t_env *env);
+
+//exit.c
+void	ft_exit_call();
 
 //export.c
 int		export(t_tree *node, char **args, t_env *env);
@@ -26,7 +24,6 @@ int	ft_pwd(void);
 int ft_cd(t_tree *node, char **args, t_env *env);
 
 // echo.c
-char	*is_envp(char *arg, t_env *env);
 int	ft_echo(char **args, t_env *env);
 
 #endif
