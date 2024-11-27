@@ -123,3 +123,10 @@ void	free_tokens(t_token *tokens) {
 		tokens = next;
 	}
 }
+
+void	free_master(t_envp *master)
+{
+	ft_arrfree(master->path_list);
+	free_node(master->u_envp);
+	free(master);
+}

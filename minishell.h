@@ -21,6 +21,8 @@
 
 # define HEREDOC_TMP ".heredoc_tmp"
 
+typedef struct	s_envp	t_envp;
+
 t_tree	*parse(t_token *tokens);
 t_token	*tokenize(const char *input);
 
@@ -32,6 +34,7 @@ t_tree	*create_tree_node(node_type type, quote_type quote_state, const char *val
 void	add_child(t_tree *parent, t_tree *child);
 void	free_tree(t_tree *node);
 void	free_tokens(t_token *tokens);
+void	free_master(t_envp *master);
 
 // parsing.c
 t_tree	*parse_pipe(t_token **current);
@@ -76,6 +79,9 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 void	handle_heredoc(const char *delimiter, t_env *u_envp);
 
 
+// interface.c
+static char	*get_host_name(void);
+char	*interface(t_env *shell_envp);
 
 
 //main_utils

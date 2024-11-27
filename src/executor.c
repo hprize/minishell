@@ -98,6 +98,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	int i;
 	int j;
 	int	bulitin;
+	int	status;
 	t_tree *cmd_node;
 	char **args;
 
@@ -132,15 +133,20 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		}
 		exit(0);
 	}
-	wait(NULL);
-	
+	wait(&status);
+	if (WIFEXITED(status))
+	{
+		int last_exit_code = WEXITSTATUS(status);
+		printf("test111 LEC : %d\n", last_exit_code);
+		replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+	}
+	// wait(NULL);
 }
 
 void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
 	int	child_pid;
-	int	status;
 	t_tree	*execute_node;
 
 	i = 0;
@@ -152,40 +158,45 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 		child_pid = fork();
 		if (child_pid == 0)
 		{
-			if (i > 0)
+			if (i == 0)
+			{
+				dup2(pipe_fds[i][1], STDOUT_FILENO);
+				close(pipe_fds[i][0]);
+				close(pipe_fds[i][1]);
+			}
+			else if (i > 0 && i < pipe_count - 1)
+			{
+				dup2(pipe_fds[i - 1][0], STDIN_FILENO);
+				close(pipe_fds[i - 1][0]);
+				close(pipe_fds[i][0]);
+				dup2(pipe_fds[i][1], STDOUT_FILENO);
+				close(pipe_fds[i][1]);
+			}
+			else if (i == pipe_count - 1)
 			{
 				dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 				close(pipe_fds[i - 1][0]);
 			}
-			if (i < pipe_count - 1)
-			{
-				dup2(pipe_fds[i][1], STDOUT_FILENO);
-				close(pipe_fds[i][1]);
-			}
 
-			close_all_pipe(pipe_count, pipe_fds);
+			// close_all_pipe(pipe_count, pipe_fds);
 			execute_node = find_cmd_node(pipe_node->children[i]);
 			if (is_bulitin(execute_node->value) == 0)
-				exit(builtin_cmd(execute_node, master));
+				builtin_cmd(execute_node, master);
 			else
 				execute_command(pipe_node->children[i], master);
 
 			exit(0);
 		}
+		if (i == 0)
+			close(pipe_fds[i][1]);
+		else if (i > 0 && i < pipe_count - 1)
+		{
+			close(pipe_fds[i - 1][0]);
+			close(pipe_fds[i][1]);
+		}
+		else if (i == pipe_count - 1)
+			close(pipe_fds[i - 1][0]);
 		i++;
-		// wait(&status);
-		// if (WIFEXITED(status))
-		// {
-		// 	int last_exit_code = WEXITSTATUS(status);
-		// 	replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-		// }
-		// else if (WIFSIGNALED(status))
-		// {
-		// 	int last_exit_code = WEXITSTATUS(status);
-		// 	int signal_num = WTERMSIG(status);
-		// 	printf("ERR exit code : %d, signal : %d\n", last_exit_code, signal_num);
-		// 	replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-		// }
 	}
 }
 
@@ -208,6 +219,7 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	int pipe_count;
 	int **pipe_fds;
 	int i;
+	int	status;
 
 	pipe_count = pipe_node->child_count;
 	pipe_fds = malloc(sizeof(int*) * (pipe_count - 1));
@@ -232,11 +244,19 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	}
 
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
-	close_all_pipe(pipe_count, pipe_fds);
+	//close_all_pipe(pipe_count, pipe_fds);
 	i = 0;
 	while (i < pipe_count)
 	{
-		wait(NULL);
+		// wait(NULL);
+		wait(&status);
+		if (WIFEXITED(status))
+		{
+			int last_exit_code = WEXITSTATUS(status);
+			printf("test222 LEC : %d\n", last_exit_code);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+			// exit(last_exit_code);
+		}
 		i++;
 	}
 }
@@ -245,7 +265,6 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 void	execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*execute_node;
-	int		last_exit_code;
 
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
@@ -253,13 +272,9 @@ void	execute_tree(t_tree *root, t_envp *master)
 	{
 		execute_node = find_cmd_node(root);
 		if (is_bulitin(execute_node->value) == 0)
-		{
-			last_exit_code = builtin_cmd(execute_node, master);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-		}
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(builtin_cmd(execute_node, master)));
 		else
 			execute_command(root, master);
 	}
-
 
 }
