@@ -17,6 +17,7 @@
 # include "parsing.h"
 # include "struct.h"
 # include "src/execute/bulitin.h"
+# include "src/utils/utils.h"
 
 # define HEREDOC_TMP ".heredoc_tmp"
 
@@ -57,11 +58,10 @@ typedef struct	s_envp
 	t_env	*u_envp;
 }				t_envp;
 
-char	*find_content(char *arg, t_env *env);
 
 char	**find_path(char **envp);
 int		is_cmd(char *token, t_envp *master);
-int	is_bulitin(char *cmd);
+int		is_bulitin(char *cmd);
 int		check_cmd_path(t_token *head, t_envp *master);
 char	*return_absolute_path(t_tree *node, t_envp *master);
 
@@ -79,7 +79,6 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp);
 
 
 //main_utils
-t_env	*init_env(char **envp);
 int	fd_print_exit(char *msg, int fd);
 
 //builtin functions

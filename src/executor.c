@@ -136,28 +136,6 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	
 }
 
-int	replace_content(t_env *head, char *name, char *content)
-{
-	t_env	*cur;
-	char	*temp;
-
-	if (head == NULL)
-		return (0);
-	cur = head;
-	while (cur)
-	{
-		if (ft_strcmp(cur->var->name, name) == 0)
-		{
-			temp = cur->var->content;
-			cur->var->content = ft_strdup(content);
-			free(temp);
-			return (1);
-		}
-		cur = cur->next;
-	}
-	return (0);
-}
-
 void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
@@ -196,18 +174,18 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 		}
 		i++;
 		wait(&status);
-		if (WIFEXITED(status))
-		{
-			int last_exit_code = WEXITSTATUS(status);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-		}
-		else if (WIFSIGNALED(status))
-		{
-			int last_exit_code = WEXITSTATUS(status);
-			int signal_num = WTERMSIG(status);
-			printf("ERR exit code : %d, signal : %d\n", last_exit_code, signal_num);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-		}
+		// if (WIFEXITED(status))
+		// {
+		// 	int last_exit_code = WEXITSTATUS(status);
+		// 	replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		// }
+		// else if (WIFSIGNALED(status))
+		// {
+		// 	int last_exit_code = WEXITSTATUS(status);
+		// 	int signal_num = WTERMSIG(status);
+		// 	printf("ERR exit code : %d, signal : %d\n", last_exit_code, signal_num);
+		// 	replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		// }
 	}
 }
 

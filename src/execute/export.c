@@ -1,21 +1,5 @@
 #include "bulitin.h"
 
-t_env*	new_node(t_var *var)
-{
-	t_env	*new;
-
-	new = malloc(sizeof(t_env));
-	new->var = malloc(sizeof(t_var));
-	if (new == NULL || new->var == NULL)
-		exit(1);
-	new->var->name = ft_strdup(var->name);
-	new->var->content = ft_strdup(var->content);
-	// new->var->flag_env = var->flag_env;
-	// new->var->flag_export = var->flag_export;
-	new->next = NULL;
-	return (new);
-}
-
 void	insert_sorted(t_env **sorted_head, t_env *new_node)
 {
 	t_env	*cur;

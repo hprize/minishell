@@ -27,23 +27,6 @@ static char	*get_host_name(void)
 	return (host);
 }
 
-char	*find_content(char *arg, t_env *env)
-{
-	t_env	*cur;
-
-	if (env == NULL)
-		return (NULL);
-	cur = env;
-	while (cur)
-	{
-		if (ft_strcmp(cur->var->name, arg) == 0)
-		{
-			return (cur->var->content);
-		}
-		cur = cur->next;
-	}
-	return (NULL);
-}
 
 char	*interface(t_env *shell_envp)
 {
@@ -52,11 +35,6 @@ char	*interface(t_env *shell_envp)
 	char	*host;
 
 	result = ft_strjoin(find_content("USER", shell_envp), "@");
-	// temp = result;
-	// host = get_host_name();
-	// result = ft_strjoin(temp, host);
-	// free(temp);
-	// free(host);
 	result = ft_strjoin_free(result, get_host_name());
 	result = ft_strjoin_free(result, ft_strdup(":"));
 	temp = ft_strjoin(find_content("PWD", shell_envp), "$ ");

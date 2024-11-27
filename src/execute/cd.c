@@ -1,24 +1,5 @@
 #include "bulitin.h"
 
-char	*find_envp_content(t_env *envp, char *name)
-{
-	t_env	*cur;
-	char	*temp;
-
-	if (envp == NULL)
-		return (NULL);
-	cur = envp;
-	while (cur)
-	{
-		if (ft_strcmp(cur->var->name, name) == 0)
-		{
-			return (cur->var->content);
-		}
-		cur = cur->next;
-	}
-	return (NULL);
-}
-
 void	change_env(t_env *envp, char *name, char *content)
 {
 	t_env	*cur;
@@ -48,12 +29,12 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 
 	if (node->child_count != 1)
 		fd_print_exit("too many argument\n", 2);
-	old = find_envp_content(env, "PWD");
+	old = find_content("PWD", env);
 	way = args[0];
 	if (ft_strcmp(args[0], "-") == 0)
-		way = find_envp_content(env, "OLDPWD");
+		way = find_content("OLDPWD", env);
 	else if (ft_strcmp(args[0], "~") == 0)
-		way = find_envp_content(env, "HOME");
+		way = find_content("HOME", env);
 	printf("test cd %s\n", way);
 	if (chdir(way) == 0)
 	{

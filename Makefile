@@ -11,7 +11,8 @@ HEADER = minishell.h
 # SRCS = $(SRCDIR)/main.c $(SRCDIR)/envp_set.c
 # 일단 와일드 카드 써둠.
 
-SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/execute/*.c)
+SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/execute/*.c) \
+$(wildcard $(SRCDIR)/utils/*.c)
 OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 GNLSRCS = $(wildcard $(GNLDIR)/*.c)
 GNLOBJS = $(GNLSRCS:$(GNLDIR)/%.c=$(OBJDIR)/%.o)
@@ -22,7 +23,7 @@ GNLOBJS = $(GNLSRCS:$(GNLDIR)/%.c=$(OBJDIR)/%.o)
 all : $(OBJDIR) $(NAME)
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR) $(OBJDIR)/execute
+	mkdir -p $(OBJDIR) $(OBJDIR)/execute $(OBJDIR)/utils
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
