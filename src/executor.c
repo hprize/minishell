@@ -119,10 +119,11 @@ void execute_command(t_tree *exec_node, t_envp *master)
 			bulitin = is_bulitin(cmd_node->value);
 			args = each_args(cmd_node, master, bulitin);
 
+			FILE* tty_fd = fopen("/dev/tty", "w");
 			int debug_i = 0;
 			while (args[debug_i])
 			{
-				printf("args[%d]: %s\n", debug_i, args[debug_i]);
+				fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
 				debug_i++;
 			}
 			execve(args[0], args, master->envp);
@@ -220,7 +221,8 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 	close_all_pipe(pipe_count, pipe_fds);
 	i = 0;
-	while (i < pipe_count) {
+	while (i < pipe_count)
+	{
 		wait(NULL);
 		i++;
 	}

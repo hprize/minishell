@@ -42,6 +42,7 @@ t_tree *parse_cmd(t_token **current);
 // replace_env.c
 void	replace_env(t_token *tokens, t_env *u_envp);
 void	process_env_replacement(char **value, t_env *u_envp);
+int	is_valid_env_char(char c, int is_first);
 
 // testing.c
 void	print_tree(t_tree *node, int level);

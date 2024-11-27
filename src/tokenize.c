@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	process_op(t_token **head, t_token **current, const char **input_p)
+void	process_op(t_token **head, t_token **current, const char **input_p, int *cmd_set)
 {
 	int 		len;
 	char		*op;
@@ -13,7 +13,10 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 		len = 2;
 	op = strndup(*input_p, len);
 	if (*op == '|' && len == 1)
+	{
 		type = TOKEN_PIPE;
+		*cmd_set = 0;
+	}
 	else if (**input_p == '<' && *(*input_p + 1) == '<')
 		type = TOKEN_HEREDOC;
 	else
@@ -153,7 +156,7 @@ t_token	*tokenize(const char *input)
 			break;
 		if (*input_p == '>' || *input_p == '<' || *input_p == '|')
 		{
-			process_op(&head, &current, &input_p);
+			process_op(&head, &current, &input_p, &cmd_set);
 			prev_space = 1;
 			continue;
 		}
