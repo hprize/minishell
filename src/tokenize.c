@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	process_op(t_token **head, t_token **current, const char **input_p)
+void	process_op(t_token **head, t_token **current, const char **input_p, int *cmd_set)
 {
 	int 		len;
 	char		*op;
@@ -13,7 +13,10 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 		len = 2;
 	op = strndup(*input_p, len);
 	if (*op == '|' && len == 1)
+	{
 		type = TOKEN_PIPE;
+		*cmd_set = 0;
+	}
 	else if (**input_p == '<' && *(*input_p + 1) == '<')
 		type = TOKEN_HEREDOC;
 	else
@@ -36,7 +39,7 @@ void	process_op(t_token **head, t_token **current, const char **input_p)
 }
 
 // quote 처리 함수
-void	process_quote(t_token **head, t_token **current, const char **input_p)
+void	process_quote(t_token **head, t_token **current, const char **input_p, int prev_space, int *cmd_set)
 {
 	char 		quote;
 	const char	*start;
@@ -49,9 +52,9 @@ void	process_quote(t_token **head, t_token **current, const char **input_p)
 	quote = **input_p;
 	if (quote == '\'')
 		quote_state = QUOTE_SINGLE;
-	else if (quote == '"')
+	else
 		quote_state = QUOTE_DOUBLE;
-	start = *input_p + 1; // 시작 quote 건너뛰기
+	start = *input_p + 1; // 시작 따옴표 건너뛰기
 	(*input_p)++;
 	while (**input_p && **input_p != quote)
 		(*input_p)++;
@@ -64,26 +67,38 @@ void	process_quote(t_token **head, t_token **current, const char **input_p)
 	quoted = ft_strndup(start, len);
 	(*input_p)++;
 
-	if (*head == NULL || (*current && (*current)->type == TOKEN_PIPE))
-		type = TOKEN_CMD;
-	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
+	if (!prev_space && *current && 
+		((*current)->type == TOKEN_CMD || (*current)->type == TOKEN_ARG || (*current)->type == TOKEN_FILENAME))
+	{
+		merge_token(current, quoted, quote_state);
+		free(quoted);
+		return;
+	}
+
+	if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
+	else if (*cmd_set == 0)
+	{
+		type = TOKEN_CMD;
+		*cmd_set = 1;
+	}
 	else
 		type = TOKEN_ARG;
+
 	new_token = create_token(type, quote_state, quoted);
 	free(quoted);
 	add_token(head, current, new_token);
 }
 
 // 이외에 다른 단어 처리 함수
-void	process_word(t_token **head, t_token **current, const char **input_p)
+void	process_word(t_token **head, t_token **current, const char **input_p, int prev_space, int *cmd_set)
 {
 	const char	*start;
 	int			len;
 	char		*word;
 	token_type	type;
 	t_token		*new_token;
-	
+
 	start = *input_p;
 	while (**input_p && !ft_isspace(**input_p) && **input_p != '>' && **input_p != '<' && **input_p != '|' \
 		&& **input_p != '"' && **input_p != '\'')
@@ -91,11 +106,21 @@ void	process_word(t_token **head, t_token **current, const char **input_p)
 	len = *input_p - start;
 	word = ft_strndup(start, len);
 
-	if (*head == NULL || 
-		(*current && ((*current)->type == TOKEN_PIPE || (*current)->type == TOKEN_FILENAME)))
-		type = TOKEN_CMD;
-	else if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
+	if (!prev_space && *current && 
+		((*current)->type == TOKEN_CMD || (*current)->type == TOKEN_ARG || (*current)->type == TOKEN_FILENAME))
+	{
+		merge_token(current, word, QUOTE_NONE);
+		free(word);
+		return;
+	}
+
+	if (*current && ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC))
 		type = TOKEN_FILENAME;
+	else if (*cmd_set == 0)
+	{
+		type = TOKEN_CMD;
+		*cmd_set = 1;
+	}
 	else
 		type = TOKEN_ARG;
 
@@ -112,27 +137,37 @@ t_token	*tokenize(const char *input)
 	t_token		*current;
 	t_token		*end_token;
 	const char	*input_p;
+	int			prev_space;
+	int			cmd_set;
 
 	head = NULL;
 	current = NULL;
 	input_p = input;
+	prev_space = 1; // 처음에는 스페이스로
+	cmd_set = 0;
 	while (*input_p)
 	{
 		while (ft_isspace(*input_p))
+		{
 			input_p++;
+			prev_space = 1;
+		}
 		if (*input_p == '\0')
 			break;
 		if (*input_p == '>' || *input_p == '<' || *input_p == '|')
 		{
-			process_op(&head, &current, &input_p);
+			process_op(&head, &current, &input_p, &cmd_set);
+			prev_space = 1;
 			continue;
 		}
 		if (*input_p == '"' || *input_p == '\'')
 		{
-			process_quote(&head, &current, &input_p);
+			process_quote(&head, &current, &input_p, prev_space, &cmd_set);
+			prev_space = 0;
 			continue;
 		}
-		process_word(&head, &current, &input_p);
+		process_word(&head, &current, &input_p, prev_space, &cmd_set);
+		prev_space = 0;
 	}
 	end_token = create_token(TOKEN_END, QUOTE_NONE, NULL);
 	if (current)

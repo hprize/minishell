@@ -22,10 +22,10 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 }
 
 // 리다이렉션 설정 함수
-int setup_redirection(t_tree *node)
+int setup_redirection(t_tree *node, t_env *u_envp)
 {
 	if (node->type == NODE_HEREDOC)
-		handle_heredoc(node->children[0]->value);
+		handle_heredoc(node->children[0]->value, u_envp);
 	else if (node->type == NODE_RED)
 	{
 		if (strcmp(node->value, ">") == 0)
@@ -64,13 +64,15 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 	}
 	i = cnt;
 	j = 0;
-	while (i < node->child_count)
+	while (j < node->child_count)
 	{
 		args[i] = ft_strdup(node->children[j]->value);
+		if (args[i] == NULL)
+			exit(EXIT_FAILURE);
 		i++;
 		j++;
 	}
-	args[node->child_count + cnt] = NULL;
+	args[i] = NULL;
 	return (args);
 }
 
@@ -106,7 +108,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		{
 			if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
 			{
-				if (setup_redirection(exec_node->children[i]) != 0)
+				if (setup_redirection(exec_node->children[i], master->u_envp) != 0)
 					exit(1);
 			}
 			i++;
@@ -116,6 +118,14 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		{
 			bulitin = is_bulitin(cmd_node->value);
 			args = each_args(cmd_node, master, bulitin);
+
+			FILE* tty_fd = fopen("/dev/tty", "w");
+			int debug_i = 0;
+			while (args[debug_i])
+			{
+				fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
+				debug_i++;
+			}
 			execve(args[0], args, master->envp);
 			perror("execve failed");
 			exit(1);
@@ -246,7 +256,8 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 	close_all_pipe(pipe_count, pipe_fds);
 	i = 0;
-	while (i < pipe_count) {
+	while (i < pipe_count)
+	{
 		wait(NULL);
 		i++;
 	}

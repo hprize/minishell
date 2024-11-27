@@ -20,7 +20,7 @@ void	free_buf(char *buf)
 		free(buf);
 }
 
-void handle_heredoc(const char *delimiter)
+void	handle_heredoc(const char *delimiter, t_env *u_envp)
 {
 	int		file;
 	char	*buf;
@@ -48,6 +48,7 @@ void handle_heredoc(const char *delimiter)
 			free_buf(buf);
 			break;
 		}
+		process_env_replacement(&buf, u_envp);
 		write(file, buf, ft_strlen(buf));
 		free_buf(buf);
 	}

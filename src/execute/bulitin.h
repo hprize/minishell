@@ -26,6 +26,7 @@ int	ft_pwd(void);
 int ft_cd(t_tree *node, char **args, t_env *env);
 
 // echo.c
+char	*is_envp(char *arg, t_env *env);
 int	ft_echo(char **args, t_env *env);
 
 #endif

@@ -101,6 +101,7 @@ int	main(int argc, char **argv, const char **envp)
 		{
 			add_history(input);
 			tokens = tokenize(input);
+			replace_env(tokens, master->u_envp);
 			print_tokens(tokens);
 			if (check_cmd_path(tokens, master) == -1)
 			{

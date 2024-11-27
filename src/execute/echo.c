@@ -1,7 +1,5 @@
 #include "bulitin.h"
 
-
-
 int	ft_echo(char **args, t_env *env)
 {
 	int	newline;

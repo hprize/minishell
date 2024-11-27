@@ -29,16 +29,24 @@ t_tree	*parse_exec(t_token **current)
 {
 	t_tree	*exec_node;
 	t_tree	*cmd_node;
+	t_tree	*arg_node;
 
 	exec_node = create_tree_node(NODE_EXEC, QUOTE_NONE, "EXEC");
 	parse_reds_opt(exec_node, current);
-
 	cmd_node = parse_cmd(current);
 	if (!cmd_node)
 		return (NULL);
 	add_child(exec_node, cmd_node);
-
 	parse_reds_opt(exec_node, current);
+
+	// 리다이렉션 이후 ARG 처리
+	while (*current && (*current)->type == TOKEN_ARG)
+	{
+		arg_node = create_tree_node(NODE_ARG, (*current)->quote_state, (*current)->value);
+		add_child(cmd_node, arg_node);
+		*current = (*current)->next;
+	}
+
 	return (exec_node);
 }
 

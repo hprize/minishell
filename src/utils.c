@@ -37,6 +37,18 @@ t_token	*create_token(token_type type, quote_type quote_state, const char *value
 	return (token);
 }
 
+void	merge_token(t_token **current, char *new_value, quote_type new_quote_state)
+{
+	char	*combined;
+
+	combined = ft_strjoin((*current)->value, new_value);
+	free((*current)->value);
+	(*current)->value = combined;
+	if ((*current)->quote_state == QUOTE_NONE)
+		(*current)->quote_state = new_quote_state;
+	else if ((*current)->quote_state != new_quote_state)
+		(*current)->quote_state = QUOTE_NONE;
+}
 // ----- 파싱 관련 util 함수 -----
 
 // 트리 노드 생성 함수
@@ -64,10 +76,15 @@ t_tree	*create_tree_node(node_type type, quote_type quote_state, const char *val
 // 자식 노드 추가 함수
 void	add_child(t_tree *parent, t_tree *child)
 {
-	parent->children = ft_realloc(parent->children, sizeof(t_tree*) * (parent->child_count + 1));
+	size_t	old_size;
+	size_t	new_size;
+
+	old_size = parent->child_count * sizeof(t_tree *);
+	new_size = (parent->child_count + 1) * sizeof(t_tree *);
+	parent->children = ft_realloc(parent->children, old_size, new_size);
 	if (!parent->children)
 	{
-		printf("메모리 할당 실패(자식 노드 추가)\n");
+		printf("realloc failed\n");
 		exit(EXIT_FAILURE);
 	}
 	parent->children[parent->child_count++] = child;
@@ -88,7 +105,9 @@ void	free_tree(t_tree *node)
 		i++;
 	}
 	free(node->children);
+	node->children = NULL;
 	free(node->value);
+	node->value = NULL;
 	free(node);
 }
 

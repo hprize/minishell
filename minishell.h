@@ -26,6 +26,7 @@ t_token	*tokenize(const char *input);
 // utils.c
 void	add_token(t_token **head, t_token **current, t_token *new_token);
 t_token	*create_token(token_type type, quote_type quote_state, const char *value);
+void	merge_token(t_token **current, char *new_value, quote_type new_quote_state);
 t_tree	*create_tree_node(node_type type, quote_type quote_state, const char *value);
 void	add_child(t_tree *parent, t_tree *child);
 void	free_tree(t_tree *node);
@@ -37,6 +38,11 @@ t_tree	*parse_exec(t_token **current);
 void	parse_reds_opt(t_tree *exec_node, t_token **current);
 t_tree *parse_reds(t_token **current);
 t_tree *parse_cmd(t_token **current);
+
+// replace_env.c
+void	replace_env(t_token *tokens, t_env *u_envp);
+void	process_env_replacement(char **value, t_env *u_envp);
+int	is_valid_env_char(char c, int is_first);
 
 // testing.c
 void	print_tree(t_tree *node, int level);
@@ -67,7 +73,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
-void	handle_heredoc(const char *delimiter);
+void	handle_heredoc(const char *delimiter, t_env *u_envp);
 
 
 
