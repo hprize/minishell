@@ -13,8 +13,13 @@ int	ft_echo(char **args, t_env *env)
 		newline = 1;
 	while (args[i])
 	{
+		if (ft_strcmp(args[i], "$?") == 0)
+		{
+			printf("tast LEC : %s\n", find_content("$?", env));
+		}
+		else
 			printf("%s", args[i]);
-			printf(" ");
+		printf(" ");
 		if (!args[i + 1])
 		{
 			if (newline == 0)
