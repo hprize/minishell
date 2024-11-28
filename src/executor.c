@@ -96,67 +96,56 @@ t_tree	*find_cmd_node(t_tree *node)
 void execute_command(t_tree *exec_node, t_envp *master)
 {
 	int i;
-	int j;
 	int	bulitin;
-	int	status;
 	t_tree *cmd_node;
 	char **args;
 
 	i = 0;
-	if (fork() == 0)
+	while (i < exec_node->child_count)
 	{
-		while (i < exec_node->child_count)
+		if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
 		{
-			if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
-			{
-				if (setup_redirection(exec_node->children[i], master->u_envp) != 0)
-					exit(1);
-			}
-			i++;
+			if (setup_redirection(exec_node->children[i], master->u_envp) != 0)
+				exit(1);
 		}
-		cmd_node = find_cmd_node(exec_node);
-		if (cmd_node != NULL)
-		{
-			bulitin = is_bulitin(cmd_node->value);
-			args = each_args(cmd_node, master, bulitin);
+		i++;
+	}
+	cmd_node = find_cmd_node(exec_node);
+	if (cmd_node != NULL)
+	{
+		bulitin = is_bulitin(cmd_node->value);
+		args = each_args(cmd_node, master, bulitin);
 
-			FILE* tty_fd = fopen("/dev/tty", "w");
-			int debug_i = 0;
-			while (args[debug_i])
-			{
-				fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
-				debug_i++;
-			}
-			execve(args[0], args, master->envp);
-			perror("execve failed");
-			exit(1);
+		FILE* tty_fd = fopen("/dev/tty", "w");
+		int debug_i = 0;
+		while (args[debug_i])
+		{
+			fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
+			debug_i++;
 		}
-		exit(0);
+		execve(args[0], args, master->envp);
+		perror("execve failed");
+		exit(1);
 	}
-	wait(&status);
-	if (WIFEXITED(status))
-	{
-		int last_exit_code = WEXITSTATUS(status);
-		printf("test111 LEC : %d\n", last_exit_code);
-		replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-	}
-	// wait(NULL);
 }
 
 void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
-	int	child_pid;
+	int	*child_pid;
 	t_tree	*execute_node;
+	int	status;
+	int	les;
 
 	i = 0;
+	child_pid = malloc(sizeof(int) * pipe_count);
 	while (i < pipe_count)
 	{
 		if (i < pipe_count - 1)
 			pipe(pipe_fds[i]);
 
-		child_pid = fork();
-		if (child_pid == 0)
+		child_pid[i] = fork();
+		if (child_pid[i] == 0)
 		{
 			if (i == 0)
 			{
@@ -181,11 +170,12 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 			// close_all_pipe(pipe_count, pipe_fds);
 			execute_node = find_cmd_node(pipe_node->children[i]);
 			if (is_bulitin(execute_node->value) == 0)
-				builtin_cmd(execute_node, master);
+			{
+				les = builtin_cmd(execute_node, master);
+				exit(les);
+			}
 			else
 				execute_command(pipe_node->children[i], master);
-
-			exit(0);
 		}
 		if (i == 0)
 			close(pipe_fds[i][1]);
@@ -196,6 +186,18 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 		}
 		else if (i == pipe_count - 1)
 			close(pipe_fds[i - 1][0]);
+		i++;
+	}
+	i = 0;
+	while (i < pipe_count)
+	{
+		waitpid(child_pid[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			int last_exit_code = WEXITSTATUS(status);
+			// printf("test%d LEC : %d\n", i, last_exit_code);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+		}
 		i++;
 	}
 }
@@ -219,7 +221,6 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	int pipe_count;
 	int **pipe_fds;
 	int i;
-	int	status;
 
 	pipe_count = pipe_node->child_count;
 	pipe_fds = malloc(sizeof(int*) * (pipe_count - 1));
@@ -244,27 +245,14 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	}
 
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
-	//close_all_pipe(pipe_count, pipe_fds);
-	i = 0;
-	while (i < pipe_count)
-	{
-		// wait(NULL);
-		wait(&status);
-		if (WIFEXITED(status))
-		{
-			int last_exit_code = WEXITSTATUS(status);
-			printf("test222 LEC : %d\n", last_exit_code);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
-			// exit(last_exit_code);
-		}
-		i++;
-	}
 }
 
 // 메인 명령어 실행 함수
 void	execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*execute_node;
+	int	status;
+	int les;
 
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
@@ -272,9 +260,22 @@ void	execute_tree(t_tree *root, t_envp *master)
 	{
 		execute_node = find_cmd_node(root);
 		if (is_bulitin(execute_node->value) == 0)
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(builtin_cmd(execute_node, master)));
+		{
+			les = builtin_cmd(execute_node, master);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(les));
+		}
 		else
-			execute_command(root, master);
+		{
+			if (fork() == 0)
+				execute_command(root, master);
+			wait(&status);
+			if (WIFEXITED(status))
+			{
+				int last_exit_code = WEXITSTATUS(status);
+				// printf("test111 LEC : %d\n", last_exit_code);
+				replace_content(master->u_envp, "LAST_EXIT_STATUS", ft_itoa(last_exit_code));
+			}
+		}
 	}
 
 }
