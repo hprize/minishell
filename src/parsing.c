@@ -34,15 +34,14 @@ t_tree	*parse_exec(t_token **current)
 	exec_node = create_tree_node(NODE_EXEC, "EXEC");
 	parse_reds_opt(exec_node, current);
 	cmd_node = parse_cmd(current);
-	if (!cmd_node)
-		return (NULL);
-	add_child(exec_node, cmd_node);
+	if (cmd_node)
+		add_child(exec_node, cmd_node);
 	parse_reds_opt(exec_node, current);
 
 	while (*current && (*current)->type == TOKEN_ARG)
 	{
 		arg_node = create_tree_node(NODE_ARG, (*current)->value);
-		add_child(cmd_node, arg_node);
+		add_child(cmd_node ? cmd_node : exec_node, arg_node);
 		*current = (*current)->next;
 	}
 

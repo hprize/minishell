@@ -248,18 +248,57 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 }
 
-// 메인 명령어 실행 함수
-void	execute_tree(t_tree *root, t_envp *master)
+void restore_stdio(int saved_stdin, int saved_stdout)
+{
+	if (dup2(saved_stdin, STDIN_FILENO) < 0)
+		perror("Failed to restore stdin");
+	close(saved_stdin);
+
+	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+		perror("Failed to restore stdout");
+	close(saved_stdout);
+}
+
+
+void execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*execute_node;
 	int	status;
 	char	*les;
+	int	i;
+
+	int saved_stdin = dup(STDIN_FILENO);
+	int saved_stdout = dup(STDOUT_FILENO);
+	if (saved_stdin < 0 || saved_stdout < 0)
+	{
+		perror("Failed to save stdio");
+		exit(1);
+	}
 
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
 	{
 		execute_node = find_cmd_node(root);
+		if (execute_node == NULL)
+		{
+			i = 0;
+			while (i < root->child_count)
+			{
+				if (root->children[i]->type == NODE_RED || root->children[i]->type == NODE_HEREDOC)
+				{
+					if (setup_redirection(root->children[i], master->u_envp) < 0)
+					{
+						perror("minishell: failed to set redirection");
+						restore_stdio(saved_stdin, saved_stdout);
+						exit(1);
+					}
+				}
+				i++;
+			}
+			restore_stdio(saved_stdin, saved_stdout);
+			return;
+		}
 		if (is_bulitin(execute_node->value) == 0)
 		{
 			les = ft_itoa(builtin_cmd(execute_node, master));
@@ -274,11 +313,10 @@ void	execute_tree(t_tree *root, t_envp *master)
 			if (WIFEXITED(status))
 			{
 				les = ft_itoa(WEXITSTATUS(status));
-				// printf("test111 LEC : %d\n", last_exit_code);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
 			}
 		}
 	}
-
+	restore_stdio(saved_stdin, saved_stdout);
 }

@@ -1,6 +1,13 @@
 #ifndef PARSE_INPUT_H
 # define PARSE_INPUT_H
 
+typedef struct	s_token_context
+{
+	const char	*input_p;
+	int			prev_space;
+	int			cmd_set;
+}	t_token_context;
+
 typedef enum
 {
 	TOKEN_CMD,
