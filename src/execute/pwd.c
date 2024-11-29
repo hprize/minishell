@@ -8,8 +8,8 @@ int	ft_pwd(void)
 		printf("%s\n", cwd);
 	else
 	{
-		perror("getcwd failed\n");
-		return (1);
+		strerror(errno);
+		return (EXIT_FAILURE);
 	}
 	return (0);
 }

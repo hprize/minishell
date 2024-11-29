@@ -7,8 +7,8 @@ static char	*get_host_name(void)
 	char	*host;
 
 	// vscode 디버깅용 파일.
-	fd = open("/etc/hostname", O_RDONLY);
-	// fd = open("for_test_src/test_hostname", O_RDONLY);
+	// fd = open("/etc/hostname", O_RDONLY);
+	fd = open("for_test_src/test_hostname", O_RDONLY);
 	ft_bzero(name_leng, 256);
 	if (fd < 0)
 	{

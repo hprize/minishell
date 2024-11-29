@@ -13,7 +13,7 @@ int	ft_echo(char **args, t_env *env)
 	{
 		if (ft_strcmp(args[i], "$?") == 0)
 		{
-			printf("tast LEC : %s\n", find_content("$?", env));
+			printf("tast LEC : %s\n", find_content("LAST_EXIT_STATUS", env));
 		}
 		else
 			printf("%s", args[i]);

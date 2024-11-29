@@ -9,7 +9,7 @@
 int	ft_env(char **args, t_env *env);
 
 //exit.c
-void	ft_exit_call();
+void	ft_exit_call(int count, char **args, t_env *envp);
 
 //export.c
 int		export(t_tree *node, char **args, t_env *env);

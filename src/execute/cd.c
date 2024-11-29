@@ -28,24 +28,30 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 	char	pwd[1024];
 
 	if (node->child_count != 1)
-		fd_print_exit("too many argument\n", 2);
+	{
+		perror("too many argument\n");
+		return (1);
+	}
 	old = find_content("PWD", env);
 	way = args[0];
 	if (ft_strcmp(args[0], "-") == 0)
 		way = find_content("OLDPWD", env);
 	else if (ft_strcmp(args[0], "~") == 0)
 		way = find_content("HOME", env);
-	printf("test cd %s\n", way);
+	// printf("test cd %s\n", way);
 	if (chdir(way) == 0)
 	{
-		printf("cd success\n");
+		// printf("cd success\n");
 		if (getcwd(pwd, sizeof(pwd)) == NULL)
 			exit(1);
 		change_env(env, "OLDPWD", old);
 		change_env(env, "PWD", pwd);
 	}
 	else
-		perror("chdir failed");
+	{
+		strerror(errno);
+		return (1);
+	}
 
 	return (0);
 }
