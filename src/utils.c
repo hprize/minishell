@@ -127,6 +127,7 @@ void	free_tokens(t_token *tokens) {
 void	free_master(t_envp *master)
 {
 	ft_arrfree(master->path_list);
+	ft_arrfree(master->envp);
 	free_node(master->u_envp);
 	free(master);
 }
