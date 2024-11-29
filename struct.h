@@ -23,5 +23,12 @@ typedef struct s_inter
 	char	*host;
 	char	*where;
 }	t_inter;
-	
+
+typedef struct	s_envp
+{
+	char	**envp;
+	char	**path_list;
+	t_env	*u_envp;
+}				t_envp;
+
 #endif

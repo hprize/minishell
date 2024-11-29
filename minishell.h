@@ -54,12 +54,6 @@ void	print_tree_linear(t_tree *node);
 void	print_tokens(t_token *head);
 
 // check_path.c
-typedef struct	s_envp
-{
-	char	**envp;
-	char	**path_list;
-	t_env	*u_envp;
-}				t_envp;
 
 
 char	**find_path(char **envp);

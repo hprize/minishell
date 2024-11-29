@@ -1,8 +1,8 @@
 #ifndef UTILS_H
 # define UTILS_H
+#include "../../minishell.h"
 #include "../../struct.h"
 #include "../../parsing.h"
-#include "../../minishell.h"
 
 //init_env.c
 t_env	*create_t_env(void);
