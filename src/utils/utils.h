@@ -24,4 +24,9 @@ int		replace_content(t_env *head, char *name, char *content);
 char	*find_content(char *arg, t_env *env);
 char	*is_envp(char *arg, t_env *env);
 
+// set_shlvl.c
+char	**copy_envp(char **envp);
+int	find_shlvl(char **envp);
+void	set_master(t_envp *master);
+
 #endif

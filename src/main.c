@@ -2,13 +2,12 @@
 
 int	g_signal;
 
+
 int	main(int argc, char **argv, const char **envp)
 {
 	t_envp	*master;
 	t_token		*tokens;
 	t_tree		*parse_tree;
-
-	// t_env		*shell_env;
 	char		*input;
 	char *inter;
 
@@ -18,15 +17,12 @@ int	main(int argc, char **argv, const char **envp)
 		exit(1);
 	master->envp = (char **)envp;
 	master->path_list = find_path(master->envp);
-
-	master->u_envp = init_env((char **)envp);
-	// print_node(master->u_envp);
+	set_master(master);
 	while(1)
 	{
 		g_signal = 0;
 		inter = interface(master->u_envp);
 		char	*input = readline(inter);
-		// char	*input = "export | export a=123";
 		if (input)
 		{
 			add_history(input);
@@ -50,6 +46,7 @@ int	main(int argc, char **argv, const char **envp)
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
 
 			execute_tree(parse_tree, master);
+	
 			free_tree(parse_tree);
 			free_tokens(tokens);
 			free(inter);
@@ -59,9 +56,9 @@ int	main(int argc, char **argv, const char **envp)
 		else if (input == NULL)
 		{
 			free_master(master);
+			free(inter);
 			//사용한 모든 구조체 프리
 			exit(0);
 		}
-
 	}
 }
