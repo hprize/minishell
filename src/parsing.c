@@ -11,7 +11,7 @@ t_tree	*parse_pipe(t_token **current)
 		return (NULL);
 	if ((*current)->type != TOKEN_PIPE)
 		return (exec_node);
-	pipe_node = create_tree_node(NODE_PIPE, QUOTE_NONE, NULL);
+	pipe_node = create_tree_node(NODE_PIPE, NULL);
 	add_child(pipe_node, exec_node);
 	while ((*current)->type == TOKEN_PIPE)
 	{
@@ -31,7 +31,7 @@ t_tree	*parse_exec(t_token **current)
 	t_tree	*cmd_node;
 	t_tree	*arg_node;
 
-	exec_node = create_tree_node(NODE_EXEC, QUOTE_NONE, "EXEC");
+	exec_node = create_tree_node(NODE_EXEC, "EXEC");
 	parse_reds_opt(exec_node, current);
 	cmd_node = parse_cmd(current);
 	if (!cmd_node)
@@ -39,10 +39,9 @@ t_tree	*parse_exec(t_token **current)
 	add_child(exec_node, cmd_node);
 	parse_reds_opt(exec_node, current);
 
-	// 리다이렉션 이후 ARG 처리
 	while (*current && (*current)->type == TOKEN_ARG)
 	{
-		arg_node = create_tree_node(NODE_ARG, (*current)->quote_state, (*current)->value);
+		arg_node = create_tree_node(NODE_ARG, (*current)->value);
 		add_child(cmd_node, arg_node);
 		*current = (*current)->next;
 	}
@@ -70,14 +69,14 @@ t_tree	*parse_reds(t_token **current)
 	t_tree	*filename_node;
 
 	if ((*current)->type == TOKEN_RED)
-		red_node = create_tree_node(NODE_RED, (*current)->quote_state, (*current)->value);
+		red_node = create_tree_node(NODE_RED, (*current)->value);
 	else
-		red_node = create_tree_node(NODE_HEREDOC, (*current)->quote_state, (*current)->value);
+		red_node = create_tree_node(NODE_HEREDOC, (*current)->value);
 	*current = (*current)->next;
 
 	if ((*current)->type == TOKEN_FILENAME)
 	{
-		filename_node = create_tree_node(NODE_FILENAME, (*current)->quote_state, (*current)->value);
+		filename_node = create_tree_node(NODE_FILENAME, (*current)->value);
 		add_child(red_node, filename_node);
 		*current = (*current)->next;
 	}
@@ -92,12 +91,12 @@ t_tree	*parse_cmd(t_token **current)
 
 	if ((*current)->type != TOKEN_CMD)
 		return (NULL);
-	cmd_node = create_tree_node(NODE_CMD, (*current)->quote_state, (*current)->value);
+	cmd_node = create_tree_node(NODE_CMD, (*current)->value);
 	*current = (*current)->next;
 
 	while (*current && (*current)->type == TOKEN_ARG)
 	{
-		arg_node = create_tree_node(NODE_ARG, (*current)->quote_state, (*current)->value);
+		arg_node = create_tree_node(NODE_ARG, (*current)->value);
 		add_child(cmd_node, arg_node);
 		*current = (*current)->next;
 	}

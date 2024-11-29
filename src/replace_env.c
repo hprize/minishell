@@ -7,19 +7,16 @@ char	*ft_strjoin_free2(char *s1, char *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	result = ft_strjoin(s1, s2); // 기존 ft_strjoin 호출
-	free(s1); // s1 해제
+	result = ft_strjoin(s1, s2);
+	free(s1);
 	return (result);
 }
 
-
-
-// 환경변수 이름 규칙 검사 함수
 int	is_valid_env_char(char c, int is_first)
 {
 	if (is_first)
 		return (ft_isalpha(c) || c == '_'); // 첫 글자는 영문자 또는 '_'
-	return (ft_isalnum(c) || c == '_');     // 나머지는 영문자, 숫자, '_'
+	return (ft_isalnum(c) || c == '_'); // 나머지는 영문자, 숫자, '_'
 }
 
 void	process_env_replacement(char **value, t_env *u_envp)
@@ -35,7 +32,7 @@ void	process_env_replacement(char **value, t_env *u_envp)
 		return;
 
 	input = *value;
-	result = ft_strdup(""); // 결과 문자열 초기화
+	result = ft_strdup("");
 	if (!result)
 		return;
 
@@ -47,7 +44,6 @@ void	process_env_replacement(char **value, t_env *u_envp)
 			start = ++i;
 			if (ft_isdigit(input[i]))
 			{
-				result = ft_strjoin_free2(result, "");
 				i++;
 				continue;
 			}
@@ -58,7 +54,6 @@ void	process_env_replacement(char **value, t_env *u_envp)
 				continue;
 			}
 
-			// 환경변수 이름 탐색
 			while (input[i] && is_valid_env_char(input[i], i == start))
 				i++;
 			env_name = ft_substr(input, start, i - start);
@@ -69,8 +64,6 @@ void	process_env_replacement(char **value, t_env *u_envp)
 			}
 
 			env_value = is_envp(env_name, u_envp);
-
-			// 치환된 값 추가
 			if (env_value)
 				result = ft_strjoin_free2(result, env_value);
 			else
@@ -81,35 +74,11 @@ void	process_env_replacement(char **value, t_env *u_envp)
 		}
 		else
 		{
-			// 일반 문자 추가
 			char tmp[2] = {input[i++], '\0'};
 			result = ft_strjoin_free2(result, tmp);
 		}
 	}
 
-	free(*value); // 기존 값 해제
-	*value = result; // 새로운 문자열 반환
-}
-
-
-
-void	replace_env(t_token *tokens, t_env *u_envp)
-{
-	t_token	*current;
-
-	current = tokens;
-	while (current && current->type != TOKEN_END)
-	{
-		if (current->type == TOKEN_CMD || current->type == TOKEN_ARG || current->type == TOKEN_FILENAME)
-		{
-			if (current->quote_state != QUOTE_SINGLE)
-				process_env_replacement(&current->value, u_envp);
-		}
-		else if (current->type == TOKEN_HEREDOC)
-		{
-			if (current->next && current->next->type == TOKEN_FILENAME)
-				current = current->next;
-		}
-		current = current->next;
-	}
+	free(*value);
+	*value = result;
 }

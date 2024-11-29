@@ -13,17 +13,9 @@ typedef enum
 	TOKEN_INVALID
 }	token_type;
 
-typedef enum
-{
-	QUOTE_SINGLE,
-	QUOTE_DOUBLE,
-	QUOTE_NONE
-}	quote_type;
-
 typedef struct	s_token
 {
 	token_type	type;
-	quote_type	quote_state;
 	char		*value;
 	struct s_token	*next;
 }	t_token;
@@ -42,7 +34,6 @@ typedef enum
 typedef struct	s_tree
 {
 	node_type		type;
-	quote_type		quote_state;
 	char			*value;
 	struct s_tree	**children;
 	int				child_count;

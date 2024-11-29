@@ -1,16 +1,5 @@
 #include "../minishell.h"
 
-const char *quote_type_to_string(quote_type type)
-{
-	switch (type)
-	{
-		case QUOTE_SINGLE: return "QUOTE_SINGLE";
-		case QUOTE_DOUBLE: return "QUOTE_DOUBLE";
-		case QUOTE_NONE: return "QUOTE_NONE";
-		default: return "UNKNOWN";
-	}
-}
-
 void print_tree(t_tree *node, int level) {
 	if (node == NULL) return;
 
@@ -18,35 +7,32 @@ void print_tree(t_tree *node, int level) {
 	for (int i = 0; i < level; i++) {
 		printf("  ");
 	}
-
-	// 노드 정보 출력
 	switch (node->type) {
 		case NODE_PIPE:
 			printf("PIPE\n");
 			break;
 		case NODE_EXEC:
-			printf("EXEC: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("EXEC: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_CMD:
-			printf("CMD: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("CMD: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_ARG:
-			printf("ARG: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("ARG: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_RED:
-			printf("RED: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("RED: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_HEREDOC:
-			printf("HEREDOC: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("HEREDOC: %s\n", node->value ? node->value : "NULL");
 			break;
 		case NODE_FILENAME:
-			printf("FILENAME: %s - %s\n", node->value ? node->value : "NULL", quote_type_to_string(node->quote_state));
+			printf("FILENAME: %s\n", node->value ? node->value : "NULL");
 			break;
 		default:
 			printf("UNKNOWN NODE\n");
 	}
 
-	// 자식 노드 재귀 호출
 	for (int i = 0; i < node->child_count; i++) {
 		print_tree(node->children[i], level + 1);
 	}
@@ -57,7 +43,6 @@ void print_tree_linear(t_tree *node) {
 	if (node == NULL)
 		return;
 
-	// 노드 정보 출력
 	switch (node->type) {
 		case NODE_PIPE:
 			printf("PIPE ");
@@ -90,7 +75,6 @@ void print_tree_linear(t_tree *node) {
 			printf("UNKNOWN_NODE ");
 	}
 
-	// 자식 노드를 순서대로 재귀적으로 방문
 	for (int i = 0; i < node->child_count; i++) {
 		print_tree_linear(node->children[i]);
 	}
@@ -120,7 +104,7 @@ void print_tokens(t_token *head)
 
 	while (current != NULL)
 	{
-		printf("Type: %s, Value: %s Quoted: %s\n", token_type_to_string(current->type), current->value ? current->value : "NULL", quote_type_to_string(current->quote_state));
+		printf("Type: %s, Value: %s\n", token_type_to_string(current->type), current->value ? current->value : "NULL");
 		current = current->next;
 	}
 }

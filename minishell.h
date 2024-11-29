@@ -24,13 +24,13 @@
 typedef struct	s_envp	t_envp;
 
 t_tree	*parse(t_token *tokens);
-t_token	*tokenize(const char *input);
+t_token	*tokenize(const char *input, t_env *u_envp);
 
 // utils.c
 void	add_token(t_token **head, t_token **current, t_token *new_token);
-t_token	*create_token(token_type type, quote_type quote_state, const char *value);
-void	merge_token(t_token **current, char *new_value, quote_type new_quote_state);
-t_tree	*create_tree_node(node_type type, quote_type quote_state, const char *value);
+t_token	*create_token(token_type type, const char *value);
+void	merge_token(t_token **current, char *new_value);
+t_tree	*create_tree_node(node_type type, const char *value);
 void	add_child(t_tree *parent, t_tree *child);
 void	free_tree(t_tree *node);
 void	free_tokens(t_token *tokens);
