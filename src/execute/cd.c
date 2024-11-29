@@ -14,7 +14,8 @@ void	change_env(t_env *envp, char *name, char *content)
 		{
 			temp = cur->var->content;
 			cur->var->content = ft_strdup(content);
-			free(temp);
+			if (temp != NULL)
+				free(temp);
 			return ;
 		}
 		cur = cur->next;
