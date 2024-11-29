@@ -21,6 +21,8 @@
 
 # define HEREDOC_TMP ".heredoc_tmp"
 
+extern int	g_signal;
+
 typedef struct	s_envp	t_envp;
 
 t_tree	*parse(t_token *tokens);
@@ -84,5 +86,14 @@ int	fd_print_exit(char *msg, int fd);
 //builtin functions
 int	builtin_cmd(t_tree *node, t_envp *env);
 
+// signal.c
+
+void	sig_int_prompt(int signo);
+void	signal_handel_prompt();
+void	signal_all_ign();
+void	signal_all_dfl();
+void	sig_int_execve(int signo);
+void	sig_quit_execve(int signo);
+void	signal_handle_execve();
 
 #endif
