@@ -20,7 +20,7 @@ void	free_buf(char *buf)
 		free(buf);
 }
 
-void	handle_heredoc(const char *delimiter, t_env *u_envp)
+int	handle_heredoc(const char *delimiter, t_env *u_envp)
 {
 	int		file;
 	char	*buf;
@@ -41,19 +41,26 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp)
 		write(tty_fd, "> ", 2);
 
 		buf = get_next_line(0);
-		if (buf == NULL)
+		if (buf == NULL) // ctrl + D
+		{
+			ft_fprintf(tty_fd, "\nwarning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
+			// close(file);
+			// close(tty_fd);
+			free_buf(buf); // 이거 댕글링 가능성
 			break;
+			// return (1);
+		}
 		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\n')
 		{
 			free_buf(buf);
 			break;
 		}
-		if (ft_strlen(buf) == 0) // ctrl + D
-		{
-			printf(" warning: here-document delimited by end-of-file (wanted `%s')", delimiter);
-			free_buf(buf);
-			break;
-		}
+		// if (ft_strlen(buf) == 0) // ctrl + D
+		// {
+		// 	printf(" warning: here-document delimited by end-of-file (wanted `%s')", delimiter);
+		// 	free_buf(buf);
+		// 	break;
+		// }
 		process_env_replacement(&buf, u_envp);
 		write(file, buf, ft_strlen(buf));
 		free_buf(buf);
@@ -68,6 +75,7 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp)
 	}
 	dup2(infile, STDIN_FILENO);
 	close(infile);
+	return (0);
 }
 
 

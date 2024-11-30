@@ -72,7 +72,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
-void	handle_heredoc(const char *delimiter, t_env *u_envp);
+int	handle_heredoc(const char *delimiter, t_env *u_envp);
 
 
 // interface.c
@@ -95,5 +95,7 @@ void	signal_all_dfl();
 void	sig_int_execve(int signo);
 void	sig_quit_execve(int signo);
 void	signal_handle_execve();
+void	signal_handle_heredoc();
 
 #endif
+

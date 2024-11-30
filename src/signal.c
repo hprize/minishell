@@ -55,6 +55,12 @@ void	signal_handle_execve()
 	signal(SIGQUIT, sig_quit_execve);
 }
 
+void	signal_handle_heredoc()
+{
+	signal(SIGINT, sig_int_execve);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 // void	signal_handle_heredoc()
 // {
 // 	signal(SIGINT,);

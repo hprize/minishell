@@ -27,7 +27,8 @@ int setup_redirection(t_tree *node, t_env *u_envp)
 	if (node->type == NODE_HEREDOC)
 	{
 
-		handle_heredoc(node->children[0]->value, u_envp);
+		int	heredoc_status = handle_heredoc(node->children[0]->value, u_envp);
+		return (heredoc_status);
 	}
 	else if (node->type == NODE_RED)
 	{
@@ -109,7 +110,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	{
 		if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
 		{
-			if (setup_redirection(exec_node->children[i], master->u_envp) != 0)
+			if (setup_redirection(exec_node->children[i], master->u_envp) < 0)
 				exit(1);
 		}
 		i++;
