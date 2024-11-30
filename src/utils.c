@@ -1,78 +1,127 @@
 #include "../minishell.h"
 
-int	free_str(char *str)
-{
-	free(str);
-	str = NULL;
-	return (FAILURE);
-}
+// ----- 토큰화 관련 util 함수 -----
 
-t_split	*lstlast(t_split *lst)
+// 토큰 추가해서 붙이고 현재 포인팅토큰 옮겨주는 함수
+void	add_token(t_token **head, t_token **current, t_token *new_token)
 {
-	if (lst == 0)
-		return (lst);
-	while (lst->next != 0)
-		lst = lst->next;
-	return (lst);
-}
-
-t_split	*lstnew(char *line)
-{
-	t_split	*new;
-
-	new = malloc(sizeof(t_split));
-	if (new == 0)
-		return (0);
-	new->line = line;
-	new->next = 0;
-	new->prev = 0;
-	return (new);
-}
-
-void	lstadd_back(t_split **lst, t_split *new)
-{
-	if (lst == 0 || new == 0)
-		return ;
-	if (*lst == 0)
+	if (*head == NULL)
 	{
-		*lst = new;
-		if (new->prev != NULL)
-			new->prev = NULL;
-		return ;
+		*head = new_token;
+		*current = new_token;
+	} else
+	{
+		(*current)->next = new_token;
+		*current = (*current)->next;
 	}
-	new->prev = lstlast(*lst);
-	new->prev->next = new;
 }
 
-void	delete_node(t_split *lst)
+// 새로운 토큰 생성 함수
+t_token	*create_token(token_type type, const char *value)
 {
-	if (lst->prev == NULL && lst->next == NULL)
-		;
-	else if (lst->prev == NULL)
-		lst->next->prev = NULL;
-	else if (lst->next == NULL)
-		lst->prev->next = NULL;
+	t_token	*token;
+	
+	token = malloc(sizeof(t_token));
+	if (!token)
+	{
+		printf("토큰 할당 실패!\n");
+		exit(EXIT_FAILURE);
+	}
+	token->type = type;
+	if (value)
+		token->value = ft_strdup(value);
 	else
-	{
-		lst->prev->next = lst->next;
-		lst->next->prev = lst->prev;
-	}
-	free_str(lst->line);
-	free(lst);
-	lst = NULL;
+		token->value = NULL;
+	token->next = NULL;
+	return (token);
 }
 
-size_t	lstsize(t_split *lst)
+void	merge_token(t_token **current, char *new_value)
 {
-	size_t	size;
+	char	*combined;
 
-	if (lst == 0)
-		return (0);
-	size = 0;
-	while (lst != NULL)
+	combined = ft_strjoin((*current)->value, new_value);
+	free((*current)->value);
+	(*current)->value = combined;
+}
+// ----- 파싱 관련 util 함수 -----
+
+// 트리 노드 생성 함수
+t_tree	*create_tree_node(node_type type, const char *value)
+{
+	t_tree	*node;
+
+	node = malloc(sizeof(t_tree));
+	if (!node)
 	{
-		++size;
-		lst = lst->next;
+		printf("메모리 할당 실패(트리 생성)\n");
+		exit(EXIT_FAILURE);
 	}
-	return (size);
+	node->type = type;
+	if (value)
+		node->value = strdup(value);
+	else
+		node->value = NULL;
+	node->children = NULL;
+	node->child_count = 0;
+	return (node);
+}
+
+// 자식 노드 추가 함수
+void	add_child(t_tree *parent, t_tree *child)
+{
+	size_t	old_size;
+	size_t	new_size;
+
+	old_size = parent->child_count * sizeof(t_tree *);
+	new_size = (parent->child_count + 1) * sizeof(t_tree *);
+	parent->children = ft_realloc(parent->children, old_size, new_size);
+	if (!parent->children)
+	{
+		printf("realloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	parent->children[parent->child_count++] = child;
+}
+
+// ----- free 함수 -----
+
+void	free_tree(t_tree *node)
+{
+	int	i;
+
+	if (node == NULL)
+		return;
+	i = 0;
+	while (i < node->child_count)
+	{
+		free_tree(node->children[i]);
+		i++;
+	}
+	free(node->children);
+	node->children = NULL;
+	free(node->value);
+	node->value = NULL;
+	free(node);
+}
+
+void	free_tokens(t_token *tokens) {
+	t_token	*next;
+
+	while (tokens != NULL)
+	{
+		next = tokens->next;
+		if (tokens->value)
+			free(tokens->value);
+		free(tokens);
+		tokens = next;
+	}
+}
+
+void	free_master(t_envp *master)
+{
+	ft_arrfree(master->path_list);
+	ft_arrfree(master->envp);
+	free_node(master->u_envp);
+	free(master);
 }

@@ -2,49 +2,75 @@
 
 int	g_signal;
 
-void	signal_exit(int sig)
-{
-	printf("caught signal %d\n", sig);
-	g_signal = 1;
-}
-
-void	exit_func(t_envp *s)
-{
-	free_struct(s);
-	free(s);
-	s = NULL;
-	exit(1);
-}
 
 int	main(int argc, char **argv, const char **envp)
 {
-	t_envp	*u_envp;
-	char	*cmd;
+	t_envp	*master;
+	t_token		*tokens;
+	t_tree		*parse_tree;
+	char		*input;
+	char *inter;
 
-	u_envp = malloc(sizeof(t_envp));
-	if (u_envp == NULL)
+
+	master = ft_calloc(1, sizeof(t_envp));
+	if (master == NULL)
 		exit(1);
-
-	ft_memset(u_envp, 0, sizeof(t_envp));
-	
+	master->envp = (char **)envp;
+	master->path_list = find_path(master->envp);
+	set_master(master);
 	while(1)
 	{
 		g_signal = 0;
-		
-		//커맨드 창을 받아서 readline에 뱉도록.
-		// printf("%s@%s:%s$", u_envp->user, u_envp->host, u_envp->where);
-		cmd = set_envp(u_envp, envp);
-		char	*input = readline(cmd);
+		signal_handel_prompt();
+		// SIGINT
+		// SIGQUIT
+		// SIGTERM == EOF
+		inter = interface(master->u_envp);
+		char	*input = readline(inter);
+		signal_all_dfl();
+		if (input == NULL)
+		{
+			int temp = ft_atoi(find_content("LAST_EXIT_STATUS", master->u_envp));
+			free_master(master);
+			free(inter);
+			//사용한 모든 구조체 프리
+			exit(temp);
+		}
+		if (ft_strlen(input) == 0)
+		{
+			free(input);
+			continue;
+		}
 		if (input)
 		{
 			add_history(input);
-			printf("entered : %s\n", input);
-			test(input);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
+			tokens = tokenize(input, master->u_envp);
+			print_tokens(tokens);
+			if (check_cmd_path(tokens, master) == -1)
+			{
+				free_tokens(tokens);
+				free(input);
+				continue;
+			}
+			parse_tree = parse(tokens);
+			if (parse_tree == NULL)
+			{
+				printf("Parsing failed.\n");
+				free_tokens(tokens);
+				return (1);
+			}
+			printf("Parsed Tree:\n");
+			print_tree(parse_tree, 0);
+			//print_tree_linear(parse_tree); -- 트리 일렬 출력
+			signal_all_ign(); // 미니쉘 중첩되기 전에 시그널 전체 무시하도록. 시그널 중첩되지 않게 처리
+			execute_tree(parse_tree, master);
+	
+			free_tree(parse_tree);
+			free_tokens(tokens);
+			free(inter);
 			free(input);
-			
+			unlink(HEREDOC_TMP);
 		}
-		signal(SIGINT, signal_exit);
-		if (g_signal == 1)
-			exit_func(u_envp);
 	}
 }

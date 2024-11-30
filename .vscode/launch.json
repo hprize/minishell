@@ -11,3 +11,108 @@
 	  }
 	]
   }
+
+//   {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "name": "(gdb) Launch Parent",
+//             "type": "cppdbg",
+//             "request": "launch",
+//             "program": "/home/hyebinle/Desktop/minishell_jh/minishell",
+//             "args": [],
+//             "stopAtEntry": false,
+//             "cwd": "${workspaceFolder}",
+//             "environment": [
+// 				{"name": "SYSTEMD_EXEC_PID", "value": "690571"},
+// 				{"name": "SSH_AUTH_SOCK", "value": "/run/user/101037/keyring/ssh"},
+// 				{"name": "SESSION_MANAGER", "value": "local/c2r7s2.42gyeongsan.kr:@/tmp/.ICE-unix/690548,unix/c2r7s2.42gyeongsan.kr:/tmp/.ICE-unix/690548"},
+// 				{"name": "GNOME_TERMINAL_SCREEN", "value": "/org/gnome/Terminal/screen/5af5bc51_4bdf_45d7_83ec_7bc6c66b9274"},
+// 				{"name": "LANG", "value": "en_US.UTF-8"},
+// 				{"name": "XDG_CURRENT_DESKTOP", "value": "ubuntu:GNOME"},
+// 				{"name": "FT_HOOK_NAME", "value": "login-user"},
+// 				{"name": "FT_HOOK_PATHNAME", "value": "login-user.d"},
+// 				{"name": "XDG_GREETER_DATA_DIR", "value": "/var/lib/lightdm-data/hyebinle"},
+// 				{"name": "LIBVIRT_DEFAULT_URI", "value": "qemu:///system"},
+// 				{"name": "GPG_AGENT_INFO", "value": "/run/user/101037/gnupg/S.gpg-agent:0:1"},
+// 				{"name": "DESKTOP_SESSION", "value": "ubuntu"},
+// 				{"name": "QT_IM_MODULE", "value": "ibus"},
+// 				{"name": "XDG_MENU_PREFIX", "value": "gnome-"},
+// 				{"name": "XDG_SESSION_PATH", "value": "/org/freedesktop/DisplayManager/Session37"},
+// 				{"name": "USER", "value": "hyebinle"},
+// 				{"name": "DBUS_SESSION_BUS_ADDRESS", "value": "unix:path"},
+// 				{"name": "DOCKER_HOST", "value": "unix:///run/user/101037/docker.sock"},
+// 				{"name": "SSH_AGENT_LAUNCHER", "value": "gnome-keyring"},
+// 				{"name": "GTK_MODULES", "value": "gail:atk-bridge"},
+// 				{"name": "XDG_CONFIG_DIRS", "value": "/etc/xdg/xdg-ubuntu:/etc/xdg"},
+// 				{"name": "GTK_IM_MODULE", "value": "ibus"},
+// 				{"name": "XDG_SESSION_DESKTOP", "value": "ubuntu"},
+// 				{"name": "QT_ACCESSIBILITY", "value": "1"},
+// 				{"name": "GNOME_DESKTOP_SESSION_ID", "value": "this-is-deprecated"},
+// 				{"name": "KRB5CCNAME", "value": "FILE:/tmp/krb5cc_101037_V5PbQW"},
+// 				{"name": "LOGNAME", "value": "hyebinle"},
+// 				{"name": "XDG_SEAT_PATH", "value": "/org/freedesktop/DisplayManager/Seat0"},
+// 				{"name": "GNOME_TERMINAL_SERVICE", "value": ":1.140"},
+// 				{"name": "HOME", "value": "/home/hyebinle"},
+// 				{"name": "PATH", "value": "/home/hyebinle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"},
+// 				{"name": "XDG_DATA_DIRS", "value": "/usr/share/ubuntu:/usr/share/gnome:/home/hyebinle/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop"},
+// 				{"name": "XMODIFIERS", "value": "@im"},
+// 				{"name": "XDG_RUNTIME_DIR", "value": "/run/user/101037"},
+// 				{"name": "XDG_SESSION_TYPE", "value": "x11"},
+// 				{"name": "SHELL", "value": "/bin/zsh"},
+// 				{"name": "VTE_VERSION", "value": "6800"},
+// 				{"name": "COLORTERM", "value": "truecolor"},
+// 				{"name": "XAUTHORITY", "value": "/home/hyebinle/.Xauthority"},
+// 				{"name": "PWD", "value": "/home/hyebinle"},
+// 				{"name": "XDG_SESSION_CLASS", "value": "user"},
+// 				{"name": "TERM", "value": "xterm-256color"},
+// 				{"name": "GDMSESSION", "value": "ubuntu"},
+// 				{"name": "DISPLAY", "value": ":0"},
+// 				{"name": "SHLVL", "value": "1"},
+// 				{"name": "OLDPWD", "value": "/home/hyebinle"},
+// 				{"name": "P9K_TTY", "value": "old"},
+// 				{"name": "_P9K_TTY", "value": "/dev/pts/0"},
+// 				{"name": "ZSH", "value": "/home/hyebinle/.oh-my-zsh"},
+// 				{"name": "PAGER", "value": "less"},
+// 				{"name": "LESS", "value": "-R"},
+// 				{"name": "LSCOLORS", "value": "Gxfxcxdxbxegedabagacad"},
+// 				{"name": "LS_COLORS", "value": "rs"},
+// 				{"name": "P9K_SSH", "value": "0"},
+// 				{"name": "_P9K_SSH_TTY", "value": "/dev/pts/0"},
+// 				{"name": "_", "value": "/usr/bin/printenv"},
+// 			],
+//             "externalConsole": false,
+//             "MIMode": "gdb",
+// 			"setupCommands": [
+//                 {
+//                     "description": "Enable pretty-printing for gdb",
+//                     "text": "-enable-pretty-printing",
+//                     "ignoreFailures": true
+//                 }
+//             ],
+//             "preLaunchTask": "C/C++: gcc build active file",
+//             "miDebuggerPath": "/usr/bin/gdb",
+//             "logging": {
+//                 "trace": true,
+//                 "traceResponse": true,
+//                 "engineLogging": true
+//             }
+//         },
+//         {
+//             "name": "(gdb) Attach to Child",
+//             "type": "cppdbg",
+//             "request": "attach",
+//             "program": "/home/hyebinle/Desktop/minishell_jh/minishell",
+//             "processId": "${command:pickProcess}",
+//             "MIMode": "gdb",
+//             "miDebuggerPath": "/usr/bin/gdb",
+//             "setupCommands": [
+//                 {
+//                     "description": "Enable pretty-printing for gdb",
+//                     "text": "-enable-pretty-printing",
+//                     "ignoreFailures": true
+//                 }
+//             ]
+//         }
+//     ]
+// }
