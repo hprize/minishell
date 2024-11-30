@@ -46,7 +46,12 @@ int	print_export(t_env *head)
 	while (temp)
 	{
 		if (temp->var->flag_export == 0)
-			printf("declare -x %s=\"%s\"\n", temp->var->name, temp->var->content);
+		{
+			if (temp->var->content != NULL)
+				printf("declare -x %s=\"%s\"\n", temp->var->name, temp->var->content);
+			else
+				printf("declare -x %s\n", temp->var->name);
+		}
 		temp = temp->next;
 	}
 	free_node(sorted);
@@ -88,9 +93,13 @@ int	check_overlap(t_env *head, t_env *new)
 		if (ft_strcmp(cur->var->name, new->var->name) == 0)
 		{
 			temp = cur->var->content;
-			cur->var->content = ft_strdup(new->var->content);
+			if (new->var->content != NULL)
+				cur->var->content = ft_strdup(new->var->content);
+			else
+				cur->var->content = NULL;
 			free_env(new);
-			free(temp);
+			if (temp != NULL)
+				free(temp);
 			return (1);
 		}
 		cur = cur->next;
