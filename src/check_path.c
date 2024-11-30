@@ -8,10 +8,10 @@ char	**find_path(char **envp)
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH", 4) == 0)
-			break ;
+			return (ft_split(envp[i] + 5, ':'));
 		i++;
 	}
-	return (ft_split(envp[i] + 5, ':'));
+	return (NULL);
 }
 
 int	strchr_is(char *s, int c)
@@ -79,8 +79,11 @@ int	is_cmd(char *token, t_envp *master)
 	int		i;
 
 	i = -1;
-	// path_list = find_path(envp);
+	// path_list = find_path(master->envp);
+
 	is_abs = strchr_is(token, '/');
+	// if (master->path_list == NULL)
+	// 	return (1);
 	while ((master->path_list)[++i])
 	{
 		valid_path = valid_path_fn(token, is_abs, (master->path_list)[i]);
@@ -138,15 +141,19 @@ int check_cmd_path(t_token *head, t_envp *master)
 
 char	*return_absolute_path(t_tree *node, t_envp *master)
 {
+	char	**path_list;
 	char	*valid_path;
 	int		is_abs;
 	int		i;
 
 	i = -1;
 	is_abs = strchr_is(node->value, '/');
-	while ((master->path_list)[++i])
+	path_list = find_path(master->envp);
+	if (path_list == NULL)
+		return (NULL);
+	while (path_list[++i])
 	{
-		valid_path = valid_path_fn(node->value, is_abs, (master->path_list)[i]);
+		valid_path = valid_path_fn(node->value, is_abs, path_list[i]);
 		if (access(valid_path, F_OK) == 0)
 			return (valid_path);
 		free(valid_path);

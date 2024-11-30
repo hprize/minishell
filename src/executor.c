@@ -173,6 +173,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		// 	fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
 		// 	debug_i++;
 		// }
+		
 		execve(args[0], args, master->envp);
 		perror("execve failed");
 		exit(1);
@@ -300,7 +301,7 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 		}
 		i++;
 	}
-
+	// 히어독 들어올 위치
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 }
 
@@ -353,6 +354,7 @@ void execute_tree(t_tree *root, t_envp *master)
 		}
 		else
 		{
+			// 히어독 들어올 위치
 			if (fork() == 0)
 				execute_command(root, master);
 			wait(&status);
@@ -361,13 +363,14 @@ void execute_tree(t_tree *root, t_envp *master)
 				les = ft_itoa(WEXITSTATUS(status));
 
 				strerror(errno);
-				printf("test111 LEC : %s\n", les);
+				printf("singleCMD_EXIT: %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
 			}
 			else if (WIFSIGNALED(status))
 			{
 				int	sig = WTERMSIG(status);
+				printf("SIGNAL!!_EXIT: %d\n", sig);
 				les = ft_itoa(WTERMSIG(status + 128));
 				// printf("testSIGNAL!!! LEC : %s\n", les);
 

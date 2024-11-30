@@ -44,7 +44,8 @@ int	main(int argc, char **argv, const char **envp)
 		if (input)
 		{
 			add_history(input);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
+			//차라리 글로벌 값으로 시그널 받고 업데이트
+			// replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
 			tokens = tokenize(input, master->u_envp);
 			print_tokens(tokens);
 			if (check_cmd_path(tokens, master) == -1)

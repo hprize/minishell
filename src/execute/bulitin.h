@@ -15,7 +15,7 @@ void	ft_exit_call(int count, char **args, t_env *envp);
 int		export(t_tree *node, char **args, t_env *env);
 
 // unset.c
-int	unset(char **args, t_env *env);
+int	unset(char **args, t_envp *master);
 
 // pwd.c
 int	ft_pwd(void);

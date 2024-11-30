@@ -12,7 +12,7 @@ int	find_unset_value(t_env *env, char *value)
 	{
 		if (ft_strncmp(cur->var->name, value, ft_strlen(value)) == 0)
 		{
-			printf("test unset\n");
+			// printf("test unset\n");
 			if (pre == NULL)
 				env = cur->next;
 			else
@@ -29,17 +29,31 @@ int	find_unset_value(t_env *env, char *value)
 	return (0);
 }
 
-int	unset(char **args, t_env *env)
+int	unset(char **args, t_envp *master)
 {
 	int	i;
-	t_env	*temp;
+	int	j;
+	char	*temp;
 
-	if (env == NULL)
+	if (master->u_envp == NULL)
 		exit(0);
 	i = -1;
 	while (args[++i])
 	{
-		find_unset_value(env, args[i]);
+		find_unset_value(master->u_envp, args[i]);
+		if (ft_strcmp(args[i], "PATH") == 0)
+		{
+			j = -1;
+			while (master->envp[++j])
+			{
+				if (ft_strncmp(master->envp[j], "PATH", 4) == 0)
+				{
+					temp = master->envp[j];
+					master->envp[j] = ft_strdup("");
+					free(temp);
+				}
+			}
+		}
 	}
 	return (0);
 }
