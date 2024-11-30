@@ -25,7 +25,10 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 int setup_redirection(t_tree *node, t_env *u_envp)
 {
 	if (node->type == NODE_HEREDOC)
+	{
+
 		handle_heredoc(node->children[0]->value, u_envp);
+	}
 	else if (node->type == NODE_RED)
 	{
 		if (strcmp(node->value, ">") == 0)
@@ -101,8 +104,6 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	char **args;
 
 	i = 0;
-
-	signal_handle_execve();
 
 	while (i < exec_node->child_count)
 	{
@@ -264,6 +265,7 @@ void	execute_tree(t_tree *root, t_envp *master)
 	int	status;
 	char	*les;
 
+	signal_handle_execve();
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
@@ -283,6 +285,7 @@ void	execute_tree(t_tree *root, t_envp *master)
 			if (WIFEXITED(status))
 			{
 				les = ft_itoa(WEXITSTATUS(status));
+				strerror(errno);
 				printf("test111 LEC : %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
@@ -290,10 +293,6 @@ void	execute_tree(t_tree *root, t_envp *master)
 			else if (WIFSIGNALED(status))
 			{
 				int	sig = WTERMSIG(status);
-				if (sig == 2)
-					printf("\n");
-				if (sig == 3)
-					printf("Quit (core dumped)\n");
 				les = ft_itoa(WTERMSIG(status + 128));
 				// printf("testSIGNAL!!! LEC : %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);

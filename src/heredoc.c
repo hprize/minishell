@@ -48,6 +48,12 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp)
 			free_buf(buf);
 			break;
 		}
+		if (ft_strlen(buf) == 0) // ctrl + D
+		{
+			printf(" warning: here-document delimited by end-of-file (wanted `%s')", delimiter);
+			free_buf(buf);
+			break;
+		}
 		process_env_replacement(&buf, u_envp);
 		write(file, buf, ft_strlen(buf));
 		free_buf(buf);

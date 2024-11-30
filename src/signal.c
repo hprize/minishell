@@ -38,25 +38,28 @@ void	signal_all_dfl()
 void	sig_int_execve(int signo)
 {
 	g_signal = signo;
-	perror("시발\n");
-	write(1, "\n", 2);
+	write(1, "\n", 1);
 	rl_redisplay();
 }
 
 void	sig_quit_execve(int signo)
 {
 	g_signal = signo;
-	perror("시발\n");
-	write(1, "Quit (core dumped)\n", 20);
+	write(1, "Quit (core dumped)\n", 19);
 	rl_redisplay();
 }
 
 void	signal_handle_execve()
 {
-	printf("++TEST SIGNAL TEST SIGNAL TEST SIGNAL++\n");
 	signal(SIGINT, sig_int_execve);
 	signal(SIGQUIT, sig_quit_execve);
 }
+
+// void	signal_handle_heredoc()
+// {
+// 	signal(SIGINT,);
+// 	signal(SIGQUIT, )
+// }
 //	command
 	// pid = waitpid(-1, &status, WNOHANG);
 
