@@ -63,7 +63,7 @@ void	process_env_replacement(char **value, t_env *u_envp)
 				return;
 			}
 
-			env_value = is_envp(env_name, u_envp);
+			env_value = return_env_value(env_name, u_envp);
 			if (env_value)
 				result = ft_strjoin_free2(result, env_value);
 			else

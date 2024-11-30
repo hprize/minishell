@@ -77,5 +77,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int		ft_isspace(int c);
 char	*ft_strndup(const char *s, size_t n);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strcpy(char *dest, const char *src);
 
 #endif

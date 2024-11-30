@@ -4,6 +4,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <signal.h>
@@ -70,8 +71,9 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
-void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2]);
-void handle_multiple_heredocs(t_tree *node, t_env *u_envp);
+void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j);
+char	*generate_filename(int i, int j);
+void	remove_heredoc_files();
 
 
 // interface.c

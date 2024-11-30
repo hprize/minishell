@@ -51,7 +51,7 @@ int	main(int argc, char **argv, const char **envp)
 			free_tokens(tokens);
 			free(inter);
 			free(input);
-			unlink(HEREDOC_TMP);
+			remove_heredoc_files();
 		}
 		else if (input == NULL)
 		{
