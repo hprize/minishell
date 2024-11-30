@@ -1,5 +1,30 @@
 #include "../minishell.h"
 
+void restore_stdio(int saved_stdin, int saved_stdout, int reset_flag)
+{
+	if (reset_flag == 1)
+	{
+		if (dup2(saved_stdin, STDIN_FILENO) < 0)
+			perror("Failed to restore stdin");
+		close(saved_stdin);
+	}
+	else if (reset_flag == 2)
+	{
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+			perror("Failed to restore stdout");
+		close(saved_stdout);
+	}
+	else if (reset_flag == 3)
+	{
+		if (dup2(saved_stdin, STDIN_FILENO) < 0)
+			perror("Failed to restore stdin");
+		close(saved_stdin);
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+			perror("Failed to restore stdout");
+		close(saved_stdout);
+	}
+}
+
 int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 {
 	int fd;
@@ -8,7 +33,6 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 	if (fd < 0)
 	{
 		printf("minishell: %s: %s\n", filepath, strerror(errno));
-		//perror("minishell: ");
 		return (-1);
 	}
 	if (dup2(fd, redirect_fd) < 0)
@@ -20,15 +44,36 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 	close(fd);
 	return (0);
 }
+void fork_heredoc(t_tree *node, t_env *u_envp)
+{
+	int	pipe_fd[2];
+
+	if (pipe(pipe_fd) < 0)
+		printf("Failed to create pipe for heredoc");
+	if (fork() == 0)
+	{
+		handle_heredoc(node->children[0]->value, u_envp, pipe_fd);
+		exit(EXIT_SUCCESS);
+	}
+	wait(NULL);
+	close(pipe_fd[1]);
+	if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
+		printf("Failed to redirect heredoc input");
+	close(pipe_fd[0]);
+}
 
 // 리다이렉션 설정 함수
-int setup_redirection(t_tree *node, t_env *u_envp)
+int setup_redirection(t_tree *node, t_tree *parent, t_env *u_envp, int i)
 {
+	int saved_stdin = dup(STDIN_FILENO);
+	int saved_stdout = dup(STDOUT_FILENO);
+	// Heredoc 처리
 	if (node->type == NODE_HEREDOC)
 	{
 
-		int	heredoc_status = handle_heredoc(node->children[0]->value, u_envp);
-		return (heredoc_status);
+		fork_heredoc(node, u_envp);
+		if (parent->children[i + 1]->type == NODE_HEREDOC)
+			dup2(saved_stdin, STDIN_FILENO);
 	}
 	else if (node->type == NODE_RED)
 	{
@@ -110,7 +155,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	{
 		if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
 		{
-			if (setup_redirection(exec_node->children[i], master->u_envp) < 0)
+			if (setup_redirection(exec_node->children[i], exec_node, master->u_envp, i) != 0)
 				exit(1);
 		}
 		i++;
@@ -121,13 +166,13 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		bulitin = is_bulitin(cmd_node->value);
 		args = each_args(cmd_node, master, bulitin);
 
-		FILE* tty_fd = fopen("/dev/tty", "w");
-		int debug_i = 0;
-		while (args[debug_i])
-		{
-			fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
-			debug_i++;
-		}
+		// FILE* tty_fd = fopen("/dev/tty", "w");
+		// int debug_i = 0;
+		// while (args[debug_i])
+		// {
+		// 	fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
+		// 	debug_i++;
+		// }
 		execve(args[0], args, master->envp);
 		perror("execve failed");
 		exit(1);
@@ -259,17 +304,6 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 }
 
-void restore_stdio(int saved_stdin, int saved_stdout)
-{
-	if (dup2(saved_stdin, STDIN_FILENO) < 0)
-		perror("Failed to restore stdin");
-	close(saved_stdin);
-
-	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-		perror("Failed to restore stdout");
-	close(saved_stdout);
-}
-
 
 void execute_tree(t_tree *root, t_envp *master)
 {
@@ -299,16 +333,16 @@ void execute_tree(t_tree *root, t_envp *master)
 			{
 				if (root->children[i]->type == NODE_RED || root->children[i]->type == NODE_HEREDOC)
 				{
-					if (setup_redirection(root->children[i], master->u_envp) < 0)
+					if (setup_redirection(root->children[i], root, master->u_envp, i) < 0)
 					{
 						perror("minishell: failed to set redirection");
-						restore_stdio(saved_stdin, saved_stdout);
+						restore_stdio(saved_stdin, saved_stdout, 3);
 						exit(1);
 					}
 				}
 				i++;
 			}
-			restore_stdio(saved_stdin, saved_stdout);
+			restore_stdio(saved_stdin, saved_stdout, 3);
 			return;
 		}
 		if (is_bulitin(execute_node->value) == 0)
@@ -340,5 +374,5 @@ void execute_tree(t_tree *root, t_envp *master)
 			}
 		}
 	}
-	restore_stdio(saved_stdin, saved_stdout);
+	restore_stdio(saved_stdin, saved_stdout, 3);
 }
