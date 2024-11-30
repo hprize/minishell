@@ -52,7 +52,12 @@ char	*return_env_value(char *arg, t_env *env)
 	while (cur)
 	{
 		if (ft_strcmp(cur->var->name, arg) == 0)
-			return (ft_strdup(cur->var->content));
+		{
+			if (cur->var->content != NULL)
+				return (ft_strdup(cur->var->content));
+			else
+				return (NULL);
+		}
 		cur = cur->next;
 	}
 	return (NULL);

@@ -71,6 +71,7 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j)
 		write(fd, buf, ft_strlen(buf));
 		write(fd, "\n", 1);
 		free(buf);
+		close(tty_fd);
 	}
 	close(fd);
 	free(filename);

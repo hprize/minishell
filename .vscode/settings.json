@@ -4,7 +4,10 @@
 	"libft.h": "c",
 	"bulitin.h": "c",
 	"parsing.h": "c",
-	"struct.h": "c"
+	"struct.h": "c",
+	"types.h": "c",
+	"unistd.h": "c",
+	"utils.h": "c"
 },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
