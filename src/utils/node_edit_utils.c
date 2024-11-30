@@ -40,7 +40,7 @@ char	*find_content(char *arg, t_env *env)
 	return (NULL);
 }
 
-char	*is_envp(char *arg, t_env *env)
+char	*return_env_value(char *arg, t_env *env)
 {
 	t_env	*cur;
 

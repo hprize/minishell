@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 19:56:24 by junlee            #+#    #+#             */
-/*   Updated: 2024/06/25 19:55:33 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/01 01:30:15 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include "../libft/libft.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
@@ -35,7 +36,7 @@ int		ft_lstadd(t_lst **lst, int fd);
 int		check_line(t_lst *lst);
 char	*add_line(t_lst *lst, char *pnew, int line_i);
 size_t	ft_strlen(const char *s);
-void	ft_strcpy(char *result, char *pnew);
+// void	ft_strcpy(char *result, char *pnew);
 void	free_mem(t_lst **lst, char **pnew);
 char	*get_line(int fd, t_lst *lst);
 
