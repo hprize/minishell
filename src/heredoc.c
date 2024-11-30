@@ -20,6 +20,7 @@ void	free_buf(char *buf)
 		free(buf);
 }
 
+
 void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2])
 {
 	char	*buf;
@@ -32,9 +33,14 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2])
 	while (1)
 	{
 		buf = readline("> ");
-		if (buf == NULL)
+		if (buf == NULL) // ctrl + D //ft_strlen
+		{
+			ft_fprintf(tty_fd, "\nwarning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
+			// close(file);
+			// close(tty_fd);
+			free_buf(buf); // 이거 댕글링 가능성
 			break;
-
+      }
 		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\0')
 		{
 			free(buf);

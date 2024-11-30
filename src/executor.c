@@ -70,6 +70,7 @@ int setup_redirection(t_tree *node, t_tree *parent, t_env *u_envp, int i)
 	// Heredoc 처리
 	if (node->type == NODE_HEREDOC)
 	{
+
 		fork_heredoc(node, u_envp);
 		if (parent->children[i + 1]->type == NODE_HEREDOC)
 			dup2(saved_stdin, STDIN_FILENO);
@@ -149,6 +150,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 	char **args;
 
 	i = 0;
+
 	while (i < exec_node->child_count)
 	{
 		if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
@@ -247,6 +249,12 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 			replace_content(master->u_envp, "LAST_EXIT_STATUS", c_les);
 			free(c_les);
 		}
+		else if (WIFSIGNALED(status))
+		{
+			c_les = ft_itoa(WTERMSIG(status + 128));
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", c_les);
+			free(c_les);
+		}
 		i++;
 	}
 }
@@ -312,6 +320,7 @@ void execute_tree(t_tree *root, t_envp *master)
 		exit(1);
 	}
 
+	signal_handle_execve();
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
@@ -350,8 +359,18 @@ void execute_tree(t_tree *root, t_envp *master)
 			if (WIFEXITED(status))
 			{
 				les = ft_itoa(WEXITSTATUS(status));
+
+				strerror(errno);
+				printf("test111 LEC : %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
+			}
+			else if (WIFSIGNALED(status))
+			{
+				int	sig = WTERMSIG(status);
+				les = ft_itoa(WTERMSIG(status + 128));
+				// printf("testSIGNAL!!! LEC : %s\n", les);
+
 			}
 		}
 	}
