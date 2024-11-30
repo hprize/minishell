@@ -20,48 +20,31 @@ void	free_buf(char *buf)
 		free(buf);
 }
 
-void	handle_heredoc(const char *delimiter, t_env *u_envp)
+void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2])
 {
-	int		file;
 	char	*buf;
-	int		infile;
 	int		del_len;
-	int		tty_fd;
 
 	del_len = ft_strlen(delimiter);
-	file = open(HEREDOC_TMP, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (file < 0)
-		msg_error("Error creating heredoc file");
-	tty_fd = open("/dev/tty", O_WRONLY);
-	if (tty_fd < 0)
-		msg_error("Error opening terminal for heredoc prompt");
+
+	close(pipe_fd[0]); // 파이프의 읽기 끝을 닫음
 
 	while (1)
 	{
-		write(tty_fd, "> ", 2);
+		buf = readline("> ");
+		if (buf == NULL) // EOF (Ctrl+D) 입력 처리
+			break;
 
-		buf = get_next_line(0);
-		if (buf == NULL)
-			break;
-		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\n')
+		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\0')
 		{
-			free_buf(buf);
-			break;
+			free(buf);
+			break; // Delimiter를 만나면 종료
 		}
-		process_env_replacement(&buf, u_envp);
-		write(file, buf, ft_strlen(buf));
-		free_buf(buf);
+		process_env_replacement(&buf, u_envp); // 환경 변수 처리
+		write(pipe_fd[1], buf, ft_strlen(buf));
+		write(pipe_fd[1], "\n", 1); // 줄바꿈 추가
+		free(buf);
 	}
-	close(file);
-	close(tty_fd);
-	infile = open(HEREDOC_TMP, O_RDONLY);
-	if (infile < 0)
-	{
-		ulink_error(HEREDOC_TMP);
-		msg_error("Error opening heredoc file for reading");
-	}
-	dup2(infile, STDIN_FILENO);
-	close(infile);
 }
 
 

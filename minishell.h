@@ -70,7 +70,8 @@ char	**each_args(t_tree *node, t_envp *master, int cnt);
 
 
 // heredoc.c
-void	handle_heredoc(const char *delimiter, t_env *u_envp);
+void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2]);
+void handle_multiple_heredocs(t_tree *node, t_env *u_envp);
 
 
 // interface.c
