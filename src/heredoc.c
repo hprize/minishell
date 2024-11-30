@@ -27,22 +27,22 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int pipe_fd[2])
 
 	del_len = ft_strlen(delimiter);
 
-	close(pipe_fd[0]); // 파이프의 읽기 끝을 닫음
+	close(pipe_fd[0]);
 
 	while (1)
 	{
 		buf = readline("> ");
-		if (buf == NULL) // EOF (Ctrl+D) 입력 처리
+		if (buf == NULL)
 			break;
 
 		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\0')
 		{
 			free(buf);
-			break; // Delimiter를 만나면 종료
+			break;
 		}
-		process_env_replacement(&buf, u_envp); // 환경 변수 처리
+		process_env_replacement(&buf, u_envp); 
 		write(pipe_fd[1], buf, ft_strlen(buf));
-		write(pipe_fd[1], "\n", 1); // 줄바꿈 추가
+		write(pipe_fd[1], "\n", 1);
 		free(buf);
 	}
 }
