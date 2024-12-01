@@ -1,7 +1,7 @@
 #ifndef BULITIN_H
 # define BULITIN_H
 #include "../../struct.h"
-#include "../../parsing.h"
+// #include "../../parsing.h"
 #include "../../minishell.h"
 #include "../utils/utils.h"
 

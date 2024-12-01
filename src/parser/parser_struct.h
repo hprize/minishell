@@ -1,5 +1,5 @@
-#ifndef PARSE_INPUT_H
-# define PARSE_INPUT_H
+#ifndef PARSER_STRUCT_H
+# define PARSER_STRUCT_H
 
 typedef struct	s_token_context
 {
