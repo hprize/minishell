@@ -1,22 +1,18 @@
-#include "../minishell.h"
+#include "signal.h"
 
 void	sig_int_prompt(int signo)
 {
 	g_signal = signo;
-	// perror("");
 	write(2, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-//	prompt
+
 void	signal_handel_prompt()
 {
-	// ctrl c
 	signal(SIGINT, sig_int_prompt);
 	signal(SIGQUIT, SIG_IGN);
-
-
 }
 
 void	signal_all_ign()
@@ -38,7 +34,6 @@ void	sig_int_execve(int signo)
 	rl_redisplay();
 }
 
-
 void	sig_quit_execve(int signo)
 {
 	g_signal = signo;
@@ -55,11 +50,7 @@ void	signal_handle_execve()
 void	sig_int_heredoc(int signo)
 {
 	g_signal = signo;
-	// signal(SIGINT, SIG_DFL);
 	write(1, "sig_int_heredoc_in\n", 19);
-	// write(1, NULL, 0);
-	// rl_redisplay();
-	// exit(130);
 }
 
 void	signal_handle_heredoc()

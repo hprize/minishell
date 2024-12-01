@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "utils.h"
 
 static char	*get_host_name(void)
 {
@@ -37,6 +37,5 @@ char	*interface(t_env *shell_envp)
 	result = ft_strjoin_free(result, ft_strdup(":"));
 	temp = ft_strjoin(find_content("PWD", shell_envp), "$ ");
 	result = ft_strjoin_free(result, temp);
-
 	return (result);
 }

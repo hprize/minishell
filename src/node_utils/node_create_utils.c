@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "node_utils.h"
 
 t_env	*creat_node(char *data)
 {

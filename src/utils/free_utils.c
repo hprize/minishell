@@ -1,7 +1,4 @@
-#include "../minishell.h"
-
-
-// ----- free 함수 -----
+#include "utils.h"
 
 void	free_tree(t_tree *node)
 {
@@ -22,7 +19,8 @@ void	free_tree(t_tree *node)
 	free(node);
 }
 
-void	free_tokens(t_token *tokens) {
+void	free_tokens(t_token *tokens)
+{
 	t_token	*next;
 
 	while (tokens != NULL)

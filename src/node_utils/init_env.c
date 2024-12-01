@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "node_utils.h"
 
 t_env	*create_t_env(void)
 {
@@ -50,11 +50,8 @@ void	set_envp_flag(t_env *env)
 t_env	*init_env(char **envp)
 {
 	t_env	*head;
-	// char	**sort_list;
 	int		i;
 
-
-	// sort_list = sort_arc(envp);
 	head = NULL;
 	i = -1;
 	while (envp[++i])
@@ -62,11 +59,8 @@ t_env	*init_env(char **envp)
 		append_node(&head, envp[i]);
 	}
 	set_envp_flag(head);
-
 	append_custom_node_back(&head, "LAST_EXIT_STATUS", "0", 1);
 	append_custom_node_back(&head, "SIG_TYPE", "prompt", 1);
-//test
-	// print_node(head);
 
 	return (head);
 }
