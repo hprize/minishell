@@ -17,7 +17,8 @@ int	ft_echo(char **args, t_env *env)
 		// }
 		// else
 		printf("%s", args[i]);
-		printf(" ");
+		if (args[i + 1])
+			printf(" ");
 		if (!args[i + 1])
 		{
 			if (newline == 0)

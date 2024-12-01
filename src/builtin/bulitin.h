@@ -1,8 +1,9 @@
 #ifndef BULITIN_H
 # define BULITIN_H
-#include "../../struct.h"
-// #include "../../parsing.h"
 #include "../../minishell.h"
+#include "../../struct.h"
+# include "../parser/parser_struct.h"
+#include "../executor/executor.h"
 #include "../utils/utils.h"
 
 //env.c
@@ -25,5 +26,9 @@ int ft_cd(t_tree *node, char **args, t_env *env);
 
 // echo.c
 int	ft_echo(char **args, t_env *env);
+
+// builtin.c
+static int	dispatch_builtin(char *cmd, char **args, t_tree *node, t_envp *master);
+int			builtin_cmd(t_tree *node, t_envp *master);
 
 #endif

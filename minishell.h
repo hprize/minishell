@@ -18,6 +18,7 @@
 # include "src/builtin/bulitin.h"
 # include "src/node_utils/node_utils.h"
 # include "src/parser/parser.h"
+# include "src/parser/parser_struct.h"
 # include "src/signal/signal.h"
 # include "src/utils/utils.h"
 

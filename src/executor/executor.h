@@ -2,6 +2,8 @@
 # define EXECUTOR_H
 
 # include "../../minishell.h"
+# include "../builtin/bulitin.h"
+# include "../parser/parser_struct.h"
 
 
 // -- executor.c -- //

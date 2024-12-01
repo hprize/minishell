@@ -47,7 +47,7 @@ int	main(int argc, char **argv, const char **envp)
 			//차라리 글로벌 값으로 시그널 받고 업데이트
 			// replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
 			tokens = tokenize(input, master->u_envp);
-			print_tokens(tokens);
+			// print_tokens(tokens);
 			if (check_cmd_path(tokens, master) == -1)
 			{
 				free_tokens(tokens);
@@ -61,8 +61,8 @@ int	main(int argc, char **argv, const char **envp)
 				free_tokens(tokens);
 				return (1);
 			}
-			printf("Parsed Tree:\n");
-			print_tree(parse_tree, 0);
+			// printf("Parsed Tree:\n");
+			// print_tree(parse_tree, 0);
 			//print_tree_linear(parse_tree); -- 트리 일렬 출력
 			// signal_all_ign(); // 미니쉘 중첩되기 전에 시그널 전체 무시하도록. 시그널 중첩되지 않게 처리
 			execute_tree(parse_tree, master);

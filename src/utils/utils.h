@@ -1,5 +1,6 @@
 #ifndef UTILS_H
 # define UTILS_H
+# include "../parser/parser_struct.h"
 #include "../../minishell.h"
 
 //check_path.c

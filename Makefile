@@ -25,7 +25,8 @@ OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 all : $(OBJDIR) $(NAME)
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR) $(OBJDIR)/execute $(OBJDIR)/utils
+	mkdir -p $(OBJDIR) $(OBJDIR)/builtin $(OBJDIR)/utils $(OBJDIR)/executor \
+	$(OBJDIR)/node_utils $(OBJDIR)/parser $(OBJDIR)/signal $(OBJDIR)/utils
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@

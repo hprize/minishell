@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "parser.h"
 
 void	process_op(t_token **head, t_token **current, t_token_context *ctx)
 {

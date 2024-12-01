@@ -10,7 +10,9 @@
 	"utils.h": "c",
 	"signal.h": "c",
 	"parser.h": "c",
-	"node_utils.h": "c"
+	"node_utils.h": "c",
+	"parser_struct.h": "c",
+	"executor.h": "c"
 },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",

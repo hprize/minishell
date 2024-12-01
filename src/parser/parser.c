@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "parser.h"
 
 // PIPE 구조 파싱: <exec> | <exec> | ...
 t_tree	*parse_pipe(t_token **current)

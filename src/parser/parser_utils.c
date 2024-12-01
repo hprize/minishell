@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "parser.h"
 
 // ----- 토큰화 관련 util 함수 -----
 

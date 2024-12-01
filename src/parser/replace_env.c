@@ -1,5 +1,4 @@
-#include "../minishell.h"
-
+#include "parser.h"
 
 char	*ft_strjoin_free2(char *s1, char *s2)
 {
@@ -42,6 +41,18 @@ void	process_env_replacement(char **value, t_env *u_envp)
 		if (input[i] == '$')
 		{
 			start = ++i;
+			if (input[i] == '?')
+			{
+				i++;
+				env_value = return_env_value("LAST_EXIT_STATUS", u_envp);
+				if (env_value)
+					result = ft_strjoin_free2(result, env_value);
+				else
+					result = ft_strjoin_free2(result, "");
+				if (env_value)
+					free(env_value);
+				continue;
+			}
 			if (ft_isdigit(input[i]))
 			{
 				i++;

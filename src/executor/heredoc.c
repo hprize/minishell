@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "executor.h"
 
 void	free_char_index(char *index_i, char *index_j)
 {
@@ -145,14 +145,14 @@ void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 			les = ft_itoa(WEXITSTATUS(status));
 
 			strerror(errno);
-			printf("singleCMD_EXIT: %s\n", les);
+			// printf("singleCMD_EXIT: %s\n", les);
 			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 			free(les);
 		}
 		else if (WIFSIGNALED(status))
 		{
 			int	sig = WTERMSIG(status);
-			printf("SIGNAL!!_EXIT: %d\n", sig);
+			// printf("SIGNAL!!_EXIT: %d\n", sig);
 			les = ft_itoa(WTERMSIG(status + 128));
 			// printf("testSIGNAL!!! LEC : %s\n", les);
 

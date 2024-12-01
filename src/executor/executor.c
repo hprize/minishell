@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "executor.h"
 
 // 커맨드 실행
 void	execute_command(t_tree *exec_node, t_envp *master, int i)
@@ -215,14 +215,14 @@ void	execute_tree(t_tree *root, t_envp *master)
 				les = ft_itoa(WEXITSTATUS(status));
 
 				strerror(errno);
-				printf("singleCMD_EXIT: %s\n", les);
+				// printf("singleCMD_EXIT: %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
 			}
 			else if (WIFSIGNALED(status))
 			{
 				int	sig = WTERMSIG(status);
-				printf("SIGNAL!!_EXIT: %d\n", sig);
+				// printf("SIGNAL!!_EXIT: %d\n", sig);
 				les = ft_itoa(WTERMSIG(status + 128));
 				// printf("testSIGNAL!!! LEC : %s\n", les);
 

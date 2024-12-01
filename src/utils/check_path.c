@@ -122,8 +122,8 @@ int check_cmd_path(t_token *head, t_envp *master)
 	{
 		if (current->type == TOKEN_CMD)
 			//여기 수정
-			if (is_cmd(current->value, master) == 0 || is_bulitin(current->value) == 0)
-				printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
+			if (is_cmd(current->value, master) == 0 || is_bulitin(current->value) == 0) ;
+				// printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else
 			{
 				printf("%s: command not found\n", current->value);

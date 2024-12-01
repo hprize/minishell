@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "executor.h"
 
 void	set_all_heredoc(t_tree *node, t_envp *master)
 {
