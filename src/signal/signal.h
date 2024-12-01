@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef SIGNAL_H
+# define SIGNAL_H
 #include "../../minishell.h"
 
 

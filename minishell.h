@@ -14,9 +14,11 @@
 # include <readline/history.h>
 # include "./libft/libft.h"
 # include "./ft_fprintf/ft_fprintf_header.h"
-# include "parsing.h"
 # include "struct.h"
-# include "src/execute/bulitin.h"
+# include "src/builtin/bulitin.h"
+# include "src/node_utils/node_utils.h"
+# include "src/parser/parser.h"
+# include "src/signal/signal.h"
 # include "src/utils/utils.h"
 
 # define HEREDOC_TMP ".heredoc_tmp"

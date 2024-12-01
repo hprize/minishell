@@ -7,7 +7,10 @@
 	"struct.h": "c",
 	"types.h": "c",
 	"unistd.h": "c",
-	"utils.h": "c"
+	"utils.h": "c",
+	"signal.h": "c",
+	"parser.h": "c",
+	"node_utils.h": "c"
 },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
