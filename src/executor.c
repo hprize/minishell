@@ -232,24 +232,45 @@ void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 {
 	pid_t	pid;
 	int		status;
+	char *les;
 
 	pid = fork();
 	if (pid == 0)
 	{
+		signal_handle_heredoc();
+		// signal_all_dfl();
 		handle_heredoc(node->children[j]->children[0]->value, master->u_envp, i, j);
 		exit(0);
 	}
 	else if (pid > 0)
 	{
+		signal_all_ign();
 		if (wait(&status) == -1)
 		{
 			perror("wait failed");
 			exit(1);
 		}
-		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		// if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		// {
+		// 	perror("Heredoc process failed");
+		// 	exit(1);
+		// }
+		if (WIFEXITED(status))
 		{
-			perror("Heredoc process failed");
-			exit(1);
+			les = ft_itoa(WEXITSTATUS(status));
+
+			strerror(errno);
+			printf("singleCMD_EXIT: %s\n", les);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
+			free(les);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			int	sig = WTERMSIG(status);
+			printf("SIGNAL!!_EXIT: %d\n", sig);
+			les = ft_itoa(WTERMSIG(status + 128));
+			// printf("testSIGNAL!!! LEC : %s\n", les);
+
 		}
 	}
 	else
@@ -257,6 +278,7 @@ void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 		perror("fork failed");
 		exit(1);
 	}
+	signal_all_dfl();
 }
 
 void	set_all_heredoc(t_tree *node, t_envp *master)
@@ -265,6 +287,9 @@ void	set_all_heredoc(t_tree *node, t_envp *master)
 	int		i;
 	int		j;
 
+	signal_all_ign();
+	
+	// signal_handle_heredoc();
 	i = 0;
 	if (node->type == NODE_EXEC)
 	{
@@ -326,6 +351,9 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 		i++;
 	}
 	set_all_heredoc(pipe_node, master);
+	g_signal = 0;
+	signal_all_dfl();
+	signal_handle_execve();
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 }
 
@@ -345,7 +373,7 @@ void execute_tree(t_tree *root, t_envp *master)
 		exit(1);
 	}
 
-	signal_handle_execve();
+	// signal_handle_execve();
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
@@ -353,6 +381,7 @@ void execute_tree(t_tree *root, t_envp *master)
 		execute_node = find_cmd_node(root);
 		if (execute_node == NULL)
 		{
+			// signal_handle_heredoc();
 			set_all_heredoc(root, master);
 			i = 0;
 			while (i < root->child_count)
@@ -380,6 +409,9 @@ void execute_tree(t_tree *root, t_envp *master)
 		else
 		{
 			set_all_heredoc(root, master);
+			signal_all_ign();
+			signal_all_dfl();
+			signal_handle_execve();
 			if (fork() == 0)
 				execute_command(root, master, 0);
 			wait(&status);

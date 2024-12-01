@@ -19,10 +19,6 @@ void	signal_handel_prompt()
 
 }
 
-void no123(int signo) {
-	signo = signo;
-}
-
 void	signal_all_ign()
 {
 	signal(SIGINT, SIG_IGN);
@@ -42,6 +38,7 @@ void	sig_int_execve(int signo)
 	rl_redisplay();
 }
 
+
 void	sig_quit_execve(int signo)
 {
 	g_signal = signo;
@@ -55,18 +52,18 @@ void	signal_handle_execve()
 	signal(SIGQUIT, sig_quit_execve);
 }
 
-void	signal_handle_heredoc()
+void	sig_int_heredoc(int signo)
 {
-	signal(SIGINT, sig_int_execve);
-	signal(SIGQUIT, SIG_IGN);
+	g_signal = signo;
+	// signal(SIGINT, SIG_DFL);
+	write(1, "sig_int_heredoc_in\n", 19);
+	// write(1, NULL, 0);
+	// rl_redisplay();
+	// exit(130);
 }
 
-// void	signal_handle_heredoc()
-// {
-// 	signal(SIGINT,);
-// 	signal(SIGQUIT, )
-// }
-//	command
-	// pid = waitpid(-1, &status, WNOHANG);
-
-//	heredoc
+void	signal_handle_heredoc()
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+}

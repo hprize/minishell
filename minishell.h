@@ -14,7 +14,6 @@
 # include <readline/history.h>
 # include "./libft/libft.h"
 # include "./ft_fprintf/ft_fprintf_header.h"
-# include "./gnl/get_next_line_bonus.h"
 # include "parsing.h"
 # include "struct.h"
 # include "src/execute/bulitin.h"
