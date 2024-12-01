@@ -47,12 +47,12 @@ int	open_and_redirect(const char *filepath, int flags, int redirect_fd)
 	fd = open(filepath, flags, 0644);
 	if (fd < 0)
 	{
-		printf("minishell: %s: %s\n", filepath, strerror(errno));
+		ft_fprintf(2, "minishell: %s: %s\n", filepath, strerror(errno));
 		return (-1);
 	}
 	if (dup2(fd, redirect_fd) < 0)
 	{
-		printf("minishell: %s: dup2 failed\n", filepath);
+		ft_fprintf(2, "minishell: %s: dup2 failed\n", filepath);
 		close(fd);
 		return (-1);
 	}
