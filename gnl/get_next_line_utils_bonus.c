@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 19:56:28 by junlee            #+#    #+#             */
-/*   Updated: 2024/06/25 19:55:20 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/01 01:28:39 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,20 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	ft_strcpy(char *dst, char *src)
-{
-	int	i;
+// void	ft_strcpy(char *dst, char *src)
+// {
+// 	int	i;
 
-	if (src == NULL)
-	{
-		*dst = '\0';
-		return ;
-	}
-	i = 0;
-	while (*(src + i))
-	{
-		*(dst + i) = *(src + i);
-		i++;
-	}
-	*(dst + i) = '\0';
-}
+// 	if (src == NULL)
+// 	{
+// 		*dst = '\0';
+// 		return ;
+// 	}
+// 	i = 0;
+// 	while (*(src + i))
+// 	{
+// 		*(dst + i) = *(src + i);
+// 		i++;
+// 	}
+// 	*(dst + i) = '\0';
+// }

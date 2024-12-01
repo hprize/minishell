@@ -21,12 +21,15 @@ char	**copy_envp(char **envp)
 	return (copy);
 }
 
+
+
 int	find_shlvl(char **envp)
 {
 	char	*shlvl;
 	int	i;
 	char	*temp;
 	char	*now;
+	char	*new;
 
 	i = 0;
 	while (envp[i])
@@ -45,12 +48,16 @@ int	find_shlvl(char **envp)
 		i++;
 	}
 }
+
+
 void	set_master(t_envp *master)
 {
 	char	**c_envp;
 
 	c_envp = copy_envp(master->envp);
 	find_shlvl(c_envp);
+	// for (int i = 0; c_envp[i]; i++)
+	// 	printf("%s\n", c_envp[i]);
 	master->envp = c_envp;
 	master->u_envp = init_env(c_envp);
 }

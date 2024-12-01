@@ -1,28 +1,14 @@
 #include "../minishell.h"
 
-void restore_stdio(int saved_stdin, int saved_stdout, int reset_flag)
+void restore_stdio(int saved_stdin, int saved_stdout)
 {
-	if (reset_flag == 1)
-	{
-		if (dup2(saved_stdin, STDIN_FILENO) < 0)
-			perror("Failed to restore stdin");
-		close(saved_stdin);
-	}
-	else if (reset_flag == 2)
-	{
-		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-			perror("Failed to restore stdout");
-		close(saved_stdout);
-	}
-	else if (reset_flag == 3)
-	{
-		if (dup2(saved_stdin, STDIN_FILENO) < 0)
-			perror("Failed to restore stdin");
-		close(saved_stdin);
-		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-			perror("Failed to restore stdout");
-		close(saved_stdout);
-	}
+	if (dup2(saved_stdin, STDIN_FILENO) < 0)
+		perror("Failed to restore stdin");
+	close(saved_stdin);
+
+	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+		perror("Failed to restore stdout");
+	close(saved_stdout);
 }
 
 int open_and_redirect(const char *filepath, int flags, int redirect_fd)
@@ -44,36 +30,21 @@ int open_and_redirect(const char *filepath, int flags, int redirect_fd)
 	close(fd);
 	return (0);
 }
-void fork_heredoc(t_tree *node, t_env *u_envp)
-{
-	int	pipe_fd[2];
-
-	if (pipe(pipe_fd) < 0)
-		printf("Failed to create pipe for heredoc");
-	if (fork() == 0)
-	{
-		handle_heredoc(node->children[0]->value, u_envp, pipe_fd);
-		exit(EXIT_SUCCESS);
-	}
-	wait(NULL);
-	close(pipe_fd[1]);
-	if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
-		printf("Failed to redirect heredoc input");
-	close(pipe_fd[0]);
-}
 
 // 리다이렉션 설정 함수
-int setup_redirection(t_tree *node, t_tree *parent, t_env *u_envp, int i)
+int	setup_redirection(t_tree *node, t_env *u_envp, int i, int j)
 {
-	int saved_stdin = dup(STDIN_FILENO);
-	int saved_stdout = dup(STDOUT_FILENO);
-	// Heredoc 처리
+	char	*filename;
+
 	if (node->type == NODE_HEREDOC)
 	{
-
-		fork_heredoc(node, u_envp);
-		if (parent->children[i + 1]->type == NODE_HEREDOC)
-			dup2(saved_stdin, STDIN_FILENO);
+		filename = generate_filename(i, j);
+		if (open_and_redirect(filename, O_RDONLY, STDIN_FILENO) < 0)
+		{
+			free(filename);
+			return (-1);
+		}
+		free(filename);
 	}
 	else if (node->type == NODE_RED)
 	{
@@ -127,7 +98,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 
 t_tree	*find_cmd_node(t_tree *node)
 {
-	int	i;
+	int		i;
 	t_tree	*now;
 
 	now = node;
@@ -142,23 +113,22 @@ t_tree	*find_cmd_node(t_tree *node)
 }
 
 // 커맨드 실행
-void execute_command(t_tree *exec_node, t_envp *master)
+void	execute_command(t_tree *exec_node, t_envp *master, int i)
 {
-	int i;
-	int	bulitin;
-	t_tree *cmd_node;
-	char **args;
+	int		j;
+	int		bulitin;
+	t_tree	*cmd_node;
+	char	**args;
 
-	i = 0;
-
-	while (i < exec_node->child_count)
+	j = 0;
+	while (j < exec_node->child_count)
 	{
-		if (exec_node->children[i]->type == NODE_RED || exec_node->children[i]->type == NODE_HEREDOC)
+		if (exec_node->children[j]->type == NODE_RED || exec_node->children[j]->type == NODE_HEREDOC)
 		{
-			if (setup_redirection(exec_node->children[i], exec_node, master->u_envp, i) != 0)
+			if (setup_redirection(exec_node->children[j], master->u_envp, i, j) != 0)
 				exit(1);
 		}
-		i++;
+		j++;
 	}
 	cmd_node = find_cmd_node(exec_node);
 	if (cmd_node != NULL)
@@ -173,6 +143,7 @@ void execute_command(t_tree *exec_node, t_envp *master)
 		// 	fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
 		// 	debug_i++;
 		// }
+		
 		execve(args[0], args, master->envp);
 		perror("execve failed");
 		exit(1);
@@ -217,8 +188,6 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 				dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 				close(pipe_fds[i - 1][0]);
 			}
-
-			// close_all_pipe(pipe_count, pipe_fds);
 			execute_node = find_cmd_node(pipe_node->children[i]);
 			if (is_bulitin(execute_node->value) == 0)
 			{
@@ -226,7 +195,7 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 				exit(les);
 			}
 			else
-				execute_command(pipe_node->children[i], master);
+				execute_command(pipe_node->children[i], master, i);
 		}
 		if (i == 0)
 			close(pipe_fds[i][1]);
@@ -259,25 +228,81 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 	}
 }
 
-
-void	close_all_pipe(int pipe_count, int **pipe_fds)
+void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 {
-	int i;
+	pid_t	pid;
+	int		status;
 
-	i = 0;
-	while (i < pipe_count - 1) {
-		close(pipe_fds[i][0]);
-		close(pipe_fds[i][1]);
-		i++;
+	pid = fork();
+	if (pid == 0)
+	{
+		handle_heredoc(node->children[j]->children[0]->value, master->u_envp, i, j);
+		exit(0);
+	}
+	else if (pid > 0)
+	{
+		if (wait(&status) == -1)
+		{
+			perror("wait failed");
+			exit(1);
+		}
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		{
+			perror("Heredoc process failed");
+			exit(1);
+		}
+	}
+	else
+	{
+		perror("fork failed");
+		exit(1);
 	}
 }
 
-// PIPE 실행
-void execute_pipe(t_tree *pipe_node, t_envp *master)
+void	set_all_heredoc(t_tree *node, t_envp *master)
 {
-	int pipe_count;
-	int **pipe_fds;
-	int i;
+	t_tree	*current;
+	int		i;
+	int		j;
+
+	i = 0;
+	if (node->type == NODE_EXEC)
+	{
+		while (i < node->child_count)
+		{
+			if (node->children[i]->type == NODE_HEREDOC)
+			{
+				process_heredoc_node(node, master, 0, i);
+			}
+			i++;
+		}
+	}
+	else if (node->type == NODE_PIPE)
+	{
+		while (i < node->child_count)
+		{
+			j = 0;
+			current = node->children[i];
+			while (j < current->child_count)
+			{
+				if (current->children[j]->type == NODE_HEREDOC)
+				{
+					process_heredoc_node(current, master, i, j);
+				}
+				j++;
+			}
+			i++;
+		}
+	}
+}
+
+
+// PIPE 실행
+void	execute_pipe(t_tree *pipe_node, t_envp *master)
+{
+	int	pipe_count;
+	int	**pipe_fds;
+	int	i;
 
 	pipe_count = pipe_node->child_count;
 	pipe_fds = malloc(sizeof(int*) * (pipe_count - 1));
@@ -300,7 +325,7 @@ void execute_pipe(t_tree *pipe_node, t_envp *master)
 		}
 		i++;
 	}
-
+	set_all_heredoc(pipe_node, master);
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
 }
 
@@ -328,21 +353,22 @@ void execute_tree(t_tree *root, t_envp *master)
 		execute_node = find_cmd_node(root);
 		if (execute_node == NULL)
 		{
+			set_all_heredoc(root, master);
 			i = 0;
 			while (i < root->child_count)
 			{
 				if (root->children[i]->type == NODE_RED || root->children[i]->type == NODE_HEREDOC)
 				{
-					if (setup_redirection(root->children[i], root, master->u_envp, i) < 0)
+					if (setup_redirection(root->children[i], master->u_envp, 0, i) < 0)
 					{
 						perror("minishell: failed to set redirection");
-						restore_stdio(saved_stdin, saved_stdout, 3);
+						restore_stdio(saved_stdin, saved_stdout);
 						exit(1);
 					}
 				}
 				i++;
 			}
-			restore_stdio(saved_stdin, saved_stdout, 3);
+			restore_stdio(saved_stdin, saved_stdout);
 			return;
 		}
 		if (is_bulitin(execute_node->value) == 0)
@@ -353,26 +379,28 @@ void execute_tree(t_tree *root, t_envp *master)
 		}
 		else
 		{
+			set_all_heredoc(root, master);
 			if (fork() == 0)
-				execute_command(root, master);
+				execute_command(root, master, 0);
 			wait(&status);
 			if (WIFEXITED(status))
 			{
 				les = ft_itoa(WEXITSTATUS(status));
 
 				strerror(errno);
-				printf("test111 LEC : %s\n", les);
+				printf("singleCMD_EXIT: %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
 			}
 			else if (WIFSIGNALED(status))
 			{
 				int	sig = WTERMSIG(status);
+				printf("SIGNAL!!_EXIT: %d\n", sig);
 				les = ft_itoa(WTERMSIG(status + 128));
 				// printf("testSIGNAL!!! LEC : %s\n", les);
 
 			}
 		}
 	}
-	restore_stdio(saved_stdin, saved_stdout, 3);
+	restore_stdio(saved_stdin, saved_stdout);
 }
