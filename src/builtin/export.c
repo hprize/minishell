@@ -62,9 +62,14 @@ int	check_name(char *name)
 {
 	int	i;
 
+	if (ft_strlen(name) == 0)
+	{
+		write(2, " not valid identifier\n", 22);
+		return (1);
+	}
 	if (ft_isdigit(name[0]) == 1 && ft_isalpha(name[0]) == 0 && name[0] != '_')
 	{
-		printf("\'%s\': not valid identifier\n", name);
+		write(2, " not valid identifier\n", 22);
 		return (1);
 	}
 	i = 1;
@@ -72,7 +77,7 @@ int	check_name(char *name)
 	{
 		if (ft_isalnum(name[i]) == 0 && name[i] != '_')
 		{
-			printf("\'%s\': not valid identifier\n", name);
+			write(2, " not valid identifier\n", 22);
 			return (1);
 		}
 		i++;

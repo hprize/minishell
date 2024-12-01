@@ -11,6 +11,7 @@ HEADER = minishell.h
 # 일단 와일드 카드 써둠.
 
 SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/builtin/*.c) \
+$(wildcard $(SRCDIR)/error/*.c) \
 $(wildcard $(SRCDIR)/executor/*.c) \
 $(wildcard $(SRCDIR)/node_utils/*.c) \
 $(wildcard $(SRCDIR)/parser/*.c) \
@@ -26,7 +27,8 @@ all : $(OBJDIR) $(NAME)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR) $(OBJDIR)/builtin $(OBJDIR)/utils $(OBJDIR)/executor \
-	$(OBJDIR)/node_utils $(OBJDIR)/parser $(OBJDIR)/signal $(OBJDIR)/utils
+	$(OBJDIR)/node_utils $(OBJDIR)/parser $(OBJDIR)/signal $(OBJDIR)/utils \
+	$(OBJDIR)/error
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(HEADER) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
