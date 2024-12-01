@@ -60,18 +60,26 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j)
 	while (1)
 	{
 		buf = readline("> ");
-		if (!buf)
+		// perror("heredoc Test here is heredoc inside\n");
+		if (buf == NULL)
+		{
+			printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
 			break;
+		}
 		if (ft_strncmp(delimiter, buf, del_len) == 0 && buf[del_len] == '\0')
 		{
 			free(buf);
 			break;
 		}
+		// if (g_signal == 2)
+		// {
+		// 	printf("^C\n");
+		// 	exit(130);
+		// }
 		process_env_replacement(&buf, u_envp);
 		write(fd, buf, ft_strlen(buf));
 		write(fd, "\n", 1);
 		free(buf);
-		close(tty_fd);
 	}
 	close(fd);
 	free(filename);
@@ -87,7 +95,7 @@ void remove_heredoc_files()
 	pattern = HEREDOC_TMP;
 	pattern_len = strlen(pattern);
 	dir = opendir(".");
-	if (!dir)
+	if (dir == NULL)
 	{
 		perror("Failed to open directory");
 		return;
