@@ -1,117 +1,5 @@
 #include "../minishell.h"
 
-void restore_stdio(int saved_stdin, int saved_stdout)
-{
-	if (dup2(saved_stdin, STDIN_FILENO) < 0)
-		perror("Failed to restore stdin");
-	close(saved_stdin);
-
-	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-		perror("Failed to restore stdout");
-	close(saved_stdout);
-}
-
-int open_and_redirect(const char *filepath, int flags, int redirect_fd)
-{
-	int fd;
-
-	fd = open(filepath, flags, 0644);
-	if (fd < 0)
-	{
-		printf("minishell: %s: %s\n", filepath, strerror(errno));
-		return (-1);
-	}
-	if (dup2(fd, redirect_fd) < 0)
-	{
-		printf("minishell: %s: dup2 failed\n", filepath);
-		close(fd);
-		return (-1);
-	}
-	close(fd);
-	return (0);
-}
-
-// 리다이렉션 설정 함수
-int	setup_redirection(t_tree *node, t_env *u_envp, int i, int j)
-{
-	char	*filename;
-
-	if (node->type == NODE_HEREDOC)
-	{
-		filename = generate_filename(i, j);
-		if (open_and_redirect(filename, O_RDONLY, STDIN_FILENO) < 0)
-		{
-			free(filename);
-			return (-1);
-		}
-		free(filename);
-	}
-	else if (node->type == NODE_RED)
-	{
-		if (strcmp(node->value, ">") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO) < 0)
-				return (-1);
-		}
-		else if (strcmp(node->value, ">>") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO) < 0)
-				return (-1);
-		}
-		else if (strcmp(node->value, "<") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_RDONLY, STDIN_FILENO) < 0)
-				return (-1);
-		}
-	}
-	return (0);
-}
-
-char	**each_args(t_tree *node, t_envp *master, int cnt)
-{
-	char	**args;
-	int		i;
-	int		j;
-
-	args = malloc(sizeof(char *) * (node->child_count + cnt + 1));
-	if (args == NULL)
-		exit(1);
-	if (cnt == 1)
-	{
-		args[0] = return_absolute_path(node, master);
-		if (args[0] == NULL)
-			exit(EXIT_FAILURE);
-	}
-	i = cnt;
-	j = 0;
-	while (j < node->child_count)
-	{
-		args[i] = ft_strdup(node->children[j]->value);
-		if (args[i] == NULL)
-			exit(EXIT_FAILURE);
-		i++;
-		j++;
-	}
-	args[i] = NULL;
-	return (args);
-}
-
-t_tree	*find_cmd_node(t_tree *node)
-{
-	int		i;
-	t_tree	*now;
-
-	now = node;
-	i = 0;
-	while (i < now->child_count)
-	{
-		if (now->children[i]->type == NODE_CMD)
-			return (now->children[i]);
-		i++;
-	}
-	return (NULL);
-}
-
 // 커맨드 실행
 void	execute_command(t_tree *exec_node, t_envp *master, int i)
 {
@@ -150,7 +38,7 @@ void	execute_command(t_tree *exec_node, t_envp *master, int i)
 	}
 }
 
-void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
+void	gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
 	int	i;
 	int	*child_pid;
@@ -228,99 +116,6 @@ void gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 	}
 }
 
-void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
-{
-	pid_t	pid;
-	int		status;
-	char *les;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		signal_handle_heredoc();
-		// signal_all_dfl();
-		handle_heredoc(node->children[j]->children[0]->value, master->u_envp, i, j);
-		exit(0);
-	}
-	else if (pid > 0)
-	{
-		signal_all_ign();
-		if (wait(&status) == -1)
-		{
-			perror("wait failed");
-			exit(1);
-		}
-		// if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		// {
-		// 	perror("Heredoc process failed");
-		// 	exit(1);
-		// }
-		if (WIFEXITED(status))
-		{
-			les = ft_itoa(WEXITSTATUS(status));
-
-			strerror(errno);
-			printf("singleCMD_EXIT: %s\n", les);
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
-			free(les);
-		}
-		else if (WIFSIGNALED(status))
-		{
-			int	sig = WTERMSIG(status);
-			printf("SIGNAL!!_EXIT: %d\n", sig);
-			les = ft_itoa(WTERMSIG(status + 128));
-			// printf("testSIGNAL!!! LEC : %s\n", les);
-
-		}
-	}
-	else
-	{
-		perror("fork failed");
-		exit(1);
-	}
-	signal_all_dfl();
-}
-
-void	set_all_heredoc(t_tree *node, t_envp *master)
-{
-	t_tree	*current;
-	int		i;
-	int		j;
-
-	signal_all_ign();
-	
-	// signal_handle_heredoc();
-	i = 0;
-	if (node->type == NODE_EXEC)
-	{
-		while (i < node->child_count)
-		{
-			if (node->children[i]->type == NODE_HEREDOC)
-			{
-				process_heredoc_node(node, master, 0, i);
-			}
-			i++;
-		}
-	}
-	else if (node->type == NODE_PIPE)
-	{
-		while (i < node->child_count)
-		{
-			j = 0;
-			current = node->children[i];
-			while (j < current->child_count)
-			{
-				if (current->children[j]->type == NODE_HEREDOC)
-				{
-					process_heredoc_node(current, master, i, j);
-				}
-				j++;
-			}
-			i++;
-		}
-	}
-}
-
 
 // PIPE 실행
 void	execute_pipe(t_tree *pipe_node, t_envp *master)
@@ -358,7 +153,7 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 }
 
 
-void execute_tree(t_tree *root, t_envp *master)
+void	execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*execute_node;
 	int	status;

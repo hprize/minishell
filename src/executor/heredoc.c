@@ -85,7 +85,7 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j)
 	free(filename);
 }
 
-void remove_heredoc_files()
+void	remove_heredoc_files()
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -110,4 +110,58 @@ void remove_heredoc_files()
 	}
 	if (closedir(dir) < 0)
 		perror("Failed to close directory");
+}
+
+
+void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
+{
+	pid_t	pid;
+	int		status;
+	char *les;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		signal_handle_heredoc();
+		// signal_all_dfl();
+		handle_heredoc(node->children[j]->children[0]->value, master->u_envp, i, j);
+		exit(0);
+	}
+	else if (pid > 0)
+	{
+		signal_all_ign();
+		if (wait(&status) == -1)
+		{
+			perror("wait failed");
+			exit(1);
+		}
+		// if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		// {
+		// 	perror("Heredoc process failed");
+		// 	exit(1);
+		// }
+		if (WIFEXITED(status))
+		{
+			les = ft_itoa(WEXITSTATUS(status));
+
+			strerror(errno);
+			printf("singleCMD_EXIT: %s\n", les);
+			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
+			free(les);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			int	sig = WTERMSIG(status);
+			printf("SIGNAL!!_EXIT: %d\n", sig);
+			les = ft_itoa(WTERMSIG(status + 128));
+			// printf("testSIGNAL!!! LEC : %s\n", les);
+
+		}
+	}
+	else
+	{
+		perror("fork failed");
+		exit(1);
+	}
+	signal_all_dfl();
 }
