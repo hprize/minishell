@@ -19,15 +19,28 @@ static int	dispatch_builtin(char *cmd, char **args, t_tree *node, t_envp *master
 	return (0);
 }
 
-int	builtin_cmd(t_tree *node, t_envp *master)
+int	builtin_cmd(t_tree *exec_node, t_envp *master, int i)
 {
 	char	**args;
+	t_tree	*cmd_node;
 	int		result;
+	int j;
 
-	args = each_args(node, master, 0);
+	j = 0;
+	while (j < exec_node->child_count)
+	{
+		if (exec_node->children[j]->type == NODE_RED || exec_node->children[j]->type == NODE_HEREDOC)
+		{
+			if (setup_redirection(exec_node->children[j], master->u_envp, i, j) != 0)
+				exit(1);
+		}
+		j++;
+	}
+	cmd_node = find_cmd_node(exec_node);
+	args = each_args(cmd_node, master, 0);
 	if (!args)
 		return (0);
-	result = dispatch_builtin(node->value, args, node, master);
+	result = dispatch_builtin(cmd_node->value, args, cmd_node, master);
 	ft_arrfree(args);
 	return (result);
 }

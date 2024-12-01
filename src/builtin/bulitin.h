@@ -29,6 +29,6 @@ int	ft_echo(char **args, t_env *env);
 
 // builtin.c
 static int	dispatch_builtin(char *cmd, char **args, t_tree *node, t_envp *master);
-int			builtin_cmd(t_tree *node, t_envp *master);
+int			builtin_cmd(t_tree *exec_node, t_envp *master, int i);
 
 #endif

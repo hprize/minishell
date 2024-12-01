@@ -4,7 +4,6 @@
 void	execute_command(t_tree *exec_node, t_envp *master, int i)
 {
 	int		j;
-	int		bulitin;
 	t_tree	*cmd_node;
 	char	**args;
 
@@ -21,8 +20,7 @@ void	execute_command(t_tree *exec_node, t_envp *master, int i)
 	cmd_node = find_cmd_node(exec_node);
 	if (cmd_node != NULL)
 	{
-		bulitin = is_bulitin(cmd_node->value);
-		args = each_args(cmd_node, master, bulitin);
+		args = each_args(cmd_node, master, 1);
 
 		// FILE* tty_fd = fopen("/dev/tty", "w");
 		// int debug_i = 0;
@@ -79,7 +77,7 @@ void	gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 			execute_node = find_cmd_node(pipe_node->children[i]);
 			if (is_bulitin(execute_node->value) == 0)
 			{
-				les = builtin_cmd(execute_node, master);
+				les = builtin_cmd(pipe_node->children[i], master, i);
 				exit(les);
 			}
 			else
@@ -155,7 +153,7 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 
 void	execute_tree(t_tree *root, t_envp *master)
 {
-	t_tree	*execute_node;
+	t_tree	*cmd_node;
 	int	status;
 	char	*les;
 	int	i;
@@ -173,8 +171,8 @@ void	execute_tree(t_tree *root, t_envp *master)
 		execute_pipe(root, master);
 	else if (root->type == NODE_EXEC)
 	{
-		execute_node = find_cmd_node(root);
-		if (execute_node == NULL)
+		cmd_node = find_cmd_node(root);
+		if (cmd_node == NULL)
 		{
 			// signal_handle_heredoc();
 			set_all_heredoc(root, master);
@@ -195,9 +193,9 @@ void	execute_tree(t_tree *root, t_envp *master)
 			restore_stdio(saved_stdin, saved_stdout);
 			return;
 		}
-		if (is_bulitin(execute_node->value) == 0)
+		if (is_bulitin(cmd_node->value) == 0)
 		{
-			les = ft_itoa(builtin_cmd(execute_node, master));
+			les = ft_itoa(builtin_cmd(root, master, 0));
 			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 			free(les);
 		}
