@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "utils.h"
 
 char	**find_path(char **envp)
 {
@@ -73,30 +73,25 @@ char	*valid_path_fn(char *cmd, int is_abs, char *path)
 
 int	is_cmd(char *token, t_envp *master)
 {
-	// char	**path_list;
 	char	*valid_path;
 	int		is_abs;
 	int		i;
 
 	i = -1;
-	// path_list = find_path(master->envp);
 
 	is_abs = strchr_is(token, '/');
-	// if (master->path_list == NULL)
-	// 	return (1);
 	while ((master->path_list)[++i])
 	{
 		valid_path = valid_path_fn(token, is_abs, (master->path_list)[i]);
 		if (access(valid_path, F_OK) == 0)
 		{
-			free(valid_path); // 나중에 실행명령어 할 때 이거 살리면 됨.
+			free(valid_path);
 			return (0);
 		}
 		free(valid_path);
 	}
 	return (1);
 }
-// 이거 추가됨. 빌트인 함수 확인
 
 int	is_bulitin(char *cmd)
 {
