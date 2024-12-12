@@ -4,6 +4,7 @@
 void	execute_command(t_tree *exec_node, t_envp *master, int i)
 {
 	int		j;
+	int		k;
 	t_tree	*cmd_node;
 	char	**args;
 
@@ -30,8 +31,9 @@ void	execute_command(t_tree *exec_node, t_envp *master, int i)
 		// 	debug_i++;
 		// }
 		
-		execve(args[0], args, master->envp);
-		perror("execve failed");
+		k = execve(args[0], args, master->envp);
+		if (k != 0)
+			handle_execve_error(cmd_node);
 		exit(1);
 	}
 }

@@ -20,6 +20,7 @@
 # include "src/parser/parser.h"
 # include "src/parser/parser_struct.h"
 # include "src/signal/signal.h"
+# include "src/error/error.h"
 # include "src/utils/utils.h"
 
 # define HEREDOC_TMP ".heredoc_tmp"

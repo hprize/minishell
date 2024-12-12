@@ -52,8 +52,8 @@ t_env*	new_node(t_var *var)
 		new->var->content = ft_strdup(var->content);
 	else
 		new->var->content = NULL;
-	// new->var->flag_env = var->flag_env;
-	// new->var->flag_export = var->flag_export;
+	new->var->flag_env = var->flag_env;
+	new->var->flag_export = var->flag_export;
 	new->next = NULL;
 	return (new);
 }
@@ -92,19 +92,21 @@ void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
 
 void	free_node(t_env *head)
 {
-	t_env	*cur;
-	t_env	*next;
+	t_env *cur;
+	t_env *next;
 
 	cur = head;
 	while (cur)
 	{
 		next = cur->next;
-		if (cur->var->name)
-			free(cur->var->name);
-		if (cur->var->content)
-			free(cur->var->content);
 		if (cur->var)
+		{
+			if (cur->var->name)
+				free(cur->var->name);
+			if (cur->var->content)
+				free(cur->var->content);
 			free(cur->var);
+		}
 		free(cur);
 		cur = next;
 	}

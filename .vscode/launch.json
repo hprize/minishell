@@ -13,6 +13,36 @@
   }
 
 //   {
+// 	"version": "0.2.0",
+// 	"configurations": [
+// 	  {
+// 		"name": "Debug Parent and Child",
+// 		"type": "cppdbg",
+// 		"request": "launch",
+// 		"program": "${fileDirname}/../minishell",
+// 		"args": [],
+// 		"stopAtEntry": false,
+// 		"cwd": "${workspaceFolder}",
+// 		"environment": [],
+// 		"externalConsole": false,
+// 		"MIMode": "gdb",
+// 		"setupCommands": [
+// 		  {
+// 			"description": "Enable debug output",
+// 			"text": "-enable-pretty-printing",
+// 			"ignoreFailures": true
+// 		  }
+// 		],
+// 		"logging": { "engineLogging": true },
+// 		// "forkMode": "both", // 부모와 자식 프로세스 디버깅
+// 		"sourceFileMap": {
+// 		  "/build/glibc-": "/usr/src/debug/glibc-"
+// 		}
+// 	  }
+// 	]
+//   }
+  
+//   {
 //     "version": "0.2.0",
 //     "configurations": [
 //         {

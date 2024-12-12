@@ -52,6 +52,7 @@ int	main(int argc, char **argv, const char **envp)
 			{
 				free_tokens(tokens);
 				free(input);
+				replace_content(master->u_envp, "LAST_EXIT_STATUS", "127");
 				continue;
 			}
 			parse_tree = parse(tokens);
