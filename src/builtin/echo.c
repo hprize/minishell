@@ -7,6 +7,8 @@ int	ft_echo(char **args, t_env *env)
 
 	i = -1;
 	newline = 0;
+	if (*args == NULL)
+		return (0);
 	while (ft_strcmp("-n", args[++i]) == 0)
 		newline = 1;
 	while (args[i])

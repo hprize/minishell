@@ -30,21 +30,28 @@ t_tree	*parse_exec(t_token **current)
 	t_tree	*exec_node;
 	t_tree	*cmd_node;
 	t_tree	*arg_node;
+	t_tree	*red_node;
 
 	exec_node = create_tree_node(NODE_EXEC, "EXEC");
 	parse_reds_opt(exec_node, current);
 	cmd_node = parse_cmd(current);
 	if (cmd_node)
 		add_child(exec_node, cmd_node);
-	parse_reds_opt(exec_node, current);
-
-	while (*current && (*current)->type == TOKEN_ARG)
+	while (*current && (*current)->type != TOKEN_PIPE && (*current)->type != TOKEN_END)
 	{
-		arg_node = create_tree_node(NODE_ARG, (*current)->value);
-		add_child(cmd_node ? cmd_node : exec_node, arg_node);
-		*current = (*current)->next;
+		if ((*current)->type == TOKEN_RED || (*current)->type == TOKEN_HEREDOC)
+		{
+			red_node = parse_reds(current);
+			if (red_node)
+				add_child(exec_node, red_node);
+		}
+		else if ((*current)->type == TOKEN_ARG)
+		{
+			arg_node = create_tree_node(NODE_ARG, (*current)->value);
+			add_child(cmd_node, arg_node);
+			*current = (*current)->next;
+		}
 	}
-
 	return (exec_node);
 }
 
@@ -112,12 +119,12 @@ t_tree	*parse(t_token *tokens)
 	root = parse_pipe(&current);
 	if (root == NULL)
 	{
-		printf("minishell: parse error\n");
+		ft_fprintf(2, "minishell: parse error\n");
 		return (NULL);
 	}
 	if (current->type != TOKEN_END)
 	{
-		printf("minishell: command terminated unexpectedly\n");
+		ft_fprintf(2, "minishell: command terminated unexpectedly\n");
 		free_tree(root);
 		return (NULL);
 	}
