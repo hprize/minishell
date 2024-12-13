@@ -1,8 +1,5 @@
 #include "parser.h"
 
-// ----- 토큰화 관련 util 함수 -----
-
-// 토큰 추가해서 붙이고 현재 포인팅토큰 옮겨주는 함수
 void	add_token(t_token **head, t_token **current, t_token *new_token)
 {
 	if (*head == NULL)
@@ -17,7 +14,6 @@ void	add_token(t_token **head, t_token **current, t_token *new_token)
 	}
 }
 
-// 새로운 토큰 생성 함수
 t_token	*create_token(token_type type, const char *value)
 {
 	t_token	*token;
@@ -42,9 +38,7 @@ void	merge_token(t_token **current, char *new_value)
 	free((*current)->value);
 	(*current)->value = combined;
 }
-// ----- 파싱 관련 util 함수 -----
 
-// 트리 노드 생성 함수
 t_tree	*create_tree_node(node_type type, const char *value)
 {
 	t_tree	*node;
@@ -62,7 +56,6 @@ t_tree	*create_tree_node(node_type type, const char *value)
 	return (node);
 }
 
-// 자식 노드 추가 함수
 void	add_child(t_tree *parent, t_tree *child)
 {
 	size_t	old_size;

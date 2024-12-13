@@ -47,15 +47,17 @@ int	print_export(t_env *head)
 	temp = sorted;
 	while (temp)
 	{
-		if (temp->var->flag_export == 0)
+		if (ft_strcmp(temp->var->name, "LAST_EXIT_STATUS") == 0)
+			temp = temp->next;
+		else
 		{
 			if (temp->var->content != NULL)
 				printf("declare -x %s=\"%s\"\n", \
 				temp->var->name, temp->var->content);
 			else
 				printf("declare -x %s\n", temp->var->name);
+			temp = temp->next;
 		}
-		temp = temp->next;
 	}
 	free_node(sorted);
 	return (0);

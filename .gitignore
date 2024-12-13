@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,linux,visualstudiocode,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,linux,visualstudiocode,macos
 
+minishell_tester/*
+
 ### C ###
 # Prerequisites
 *.d

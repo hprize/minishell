@@ -22,6 +22,18 @@ void	change_env(t_env *envp, char *name, char *content)
 	}
 }
 
+static char	*find_way(char **args, t_env *env)
+{
+	char	*way;
+
+	way = args[0];
+	if (ft_strcmp(args[0], "-") == 0)
+		way = find_content("OLDPWD", env);
+	else if (ft_strcmp(args[0], "~") == 0)
+		way = find_content("HOME", env);
+	return (way);
+}
+
 int	ft_cd(t_tree *node, char **args, t_env *env)
 {
 	char	*way;
@@ -30,15 +42,11 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 
 	if (node->child_count != 1)
 	{
-		perror("too many argument\n");
+		ft_putstr_fd("too many argument\n", 2);
 		return (1);
 	}
 	old = find_content("PWD", env);
-	way = args[0];
-	if (ft_strcmp(args[0], "-") == 0)
-		way = find_content("OLDPWD", env);
-	else if (ft_strcmp(args[0], "~") == 0)
-		way = find_content("HOME", env);
+	way = find_way(args, env);
 	if (chdir(way) == 0)
 	{
 		if (getcwd(pwd, sizeof(pwd)) == NULL)
