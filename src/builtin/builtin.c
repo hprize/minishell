@@ -1,6 +1,7 @@
 #include "bulitin.h"
 
-static int	dispatch_builtin(char *cmd, char **args, t_tree *node, t_envp *master)
+static int	dispatch_builtin(char *cmd, char **args, \
+t_tree *node, t_envp *master)
 {
 	if (ft_strncmp(cmd, "env", ft_strlen("env")) == 0)
 		return (ft_env(args, master->u_envp));
