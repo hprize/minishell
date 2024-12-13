@@ -220,7 +220,7 @@ void	execute_exec(t_tree *root, t_envp *master, int s_stdin, int s_stdout)
 	cmd_node = find_cmd_node(root);
 	if (cmd_node == NULL)
 	{
-		handle_none_cmd_exec(root, master, s_stdin, s_stdout);
+		handle_red_exec(root, master, s_stdin, s_stdout);
 		return ;
 	}
 	if (is_bulitin(cmd_node->value) == 0)
