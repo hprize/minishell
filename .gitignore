@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,linux,visualstudiocode,macos
 
 minishell_tester/*
-
+minishell_tester/
 ### C ###
 # Prerequisites
 *.d
