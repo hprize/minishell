@@ -119,9 +119,9 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 	i = -1;
 	if (!pipe_fds)
 		strerror_exit();
-	while (i < pipe_count - 1)
+	while (++i < pipe_count - 1)
 	{
-		pipe_fds[++i] = malloc(sizeof(int) * 2);
+		pipe_fds[i] = malloc(sizeof(int) * 2);
 		if (pipe_fds[i] == NULL)
 		{
 			while (i-- > 0)

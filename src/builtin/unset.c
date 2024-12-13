@@ -41,7 +41,7 @@ int	unset(char **args, t_envp *master)
 	{
 		find_unset_value(master->u_envp, args[i]);
 		if (ft_strcmp(args[i], "PATH") != 0)
-			return (1);
+			return (0);
 		j = -1;
 		while (master->envp[++j])
 		{
