@@ -5,7 +5,6 @@ void	restore_stdio(int saved_stdin, int saved_stdout)
 	if (dup2(saved_stdin, STDIN_FILENO) < 0)
 		perror("Failed to restore stdin");
 	close(saved_stdin);
-
 	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
 		perror("Failed to restore stdout");
 	close(saved_stdout);
@@ -35,7 +34,7 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 
 	args = malloc(sizeof(char *) * (node->child_count + cnt + 1));
 	if (args == NULL)
-		exit(1);
+		strerror_exit();
 	if (cnt == 1)
 	{
 		args[0] = return_absolute_path(node, master);

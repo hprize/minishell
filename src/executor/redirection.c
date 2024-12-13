@@ -8,7 +8,6 @@ void	set_all_heredoc(t_tree *node, t_envp *master)
 
 	signal_all_ign();
 	
-	// signal_handle_heredoc();
 	i = 0;
 	if (node->type == NODE_EXEC)
 	{

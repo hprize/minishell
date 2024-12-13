@@ -113,17 +113,15 @@ int	is_bulitin(char *cmd)
 		return (1);
 }
 
-int check_cmd_path(t_token *head, t_envp *master)
+int	check_cmd_path(t_token *head, t_envp *master)
 {
-	t_token *current;
+	t_token	*current;
 	
 	current = head;
 	while (current != NULL)
 	{
 		if (current->type == TOKEN_CMD)
-			//여기 수정
 			if (is_cmd(current->value, master) == 0 || is_bulitin(current->value) == 0) ;
-				// printf("cmd Token - value: %s, type: %d\n", current->value, current->type);
 			else
 			{
 				ft_putstr_fd("command not found\n", 2);

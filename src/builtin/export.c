@@ -4,7 +4,8 @@ void	insert_sorted(t_env **sorted_head, t_env *new_node)
 {
 	t_env	*cur;
 
-	if (*sorted_head == NULL || (ft_strcmp((*sorted_head)->var->name, new_node->var->name) >= 0))
+	if (*sorted_head == NULL || \
+	(ft_strcmp((*sorted_head)->var->name, new_node->var->name) >= 0))
 	{
 		new_node->next = *sorted_head;
 		*sorted_head = new_node;
@@ -12,7 +13,8 @@ void	insert_sorted(t_env **sorted_head, t_env *new_node)
 	else
 	{
 		cur = *sorted_head;
-		while (cur->next != NULL && (ft_strcmp(cur->next->var->name, new_node->var->name) < 0))
+		while (cur->next != NULL && \
+		(ft_strcmp(cur->next->var->name, new_node->var->name) < 0))
 			cur = cur->next;
 		new_node->next = cur->next;
 		cur->next = new_node;
@@ -48,7 +50,8 @@ int	print_export(t_env *head)
 		if (temp->var->flag_export == 0)
 		{
 			if (temp->var->content != NULL)
-				printf("declare -x %s=\"%s\"\n", temp->var->name, temp->var->content);
+				printf("declare -x %s=\"%s\"\n", \
+				temp->var->name, temp->var->content);
 			else
 				printf("declare -x %s\n", temp->var->name);
 		}
@@ -114,9 +117,9 @@ int	check_overlap(t_env *head, t_env *new)
 
 int	value_export(char **args, t_env *env)
 {
-	int	result;
+	int		result;
 	t_env	*new;
-	int	i;
+	int		i;
 
 	i = -1;
 	result = 0;
@@ -129,9 +132,7 @@ int	value_export(char **args, t_env *env)
 			free_env(new);
 		}
 		else if (check_overlap(env, new) == 0)
-		{
 			add_node_back(&env, new);
-		}
 	}
 	return (result);
 }
@@ -139,6 +140,7 @@ int	value_export(char **args, t_env *env)
 int	export(t_tree *node, char **args, t_env *env)
 {
 	int	result;
+
 	if (args[0] == NULL)
 		result = print_export(env);
 	else

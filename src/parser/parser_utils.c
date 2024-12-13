@@ -9,7 +9,8 @@ void	add_token(t_token **head, t_token **current, t_token *new_token)
 	{
 		*head = new_token;
 		*current = new_token;
-	} else
+	}
+	else
 	{
 		(*current)->next = new_token;
 		*current = (*current)->next;
@@ -23,10 +24,7 @@ t_token	*create_token(token_type type, const char *value)
 	
 	token = malloc(sizeof(t_token));
 	if (!token)
-	{
-		printf("토큰 할당 실패!\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	token->type = type;
 	if (value)
 		token->value = ft_strdup(value);
@@ -53,10 +51,7 @@ t_tree	*create_tree_node(node_type type, const char *value)
 
 	node = malloc(sizeof(t_tree));
 	if (!node)
-	{
-		printf("메모리 할당 실패(트리 생성)\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	node->type = type;
 	if (value)
 		node->value = strdup(value);
@@ -77,9 +72,6 @@ void	add_child(t_tree *parent, t_tree *child)
 	new_size = (parent->child_count + 1) * sizeof(t_tree *);
 	parent->children = ft_realloc(parent->children, old_size, new_size);
 	if (!parent->children)
-	{
-		printf("realloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	parent->children[parent->child_count++] = child;
 }

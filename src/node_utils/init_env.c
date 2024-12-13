@@ -38,9 +38,7 @@ void	set_envp_flag(t_env *env)
 	while (cur)
 	{
 		if (ft_strcmp(cur->var->name, "_") == 0)
-		{
 			cur->var->flag_export = 1;
-		}
 		cur->var->flag_env = 0;
 		cur = cur->next;
 	}
@@ -61,6 +59,5 @@ t_env	*init_env(char **envp)
 	set_envp_flag(head);
 	append_custom_node_back(&head, "LAST_EXIT_STATUS", "0", 1);
 	append_custom_node_back(&head, "SIG_TYPE", "prompt", 1);
-
 	return (head);
 }

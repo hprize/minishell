@@ -56,11 +56,9 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j)
 		free(filename);
 		return;
 	}
-	//printf("Heredoc file created: %s\n", filename);
 	while (1)
 	{
 		buf = readline("> ");
-		// perror("heredoc Test here is heredoc inside\n");
 		if (buf == NULL)
 		{
 			printf("warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
@@ -71,11 +69,6 @@ void	handle_heredoc(const char *delimiter, t_env *u_envp, int i, int j)
 			free(buf);
 			break;
 		}
-		// if (g_signal == 2)
-		// {
-		// 	printf("^C\n");
-		// 	exit(130);
-		// }
 		process_env_replacement(&buf, u_envp);
 		write(fd, buf, ft_strlen(buf));
 		write(fd, "\n", 1);
@@ -117,13 +110,12 @@ void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 {
 	pid_t	pid;
 	int		status;
-	char *les;
+	char	*les;
 
 	pid = fork();
 	if (pid == 0)
 	{
 		signal_handle_heredoc();
-		// signal_all_dfl();
 		handle_heredoc(node->children[j]->children[0]->value, master->u_envp, i, j);
 		exit(0);
 	}
@@ -135,33 +127,21 @@ void	process_heredoc_node(t_tree *node, t_envp *master, int i, int j)
 			perror("wait failed");
 			exit(1);
 		}
-		// if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		// {
-		// 	perror("Heredoc process failed");
-		// 	exit(1);
-		// }
 		if (WIFEXITED(status))
 		{
 			les = ft_itoa(WEXITSTATUS(status));
 
 			strerror(errno);
-			// printf("singleCMD_EXIT: %s\n", les);
 			replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 			free(les);
 		}
 		else if (WIFSIGNALED(status))
 		{
 			int	sig = WTERMSIG(status);
-			// printf("SIGNAL!!_EXIT: %d\n", sig);
 			les = ft_itoa(WTERMSIG(status + 128));
-			// printf("testSIGNAL!!! LEC : %s\n", les);
-
 		}
 	}
 	else
-	{
-		perror("fork failed");
-		exit(1);
-	}
+		strerror_exit();
 	signal_all_dfl();
 }

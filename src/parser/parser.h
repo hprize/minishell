@@ -21,13 +21,15 @@ void	add_child(t_tree *parent, t_tree *child);
 
 // -- tokenize.c -- //
 void	process_op(t_token **head, t_token **current, t_token_context *ctx);
-void	process_quote(t_token **head, t_token **current, t_env *u_envp, t_token_context *ctx);
-void	process_word(t_token **head, t_token **current, t_env *u_envp, t_token_context *ctx);
+void	process_quote(t_token **head, t_token **current, t_env *u_envp, \
+t_token_context *ctx);
+void	process_word(t_token **head, t_token **current, t_env *u_envp, \
+t_token_context *ctx);
 t_token	*tokenize(const char *input, t_env *u_envp);
 
 // -- replace_env -- //
 char	*ft_strjoin_free2(char *s1, char *s2);
-int	is_valid_env_char(char c, int is_first);
+int		is_valid_env_char(char c, int is_first);
 void	process_env_replacement(char **value, t_env *u_envp);
 
 

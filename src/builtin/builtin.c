@@ -24,14 +24,16 @@ int	builtin_cmd(t_tree *exec_node, t_envp *master, int i)
 	char	**args;
 	t_tree	*cmd_node;
 	int		result;
-	int j;
+	int		j;
 
 	j = 0;
 	while (j < exec_node->child_count)
 	{
-		if (exec_node->children[j]->type == NODE_RED || exec_node->children[j]->type == NODE_HEREDOC)
+		if (exec_node->children[j]->type == NODE_RED || \
+		exec_node->children[j]->type == NODE_HEREDOC)
 		{
-			if (setup_redirection(exec_node->children[j], master->u_envp, i, j) != 0)
+			if (setup_redirection(exec_node->children[j], \
+			master->u_envp, i, j) != 0)
 				exit(1);
 		}
 		j++;

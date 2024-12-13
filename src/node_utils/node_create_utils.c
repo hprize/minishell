@@ -46,7 +46,7 @@ t_env*	new_node(t_var *var)
 	new = malloc(sizeof(t_env));
 	new->var = malloc(sizeof(t_var));
 	if (new == NULL || new->var == NULL)
-		exit(1);
+		strerror_exit();
 	new->var->name = ft_strdup(var->name);
 	if (var->content)
 		new->var->content = ft_strdup(var->content);
@@ -92,8 +92,8 @@ void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
 
 void	free_node(t_env *head)
 {
-	t_env *cur;
-	t_env *next;
+	t_env	*cur;
+	t_env	*next;
 
 	cur = head;
 	while (cur)

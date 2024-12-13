@@ -22,15 +22,6 @@ void	execute_command(t_tree *exec_node, t_envp *master, int i)
 	if (cmd_node != NULL)
 	{
 		args = each_args(cmd_node, master, 1);
-
-		// FILE* tty_fd = fopen("/dev/tty", "w");
-		// int debug_i = 0;
-		// while (args[debug_i])
-		// {
-		// 	fprintf(tty_fd,"args[%d]: %s\n", debug_i, args[debug_i]);
-		// 	debug_i++;
-		// }
-		
 		k = execve(args[0], args, master->envp);
 		if (k != 0)
 			handle_execve_error(cmd_node);
@@ -40,11 +31,11 @@ void	execute_command(t_tree *exec_node, t_envp *master, int i)
 
 void	gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp *master)
 {
-	int	i;
-	int	*child_pid;
+	int		i;
+	int		*child_pid;
 	t_tree	*execute_node;
-	int	status;
-	int	les;
+	int		status;
+	int		les;
 	char	*c_les;
 
 	i = 0;
@@ -116,7 +107,6 @@ void	gen_pipe_process(int pipe_count, int **pipe_fds, t_tree *pipe_node, t_envp 
 	}
 }
 
-
 // PIPE 실행
 void	execute_pipe(t_tree *pipe_node, t_envp *master)
 {
@@ -126,24 +116,19 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 
 	pipe_count = pipe_node->child_count;
 	pipe_fds = malloc(sizeof(int*) * (pipe_count - 1));
-	i = 0;
+	i = -1;
 	if (!pipe_fds)
-	{
-		printf("malloc failed\n");
-		exit(1);
-	}
+		strerror_exit();
 	while (i < pipe_count - 1)
 	{
-		pipe_fds[i] = malloc(sizeof(int) * 2);
+		pipe_fds[++i] = malloc(sizeof(int) * 2);
 		if (pipe_fds[i] == NULL)
 		{
-			printf("malloc failed\n");
 			while (i-- > 0)
 				free(pipe_fds[i]);
 			free(pipe_fds);
-			exit(1);
+			strerror_exit();
 		}
-		i++;
 	}
 	set_all_heredoc(pipe_node, master);
 	g_signal = 0;
@@ -156,18 +141,16 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 void	execute_tree(t_tree *root, t_envp *master)
 {
 	t_tree	*cmd_node;
-	int	status;
+	int		status;
 	char	*les;
-	int	i;
+	int		i;
+	int	saved_stdin;
+	int	saved_stdout;
 
-	int saved_stdin = dup(STDIN_FILENO);
-	int saved_stdout = dup(STDOUT_FILENO);
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
 	if (saved_stdin < 0 || saved_stdout < 0)
-	{
-		perror("Failed to save stdio");
-		exit(1);
-	}
-
+		strerror_exit();
 	// signal_handle_execve();
 	if (root->type == NODE_PIPE)
 		execute_pipe(root, master);
@@ -215,17 +198,13 @@ void	execute_tree(t_tree *root, t_envp *master)
 				les = ft_itoa(WEXITSTATUS(status));
 
 				strerror(errno);
-				// printf("singleCMD_EXIT: %s\n", les);
 				replace_content(master->u_envp, "LAST_EXIT_STATUS", les);
 				free(les);
 			}
 			else if (WIFSIGNALED(status))
 			{
 				int	sig = WTERMSIG(status);
-				// printf("SIGNAL!!_EXIT: %d\n", sig);
 				les = ft_itoa(WTERMSIG(status + 128));
-				// printf("testSIGNAL!!! LEC : %s\n", les);
-
 			}
 		}
 	}

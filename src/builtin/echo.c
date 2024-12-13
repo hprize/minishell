@@ -11,11 +11,6 @@ int	ft_echo(char **args, t_env *env)
 		newline = 1;
 	while (args[i])
 	{
-		// if (ft_strcmp(args[i], "$?") == 0)
-		// {
-		// 	printf("tast LEC : %s\n", find_content("LAST_EXIT_STATUS", env));
-		// }
-		// else
 		printf("%s", args[i]);
 		if (args[i + 1])
 			printf(" ");

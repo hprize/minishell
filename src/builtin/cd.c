@@ -39,10 +39,8 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 		way = find_content("OLDPWD", env);
 	else if (ft_strcmp(args[0], "~") == 0)
 		way = find_content("HOME", env);
-	// printf("test cd %s\n", way);
 	if (chdir(way) == 0)
 	{
-		// printf("cd success\n");
 		if (getcwd(pwd, sizeof(pwd)) == NULL)
 			exit(1);
 		change_env(env, "OLDPWD", old);
@@ -53,6 +51,5 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 		strerror(errno);
 		return (1);
 	}
-
 	return (0);
 }

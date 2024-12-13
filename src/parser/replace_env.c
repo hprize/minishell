@@ -14,8 +14,8 @@ char	*ft_strjoin_free2(char *s1, char *s2)
 int	is_valid_env_char(char c, int is_first)
 {
 	if (is_first)
-		return (ft_isalpha(c) || c == '_'); // 첫 글자는 영문자 또는 '_'
-	return (ft_isalnum(c) || c == '_'); // 나머지는 영문자, 숫자, '_'
+		return (ft_isalpha(c) || c == '_');
+	return (ft_isalnum(c) || c == '_');
 }
 
 void	process_env_replacement(char **value, t_env *u_envp)
@@ -29,12 +29,10 @@ void	process_env_replacement(char **value, t_env *u_envp)
 
 	if (!value || !*value)
 		return;
-
 	input = *value;
 	result = ft_strdup("");
 	if (!result)
 		return;
-
 	i = 0;
 	while (input[i])
 	{
@@ -58,13 +56,11 @@ void	process_env_replacement(char **value, t_env *u_envp)
 				i++;
 				continue;
 			}
-			// '$'만 있는 경우 처리
 			if (!input[i] || !is_valid_env_char(input[i], 1))
 			{
 				result = ft_strjoin_free2(result, "$");
 				continue;
 			}
-
 			while (input[i] && is_valid_env_char(input[i], i == start))
 				i++;
 			env_name = ft_substr(input, start, i - start);
@@ -73,7 +69,6 @@ void	process_env_replacement(char **value, t_env *u_envp)
 				free(result);
 				return;
 			}
-
 			env_value = return_env_value(env_name, u_envp);
 			if (env_value)
 				result = ft_strjoin_free2(result, env_value);
@@ -89,7 +84,6 @@ void	process_env_replacement(char **value, t_env *u_envp)
 			result = ft_strjoin_free2(result, tmp);
 		}
 	}
-
 	free(*value);
 	*value = result;
 }

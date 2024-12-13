@@ -2,7 +2,7 @@
 
 char	**copy_envp(char **envp)
 {
-	int	i;
+	int		i;
 	char	**copy;
 
 	i = 0;
@@ -10,10 +10,7 @@ char	**copy_envp(char **envp)
 		i++;
 	copy = malloc(sizeof(char *) * (i + 1));
 	if (copy == NULL)
-	{
-		strerror(errno);
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	i = -1;
 	while (envp[++i])
 		copy[i] = ft_strdup(envp[i]);
@@ -24,7 +21,7 @@ char	**copy_envp(char **envp)
 int	find_shlvl(char **envp)
 {
 	char	*shlvl;
-	int	i;
+	int		i;
 	char	*temp;
 	char	*now;
 	char	*new;

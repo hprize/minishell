@@ -7,9 +7,6 @@ int	ft_pwd(void)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
-	{
-		strerror(errno);
-		return (EXIT_FAILURE);
-	}
+		strerror_exit();
 	return (0);
 }
