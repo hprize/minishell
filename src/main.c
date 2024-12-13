@@ -50,9 +50,9 @@ int	main(int argc, char **argv, const char **envp)
 			parse_tree = parse(tokens);
 			if (parse_tree == NULL)
 			{
-				printf("Parsing failed.\n");
 				free_tokens(tokens);
-				return (1);
+				free(input);
+				continue;
 			}
 			execute_tree(parse_tree, master);
 			free_tree(parse_tree);
