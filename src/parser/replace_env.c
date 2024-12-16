@@ -18,7 +18,7 @@ int	is_valid_env_char(char c, int is_first)
 	return (ft_isalnum(c) || c == '_');
 }
 
-void	handling_questoinmark(t_env *u_envp, size_t *i, char **result)
+static void	handling_questoinmark(t_env *u_envp, size_t *i, char **result)
 {
 	char	*env_value;
 
@@ -32,7 +32,7 @@ void	handling_questoinmark(t_env *u_envp, size_t *i, char **result)
 		free(env_value);
 }
 
-void	set_env_value(t_env *u_envp, char *env_name, char **result)
+static void	set_env_value(t_env *u_envp, char *env_name, char **result)
 {
 	char	*env_value;
 
@@ -45,7 +45,7 @@ void	set_env_value(t_env *u_envp, char *env_name, char **result)
 		free(env_value);
 }
 
-char	*set_env_name(char *input, size_t *i, size_t start, char **result)
+static char	*set_env_name(char *input, size_t *i, size_t start, char **result)
 {
 	char	*env_name;
 
@@ -60,46 +60,59 @@ char	*set_env_name(char *input, size_t *i, size_t start, char **result)
 	return (env_name);
 }
 
+static void	handle_env_var(char *input, t_env *u_envp, size_t *i, char **result)
+{
+	size_t	start;
+	char	*env_name;
+
+	start = *i;
+	if (input[*i] == '?')
+		handling_questoinmark(u_envp, i, result);
+	else if (ft_isdigit(input[*i]))
+		(*i)++;
+	else if (!input[*i] || !is_valid_env_char(input[*i], 1))
+		*result = ft_strjoin_free2(*result, "$");
+	else
+	{
+		env_name = set_env_name(input, i, start, result);
+		if (!env_name)
+			return ;
+		set_env_value(u_envp, env_name, result);
+		free(env_name);
+	}
+}
+
+static void	append_normal_char(char input,char **result)
+{
+	char	tmp[2];
+
+	tmp[0] = input;
+	tmp[1] = '\0';
+	*result = ft_strjoin_free2(*result, tmp);
+}
+
 void	process_env_replacement(char **value, t_env *u_envp)
 {
 	char	*input;
 	char	*result;
-	char	*env_name;
 	size_t	i;
-	size_t	start;
 
 	if (!value || !*value)
-		return;
+		return ;
 	input = *value;
 	result = ft_strdup("");
 	if (!result)
-		return;
+		return ;
 	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '$')
 		{
-			start = ++i;
-			if (input[i] == '?')
-				handling_questoinmark(u_envp, &i, &result);
-			else if (ft_isdigit(input[i]))
-				i++;
-			else if (!input[i] || !is_valid_env_char(input[i], 1))
-				result = ft_strjoin_free2(result, "$");
-			else
-			{
-				env_name = set_env_name(input, &i, start, &result);
-				if (!env_name)
-					return ;
-				set_env_value(u_envp, env_name, &result);
-				free(env_name);
-			}
+			++i;
+			handle_env_var(input, u_envp, &i, &result);
 		}
 		else
-		{
-			char tmp[2] = {input[i++], '\0'};
-			result = ft_strjoin_free2(result, tmp);
-		}
+			append_normal_char(input[i++], &result);
 	}
 	free(*value);
 	*value = result;
