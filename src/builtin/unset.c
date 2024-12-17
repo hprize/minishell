@@ -20,7 +20,7 @@ int	find_unset_value(t_env *env, char *value)
 			pre = cur;
 			cur = cur->next;
 			free_env(temp);
-			break;
+			break ;
 		}
 		pre = cur;
 		cur = cur->next;

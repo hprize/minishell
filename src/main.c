@@ -2,64 +2,72 @@
 
 int	g_signal;
 
-int	main(int argc, char **argv, const char **envp)
+void	handle_no_input(t_envp *master, char *inter)
 {
-	t_envp	*master;
+	replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
+	free_master(master);
+	free(inter);
+	exit(0);
+}
+
+void	wrong_cmd_path(t_token *tokens, char *input, t_envp **master)
+{
+	free_tokens(tokens);
+	free(input);
+	replace_content((*master)->u_envp, "LAST_EXIT_STATUS", "127");
+}
+
+void	parse_tree_err(t_token *tokens, char *input)
+{
+	free_tokens(tokens);
+	free(input);
+}
+
+void	right_input(char *input, t_envp **master, char *inter)
+{
 	t_token	*tokens;
 	t_tree	*parse_tree;
-	char	*input;
-	char	*inter;
 
-
-	master = ft_calloc(1, sizeof(t_envp));
-	if (master == NULL)
-		exit(1);
-	master->envp = (char **)envp;
-	master->path_list = find_path(master->envp);
-	set_master(master);
-	while(1)
+	add_history(input);
+	tokens = tokenize(input, (*master)->u_envp);
+	if (check_cmd_path(tokens, (*master)) == -1)
+		wrong_cmd_path(tokens, input, master);
+	else
 	{
-		g_signal = 0;
-		signal_handel_prompt();
-		inter = interface(master->u_envp);
-		char	*input = readline(inter);
-		signal_all_dfl();
-		if (input == NULL)
+		parse_tree = parse(tokens);
+		if (parse_tree == NULL)
+			parse_tree_err(tokens, input);
+		else
 		{
-			replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
-			free_master(master);
-			free(inter);
-			exit(0);
-		}
-		if (ft_strlen(input) == 0)
-		{
-			free(input);
-			continue;
-		}
-		if (input)
-		{
-			add_history(input);
-			tokens = tokenize(input, master->u_envp);
-			if (check_cmd_path(tokens, master) == -1)
-			{
-				free_tokens(tokens);
-				free(input);
-				replace_content(master->u_envp, "LAST_EXIT_STATUS", "127");
-				continue;
-			}
-			parse_tree = parse(tokens);
-			if (parse_tree == NULL)
-			{
-				free_tokens(tokens);
-				free(input);
-				continue;
-			}
-			execute_tree(parse_tree, master);
+			execute_tree(parse_tree, (*master));
 			free_tree(parse_tree);
 			free_tokens(tokens);
 			free(inter);
 			free(input);
 			remove_heredoc_files();
 		}
+	}
+}
+
+int	main(int argc, char **argv, const char **envp)
+{
+	t_envp	*master;
+	char	*input;
+	char	*inter;
+
+	set_master(&master, envp);
+	while (1)
+	{
+		g_signal = 0;
+		signal_handel_prompt();
+		inter = interface(master->u_envp);
+		input = readline(inter);
+		signal_all_dfl();
+		if (input == NULL)
+			handle_no_input(master, inter);
+		else if (ft_strlen(input) == 0)
+			free(input);
+		else if (input)
+			right_input(input, &master, inter);
 	}
 }

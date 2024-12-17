@@ -44,12 +44,17 @@ int	find_shlvl(char **envp)
 	}
 }
 
-void	set_master(t_envp *master)
+void	set_master(t_envp **master, const char **envp)
 {
 	char	**c_envp;
 
-	c_envp = copy_envp(master->envp);
+	*master = ft_calloc(1, sizeof(t_envp));
+	if (*master == NULL)
+		strerror_exit();
+	(*master)->envp = (char **)envp;
+	(*master)->path_list = find_path((*master)->envp);
+	c_envp = copy_envp((*master)->envp);
 	find_shlvl(c_envp);
-	master->envp = c_envp;
-	master->u_envp = init_env(c_envp);
+	(*master)->envp = c_envp;
+	(*master)->u_envp = init_env(c_envp);
 }

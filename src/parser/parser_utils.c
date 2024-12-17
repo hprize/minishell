@@ -17,7 +17,7 @@ void	add_token(t_token **head, t_token **current, t_token *new_token)
 t_token	*create_token(token_type type, const char *value)
 {
 	t_token	*token;
-	
+
 	token = malloc(sizeof(t_token));
 	if (!token)
 		strerror_exit();

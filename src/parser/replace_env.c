@@ -82,7 +82,7 @@ static void	handle_env_var(char *input, t_env *u_envp, size_t *i, char **result)
 	}
 }
 
-static void	append_normal_char(char input,char **result)
+static void	append_normal_char(char input, char **result)
 {
 	char	tmp[2];
 

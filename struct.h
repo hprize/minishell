@@ -1,8 +1,6 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-//VAR=value
-//name=eontent
 typedef struct s_var
 {
 	char	*name;

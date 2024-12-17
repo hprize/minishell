@@ -1,0 +1,13 @@
+for_test_src
+ft_fprintf
+libft
+Makefile
+minishell
+minishell.h
+minishell_tester
+obj
+out.c
+out.tst
+readline.supp
+src
+struct.h

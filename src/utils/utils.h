@@ -25,6 +25,6 @@ char	*interface(t_env *shell_envp);
 // set_shlvl.c
 char	**copy_envp(char **envp);
 int		find_shlvl(char **envp);
-void	set_master(t_envp *master);
+void	set_master(t_envp **master, const char **envp);
 
 #endif

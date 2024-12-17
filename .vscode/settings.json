@@ -13,7 +13,8 @@
 	"node_utils.h": "c",
 	"parser_struct.h": "c",
 	"executor.h": "c",
-	"error.h": "c"
+	"error.h": "c",
+	"stdio.h": "c"
 },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
