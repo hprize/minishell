@@ -6,7 +6,7 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:54:50 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:31 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 20:45:51 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,23 @@ static char	*find_way(char **args, t_env *env)
 	return (way);
 }
 
+static void	chdir_suc(char *pwd, char *old, t_env *env)
+{
+	if (getcwd(pwd, sizeof(pwd)) == NULL)
+		exit(1);
+	change_env(env, "OLDPWD", old);
+	change_env(env, "PWD", pwd);
+}
+
 int	ft_cd(t_tree *node, char **args, t_env *env)
 {
 	char	*way;
 	char	*old;
 	char	pwd[1024];
 
-	if (node->child_count != 1)
+	if (node->child_count == 0)
+		return (0);
+	else if (node->child_count != 1)
 	{
 		ft_putstr_fd("too many argument\n", 2);
 		return (1);
@@ -60,12 +70,7 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 	old = find_content("PWD", env);
 	way = find_way(args, env);
 	if (chdir(way) == 0)
-	{
-		if (getcwd(pwd, sizeof(pwd)) == NULL)
-			exit(1);
-		change_env(env, "OLDPWD", old);
-		change_env(env, "PWD", pwd);
-	}
+		chdir_suc(pwd, old, env);
 	else
 	{
 		strerror(errno);
