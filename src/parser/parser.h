@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:03:26 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:10:15 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSER_H
 # define PARSER_H
-
 # include "parser_struct.h"
 # include "../../minishell.h"
 
@@ -11,6 +22,11 @@ void	parse_reds_opt(t_tree *exec_node, t_token **current);
 t_tree	*parse_reds(t_token **current);
 t_tree	*parse_cmd(t_token **current);
 t_tree	*parse(t_token *tokens);
+
+// -- parser_m_utils.c -- //
+t_tree	*parse_pipe(t_token **current);
+void	current_type(t_token **current, t_tree *exec_node);
+t_tree	*parse_exec(t_token **current);
 
 // -- parser_utils.c -- //
 void	add_token(t_token **head, t_token **current, t_token *new_token);
@@ -31,5 +47,20 @@ t_token	*tokenize(const char *input, t_env *u_envp);
 char	*ft_strjoin_free2(char *s1, char *s2);
 int		is_valid_env_char(char c, int is_first);
 void	process_env_replacement(char **value, t_env *u_envp);
+
+// -- replace_env_utils -- //
+void	handling_questoinmark(t_env *u_envp, size_t *i, char **result);
+void	set_env_value(t_env *u_envp, char *env_name, char **result);
+char	*set_env_name(char *input, size_t *i, size_t start, char **result);
+void	handle_env_var(char *input, t_env *u_envp, size_t *i, char **result);
+void	append_normal_char(char input, char **result);
+
+// -- handle_token.c -- //
+void	handle_operator(t_token **head, t_token **current, \
+	t_token_context *ctx);
+void	handle_quote(t_token **head, t_token **current, t_env *u_envp, \
+	t_token_context *ctx);
+void	handle_word(t_token **head, t_token **current, t_env *u_envp, \
+	t_token_context *ctx);
 
 #endif

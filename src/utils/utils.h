@@ -18,6 +18,11 @@ void	free_tree(t_tree *node);
 void	free_tokens(t_token *tokens);
 void	free_master(t_envp *master);
 
+// free2_utils.c
+void	handle_no_input(t_envp *master, char *inter);
+void	wrong_cmd_path(t_token *tokens, char *input, t_envp **master);
+void	parse_tree_err(t_token *tokens, char *input);
+
 // interface.c
 char	*get_host_name(void);
 char	*interface(t_env *shell_envp);
@@ -26,5 +31,8 @@ char	*interface(t_env *shell_envp);
 char	**copy_envp(char **envp);
 int		find_shlvl(char **envp);
 void	set_master(t_envp **master, const char **envp);
+
+// main_util.c
+void	right_input(char *input, t_envp **master, char *inter);
 
 #endif

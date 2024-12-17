@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:11:19 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:18:28 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -25,8 +37,7 @@
 
 # define HEREDOC_TMP ".heredoc_tmp"
 
-extern int	g_signal;
-
+extern int				g_signal;
 typedef struct s_var	t_var;
 typedef struct s_env	t_env;
 typedef struct s_inter	t_inter;
@@ -34,7 +45,6 @@ typedef struct s_envp	t_envp;
 typedef struct s_token	t_token;
 typedef struct s_tree	t_tree;
 
-// testing.c
 void	print_tree(t_tree *node, int level);
 void	print_tree_linear(t_tree *node);
 void	print_tokens(t_token *head);
