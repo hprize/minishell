@@ -1,14 +1,16 @@
-#include "executor.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:19:43 by junlee            #+#    #+#             */
+/*   Updated: 2024/12/17 20:22:18 by junlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	restore_stdio(int s_stdin, int s_stdout)
-{
-	if (dup2(s_stdin, STDIN_FILENO) < 0)
-		perror("Failed to restore stdin");
-	close(s_stdin);
-	if (dup2(s_stdout, STDOUT_FILENO) < 0)
-		perror("Failed to restore stdout");
-	close(s_stdout);
-}
+#include "executor.h"
 
 t_tree	*find_cmd_node(t_tree *node)
 {
@@ -53,4 +55,24 @@ char	**each_args(t_tree *node, t_envp *master, int cnt)
 	}
 	args[i] = NULL;
 	return (args);
+}
+
+void	handle_child_status(int pid, t_envp *master)
+{
+	int		status;
+	char	*c_les;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+	{
+		c_les = ft_itoa(WEXITSTATUS(status));
+		replace_content(master->u_envp, "LAST_EXIT_STATUS", c_les);
+		free(c_les);
+	}
+	else if (WIFSIGNALED(status))
+	{
+		c_les = ft_itoa(WTERMSIG(status) + 128);
+		replace_content(master->u_envp, "LAST_EXIT_STATUS", c_les);
+		free(c_les);
+	}
 }
