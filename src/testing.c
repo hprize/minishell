@@ -81,7 +81,7 @@ void print_tree_linear(t_tree *node) {
 }
 
 // 토큰 타입을 문자열로 변환하는 함수
-const char *token_type_to_string(token_type type)
+const char *token_type_to_string(t_token_type type)
 {
 	switch (type)
 	{

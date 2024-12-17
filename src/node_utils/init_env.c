@@ -57,7 +57,7 @@ t_env	*init_env(char **envp)
 		append_node(&head, envp[i]);
 	}
 	set_envp_flag(head);
-	append_custom_node_back(&head, "LAST_EXIT_STATUS", "0", 1);
-	append_custom_node_back(&head, "SIG_TYPE", "prompt", 1);
+	append_cust_node_back(&head, "LAST_EXIT_STATUS", "0", 1);
+	append_cust_node_back(&head, "SIG_TYPE", "prompt", 1);
 	return (head);
 }

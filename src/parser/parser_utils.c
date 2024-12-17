@@ -14,7 +14,7 @@ void	add_token(t_token **head, t_token **current, t_token *new_token)
 	}
 }
 
-t_token	*create_token(token_type type, const char *value)
+t_token	*create_token(t_token_type type, const char *value)
 {
 	t_token	*token;
 
@@ -39,7 +39,7 @@ void	merge_token(t_token **current, char *new_value)
 	(*current)->value = combined;
 }
 
-t_tree	*create_tree_node(node_type type, const char *value)
+t_tree	*create_tree_node(t_node_type type, const char *value)
 {
 	t_tree	*node;
 

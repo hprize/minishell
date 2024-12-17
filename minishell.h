@@ -27,13 +27,12 @@
 
 extern int	g_signal;
 
-typedef struct	s_var	t_var;
-typedef struct	s_env	t_env;
-typedef struct	s_inter	t_inter;
-typedef struct	s_envp	t_envp;
-typedef struct	s_token	t_token;
-typedef struct	s_tree	t_tree;
-
+typedef struct s_var	t_var;
+typedef struct s_env	t_env;
+typedef struct s_inter	t_inter;
+typedef struct s_envp	t_envp;
+typedef struct s_token	t_token;
+typedef struct s_tree	t_tree;
 
 // testing.c
 void	print_tree(t_tree *node, int level);
@@ -41,4 +40,3 @@ void	print_tree_linear(t_tree *node);
 void	print_tokens(t_token *head);
 
 #endif
-

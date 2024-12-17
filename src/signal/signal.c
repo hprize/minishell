@@ -28,4 +28,3 @@ void	sig_int_heredoc(int signo)
 	g_signal = signo;
 	write(1, "sig_int_heredoc_in\n", 19);
 }
-

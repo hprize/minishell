@@ -39,7 +39,7 @@ void	add_node_back(t_env **head, t_env *new)
 	}
 }
 
-t_env*	new_node(t_var *var)
+t_env	*new_node(t_var *var)
 {
 	t_env	*new;
 
@@ -77,7 +77,7 @@ void	append_node(t_env **head, char *data)
 	}
 }
 
-void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
+void	append_cust_node_back(t_env **head, char *name, char *value, int flag)
 {
 	t_env	*new;
 
@@ -88,7 +88,6 @@ void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
 	new->var->flag_export = flag;
 	add_node_back(head, new);
 }
-
 
 void	free_node(t_env *head)
 {

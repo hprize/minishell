@@ -1,10 +1,10 @@
 #ifndef BULITIN_H
 # define BULITIN_H
-#include "../../minishell.h"
-#include "../../struct.h"
+# include "../../minishell.h"
+# include "../../struct.h"
 # include "../parser/parser_struct.h"
-#include "../executor/executor.h"
-#include "../utils/utils.h"
+# include "../executor/executor.h"
+# include "../utils/utils.h"
 
 int		ft_env(char **args, t_env *env);
 void	ft_exit_call(int count, char **args, t_env *envp);

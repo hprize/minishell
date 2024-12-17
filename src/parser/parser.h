@@ -14,9 +14,9 @@ t_tree	*parse(t_token *tokens);
 
 // -- parser_utils.c -- //
 void	add_token(t_token **head, t_token **current, t_token *new_token);
-t_token	*create_token(token_type type, const char *value);
+t_token	*create_token(t_token_type type, const char *value);
 void	merge_token(t_token **current, char *new_value);
-t_tree	*create_tree_node(node_type type, const char *value);
+t_tree	*create_tree_node(t_node_type type, const char *value);
 void	add_child(t_tree *parent, t_tree *child);
 
 // -- tokenize.c -- //
@@ -31,6 +31,5 @@ t_token	*tokenize(const char *input, t_env *u_envp);
 char	*ft_strjoin_free2(char *s1, char *s2);
 int		is_valid_env_char(char c, int is_first);
 void	process_env_replacement(char **value, t_env *u_envp);
-
 
 #endif

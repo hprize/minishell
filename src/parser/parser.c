@@ -26,6 +26,7 @@ t_tree	*parse_pipe(t_token **current)
 void	current_type(t_token **current, t_tree *exec_node)
 {
 	t_tree	*red_node;
+
 	red_node = parse_reds(current);
 	if (red_node)
 		add_child(exec_node, red_node);

@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 # include "../parser/parser_struct.h"
-#include "../../minishell.h"
+# include "../../minishell.h"
 
 //check_path.c
 char	**find_path(char **envp);
@@ -19,7 +19,7 @@ void	free_tokens(t_token *tokens);
 void	free_master(t_envp *master);
 
 // interface.c
-static char	*get_host_name(void);
+char	*get_host_name(void);
 char	*interface(t_env *shell_envp);
 
 // set_shlvl.c

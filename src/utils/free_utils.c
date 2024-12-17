@@ -5,7 +5,7 @@ void	free_tree(t_tree *node)
 	int	i;
 
 	if (node == NULL)
-		return;
+		return ;
 	i = 0;
 	while (i < node->child_count)
 	{

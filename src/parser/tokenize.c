@@ -9,7 +9,7 @@ static int	set_len(const char *input_p)
 		return (1);
 }
 
-static void	set_op_type(t_token_context *ctx, char **op, token_type *type, \
+static void	set_op_type(t_token_context *ctx, char **op, t_token_type *type, \
 						int *len)
 {
 	*op = strndup(ctx->input_p, *len);
@@ -26,10 +26,10 @@ static void	set_op_type(t_token_context *ctx, char **op, token_type *type, \
 
 void	process_op(t_token **head, t_token **current, t_token_context *ctx)
 {
-	int			len;
-	char		*op;
-	token_type	type;
-	t_token		*new_token;
+	int				len;
+	char			*op;
+	t_token_type	type;
+	t_token			*new_token;
 
 	len = set_len((ctx->input_p));
 	op = strndup(ctx->input_p, len);
@@ -64,7 +64,7 @@ static void	check_quote(const char **start, t_token_context *ctx, char *quote)
 }
 
 static void	set_cur_type(t_token **current, t_token_context *ctx, \
-	token_type *type)
+	t_token_type *type)
 {
 	if (*current && ((*current)->type == TOKEN_RED || \
 		(*current)->type == TOKEN_HEREDOC))
@@ -81,17 +81,15 @@ static void	set_cur_type(t_token **current, t_token_context *ctx, \
 void	process_quote(t_token **head, t_token **current, t_env *u_envp, \
 	t_token_context *ctx)
 {
-	char		quote;
-	const char	*start;
-	int			len;
-	char		*quoted;
-	token_type	type;
-	t_token		*new_token;
+	char			quote;
+	const char		*start;
+	char			*quoted;
+	t_token_type	type;
+	t_token			*new_token;
 
 	quote = *(ctx->input_p);
 	check_quote(&start, ctx, &quote);
-	len = ctx->input_p - start;
-	quoted = ft_strndup(start, len);
+	quoted = ft_strndup(start, (ctx->input_p - start));
 	if (quote != '\'')
 		process_env_replacement(&quoted, u_envp);
 	ctx->input_p++;
@@ -119,7 +117,7 @@ static int	check_input_p(t_token_context *ctx)
 }
 
 static void	set_cur_token_type(t_token **current, t_token_context *ctx, \
-	token_type *type)
+	t_token_type *type)
 {
 	if (*current && ((*current)->type == TOKEN_RED || \
 		(*current)->type == TOKEN_HEREDOC))
@@ -136,11 +134,11 @@ static void	set_cur_token_type(t_token **current, t_token_context *ctx, \
 void	process_word(t_token **head, t_token **current, t_env *u_envp, \
 	t_token_context *ctx)
 {
-	const char	*start;
-	int			len;
-	char		*word;
-	token_type	type;
-	t_token		*new_token;
+	const char		*start;
+	int				len;
+	char			*word;
+	t_token_type	type;
+	t_token			*new_token;
 
 	start = ctx->input_p;
 	while (check_input_p(ctx))
@@ -153,7 +151,7 @@ void	process_word(t_token **head, t_token **current, t_env *u_envp, \
 	{
 		merge_token(current, word);
 		free(word);
-		return;
+		return ;
 	}
 	set_cur_token_type(current, ctx, &type);
 	new_token = create_token(type, word);
@@ -206,7 +204,7 @@ static void	set_current(t_token **current, t_token *head, t_token *end_token)
 		head = end_token;
 }
 
-void set_local(t_token **head, t_token **current, t_token_context **ctx)
+void	set_local(t_token **head, t_token **current, t_token_context **ctx)
 {
 	*head = NULL;
 	*current = NULL;

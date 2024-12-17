@@ -1,12 +1,11 @@
 #include "utils.h"
 
-static char	*get_host_name(void)
+char	*get_host_name(void)
 {
 	int		fd;
 	char	name_leng[256];
 	char	*host;
 
-	// vscode 디버깅용 파일.
 	fd = open("/etc/hostname", O_RDONLY);
 	// fd = open("for_test_src/test_hostname", O_RDONLY);
 	ft_bzero(name_leng, 256);
@@ -24,7 +23,6 @@ static char	*get_host_name(void)
 	close(fd);
 	return (host);
 }
-
 
 char	*interface(t_env *shell_envp)
 {

@@ -33,4 +33,3 @@ void	strerror_exit(void)
 	strerror(errno);
 	exit(EXIT_FAILURE);
 }
-

@@ -78,7 +78,6 @@ int	is_cmd(char *token, t_envp *master)
 	int		i;
 
 	i = -1;
-
 	is_abs = strchr_is(token, '/');
 	while ((master->path_list)[++i])
 	{
@@ -116,17 +115,19 @@ int	is_bulitin(char *cmd)
 int	check_cmd_path(t_token *head, t_envp *master)
 {
 	t_token	*current;
-	
+
 	current = head;
 	while (current != NULL)
 	{
 		if (current->type == TOKEN_CMD)
-			if (is_cmd(current->value, master) == 0 || is_bulitin(current->value) == 0) ;
-			else
+		{
+			if (is_cmd(current->value, master) != 0 && \
+				is_bulitin(current->value) != 0)
 			{
 				ft_putstr_fd("command not found\n", 2);
 				return (-1);
 			}
+		}
 		current = current->next;
 	}
 	return (0);
