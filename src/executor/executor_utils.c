@@ -1,13 +1,13 @@
 #include "executor.h"
 
-void	restore_stdio(int saved_stdin, int saved_stdout)
+void	restore_stdio(int s_stdin, int s_stdout)
 {
-	if (dup2(saved_stdin, STDIN_FILENO) < 0)
+	if (dup2(s_stdin, STDIN_FILENO) < 0)
 		perror("Failed to restore stdin");
-	close(saved_stdin);
-	if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+	close(s_stdin);
+	if (dup2(s_stdout, STDOUT_FILENO) < 0)
 		perror("Failed to restore stdout");
-	close(saved_stdout);
+	close(s_stdout);
 }
 
 t_tree	*find_cmd_node(t_tree *node)

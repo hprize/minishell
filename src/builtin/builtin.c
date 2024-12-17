@@ -33,8 +33,7 @@ int	builtin_cmd(t_tree *exec_node, t_envp *master, int i)
 		if (exec_node->children[j]->type == NODE_RED || \
 		exec_node->children[j]->type == NODE_HEREDOC)
 		{
-			if (setup_redirection(exec_node->children[j], \
-			master->u_envp, i, j) != 0)
+			if (setup_redirection(exec_node->children[j], i, j) != 0)
 				exit(1);
 		}
 		j++;

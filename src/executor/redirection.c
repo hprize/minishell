@@ -1,39 +1,33 @@
 #include "executor.h"
 
+void	process_all_heredocs(t_tree *parent, t_envp *master, int parent_index)
+{
+	int	i;
+
+	i = 0;
+	while (i < parent->child_count)
+	{
+		if (parent->children[i]->type == NODE_HEREDOC)
+			process_heredoc_node(parent, master, parent_index, i);
+		i++;
+	}
+}
+
 void	set_all_heredoc(t_tree *node, t_envp *master)
 {
 	t_tree	*current;
 	int		i;
-	int		j;
 
 	signal_all_ign();
-	
 	i = 0;
 	if (node->type == NODE_EXEC)
-	{
-		while (i < node->child_count)
-		{
-			if (node->children[i]->type == NODE_HEREDOC)
-			{
-				process_heredoc_node(node, master, 0, i);
-			}
-			i++;
-		}
-	}
+		process_all_heredocs(node, master, 0);
 	else if (node->type == NODE_PIPE)
 	{
 		while (i < node->child_count)
 		{
-			j = 0;
 			current = node->children[i];
-			while (j < current->child_count)
-			{
-				if (current->children[j]->type == NODE_HEREDOC)
-				{
-					process_heredoc_node(current, master, i, j);
-				}
-				j++;
-			}
+			process_all_heredocs(current, master, i);
 			i++;
 		}
 	}
@@ -41,7 +35,7 @@ void	set_all_heredoc(t_tree *node, t_envp *master)
 
 int	open_and_redirect(const char *filepath, int flags, int redirect_fd)
 {
-	int fd;
+	int	fd;
 
 	fd = open(filepath, flags, 0644);
 	if (fd < 0)
@@ -59,7 +53,34 @@ int	open_and_redirect(const char *filepath, int flags, int redirect_fd)
 	return (0);
 }
 
-int	setup_redirection(t_tree *node, t_env *u_envp, int i, int j)
+int	handle_redirection(const char *value, const char *filename)
+{
+	int	flags;
+	int	fd;
+
+	if (strcmp(value, ">") == 0)
+	{
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+		fd = STDOUT_FILENO;
+	}
+	else if (strcmp(value, ">>") == 0)
+	{
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+		fd = STDOUT_FILENO;
+	}
+	else if (strcmp(value, "<") == 0)
+	{
+		flags = O_RDONLY;
+		fd = STDIN_FILENO;
+	}
+	else
+		return (-1);
+	if (open_and_redirect(filename, flags, fd) < 0)
+		return (-1);
+	return (0);
+}
+
+int	setup_redirection(t_tree *node, int i, int j)
 {
 	char	*filename;
 
@@ -75,21 +96,8 @@ int	setup_redirection(t_tree *node, t_env *u_envp, int i, int j)
 	}
 	else if (node->type == NODE_RED)
 	{
-		if (strcmp(node->value, ">") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO) < 0)
-				return (-1);
-		}
-		else if (strcmp(node->value, ">>") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO) < 0)
-				return (-1);
-		}
-		else if (strcmp(node->value, "<") == 0)
-		{
-			if (open_and_redirect(node->children[0]->value, O_RDONLY, STDIN_FILENO) < 0)
-				return (-1);
-		}
+		if (handle_redirection(node->value, node->children[0]->value) < 0)
+			return (-1);
 	}
 	return (0);
 }
