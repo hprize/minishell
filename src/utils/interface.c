@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:21:39 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:21:41 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/17 22:29:29 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*interface(t_env *shell_envp)
 {
 	char	*result;
 	char	*temp;
-	char	*host;
 
 	result = ft_strjoin(find_content("USER", shell_envp), "@");
 	result = ft_strjoin_free(result, get_host_name());

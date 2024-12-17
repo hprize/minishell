@@ -1,6 +1,6 @@
 CC = cc
-CFLAGS = -g #-fsanitize=address
-# CFLAGS = -Wall -Wextra -Werror -g
+# CFLAGS = -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 SRCDIR = src

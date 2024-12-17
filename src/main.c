@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:25:25 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:25:29 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:22:46 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	main(int argc, char **argv, const char **envp)
 	char	*input;
 	char	*inter;
 
+	if (argc || argv)
+		argc = 1;
 	set_master(&master, envp);
 	while (1)
 	{

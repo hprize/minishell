@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:54:50 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:45:51 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 20:58:56 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static char	*find_way(char **args, t_env *env)
 
 static void	chdir_suc(char *pwd, char *old, t_env *env)
 {
-	if (getcwd(pwd, sizeof(pwd)) == NULL)
+	if (getcwd(pwd, sizeof(char) * 1024) == NULL)
 		exit(1);
 	change_env(env, "OLDPWD", old);
 	change_env(env, "PWD", pwd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:54:34 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:34 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:25:27 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ t_tree *node, t_envp *master)
 	if (ft_strncmp(cmd, "pwd", ft_strlen("pwd")) == 0)
 		return (ft_pwd());
 	if (ft_strncmp(cmd, "export", ft_strlen("export")) == 0)
-		return (export(node, args, master->u_envp));
+		return (export(args, master->u_envp));
 	if (ft_strncmp(cmd, "unset", ft_strlen("unset")) == 0)
 		return (unset(args, master));
 	if (ft_strncmp(cmd, "cd", ft_strlen("cd")) == 0)
 		return (ft_cd(node, args, master->u_envp));
 	if (ft_strncmp(cmd, "echo", ft_strlen("echo")) == 0)
-		return (ft_echo(args, master->u_envp));
+		return (ft_echo(args));
 	return (0);
 }
 

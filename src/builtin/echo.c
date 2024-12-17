@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:54:57 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:29 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:24:07 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bulitin.h"
 
-int	ft_echo(char **args, t_env *env)
+int	ft_echo(char **args)
 {
 	int	newline;
 	int	i;
