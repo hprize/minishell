@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:05:43 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 22:15:50 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 21:33:21 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ static void	set_op_type(t_token_context *ctx, char **op, t_token_type *type, \
 		*type = TOKEN_RED;
 }
 
+int	error_unexpected_token(char *op)
+{
+	ft_fprintf(2, "minishell: syntax error near unexpected token `%s'\n", op);
+	free(op);
+	return (1);
+}
+
 int	process_op(t_token **head, t_token **current, t_token_context *ctx)
 {
 	int				len;
@@ -48,20 +55,13 @@ int	process_op(t_token **head, t_token **current, t_token_context *ctx)
 	ctx->input_p += len;
 	while (*(ctx->input_p) == ' ')
 		ctx->input_p++;
-	if (type == TOKEN_PIPE && (*(ctx->input_p) == '\0' || *(ctx->input_p) == '|'))
-	{
-		ft_fprintf(2, "minishell: syntax error near unexpected token `%s'\n", op);
-		free(op);
-		return (1);
-	}
+	if (type == TOKEN_PIPE && (*(ctx->input_p) == '\0' || \
+		*(ctx->input_p) == '|'))
+		return (error_unexpected_token(op));
 	if ((type == TOKEN_RED || type == TOKEN_HEREDOC) && \
 		(*(ctx->input_p) == '\0' || *(ctx->input_p) == '|' \
 		|| *(ctx->input_p) == '<' || *(ctx->input_p) == '>'))
-	{
-		ft_fprintf(2, "minishell: syntax error near unexpected token `%s'\n", op);
-		free(op);
-		return (1);
-	}
+		return (error_unexpected_token(op));
 	new_token = create_token(type, op);
 	free(op);
 	add_token(head, current, new_token);

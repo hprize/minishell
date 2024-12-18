@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:03:26 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 21:12:36 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 21:51:06 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ t_token	*create_token(t_token_type type, const char *value);
 void	merge_token(t_token **current, char *new_value);
 t_tree	*create_tree_node(t_node_type type, const char *value);
 void	add_child(t_tree *parent, t_tree *child);
+
+// -- tokenize_utils.c -- //
+void	skip_whitespace(t_token_context *ctx);
+void	set_ctx(t_token_context **ctx, const char *input);
+void	set_current(t_token **current, t_token **head, t_token *end_token);
+void	set_local(t_token **head, t_token **current, t_token_context **ctx);
 
 // -- tokenize.c -- //
 int		process_op(t_token **head, t_token **current, t_token_context *ctx);

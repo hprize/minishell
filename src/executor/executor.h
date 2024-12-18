@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:02:54 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:16:03 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 20:37:48 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	close_unused_pipes(int i, int pipe_count, int **pipe_fds);
 t_tree	*find_cmd_node(t_tree *node);
 char	**each_args(t_tree *node, t_envp *master, int cnt);
 void	handle_child_status(int pid, t_envp *master);
+void	free_pipe_fds(int **pipe_fds, int pipe_count);
 
 // -- executor.c -- //
 void	execute_command(t_tree *exec_node, t_envp *master, int i);

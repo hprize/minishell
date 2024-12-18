@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:19:43 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:22:18 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 21:21:13 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,17 @@ void	handle_child_status(int pid, t_envp *master)
 		replace_content(master->u_envp, "LAST_EXIT_STATUS", c_les);
 		free(c_les);
 	}
+}
+
+void	free_pipe_fds(int **pipe_fds, int pipe_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < pipe_count - 1)
+	{
+		free(pipe_fds[i]);
+		i++;
+	}
+	free(pipe_fds);
 }

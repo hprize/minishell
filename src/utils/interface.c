@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:21:39 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 22:29:29 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 21:20:41 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*get_host_name(void)
 	char	*host;
 
 	fd = open("/etc/hostname", O_RDONLY);
-	// fd = open("for_test_src/test_hostname", O_RDONLY);
 	ft_bzero(name_leng, 256);
 	if (fd < 0)
 	{
