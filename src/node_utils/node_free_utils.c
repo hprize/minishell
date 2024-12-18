@@ -1,34 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   node_free_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 19:55:07 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:22 by hyebinle         ###   ########.fr       */
+/*   Created: 2024/12/17 20:17:47 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:17:49 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bulitin.h"
+#include "node_utils.h"
 
-void	ft_exit_call(int count, char **args, t_env *envp)
+void	free_node(t_env *head)
 {
-	int	result;
+	t_env	*cur;
+	t_env	*next;
 
-	result = ft_atoi(find_content("LAST_EXIT_STATUS", envp));
-	if (count > 1)
+	cur = head;
+	while (cur)
 	{
-		write(2, "too many arguments\n", 19);
-		exit (1);
+		next = cur->next;
+		if (cur->var)
+		{
+			if (cur->var->name)
+				free(cur->var->name);
+			if (cur->var->content)
+				free(cur->var->content);
+			free(cur->var);
+		}
+		free(cur);
+		cur = next;
 	}
-	if (ft_isalldigit(args[0]) == 0)
-	{
-		write(2, "numeric argument required\n", 26);
-		exit (2);
-	}
-	else if (count == 1)
-		exit (ft_atoi(args[0]) % 256);
-	else
-		exit (result);
+}
+
+void	free_env(t_env *node)
+{
+	free(node->var->name);
+	free(node->var->content);
+	free(node->var);
+	free(node);
 }

@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isalldigit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 19:55:45 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:48 by hyebinle         ###   ########.fr       */
+/*   Created: 2024/12/01 20:55:26 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/01 21:25:10 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bulitin.h"
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_isalldigit(char *str)
 {
-	char	cwd[1024];
+	int	i;
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		strerror_exit();
-	return (0);
+	if (str == NULL)
+		return (0);
+	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
 }

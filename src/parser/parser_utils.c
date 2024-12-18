@@ -1,32 +1,38 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 19:57:49 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 19:57:51 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// ----- 토큰화 관련 util 함수 -----
+#include "parser.h"
 
-// 토큰 추가해서 붙이고 현재 포인팅토큰 옮겨주는 함수
 void	add_token(t_token **head, t_token **current, t_token *new_token)
 {
 	if (*head == NULL)
 	{
 		*head = new_token;
 		*current = new_token;
-	} else
+	}
+	else
 	{
 		(*current)->next = new_token;
 		*current = (*current)->next;
 	}
 }
 
-// 새로운 토큰 생성 함수
-t_token	*create_token(token_type type, const char *value)
+t_token	*create_token(t_token_type type, const char *value)
 {
 	t_token	*token;
-	
+
 	token = malloc(sizeof(t_token));
 	if (!token)
-	{
-		printf("토큰 할당 실패!\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	token->type = type;
 	if (value)
 		token->value = ft_strdup(value);
@@ -44,19 +50,14 @@ void	merge_token(t_token **current, char *new_value)
 	free((*current)->value);
 	(*current)->value = combined;
 }
-// ----- 파싱 관련 util 함수 -----
 
-// 트리 노드 생성 함수
-t_tree	*create_tree_node(node_type type, const char *value)
+t_tree	*create_tree_node(t_node_type type, const char *value)
 {
 	t_tree	*node;
 
 	node = malloc(sizeof(t_tree));
 	if (!node)
-	{
-		printf("메모리 할당 실패(트리 생성)\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	node->type = type;
 	if (value)
 		node->value = strdup(value);
@@ -67,7 +68,6 @@ t_tree	*create_tree_node(node_type type, const char *value)
 	return (node);
 }
 
-// 자식 노드 추가 함수
 void	add_child(t_tree *parent, t_tree *child)
 {
 	size_t	old_size;
@@ -77,9 +77,6 @@ void	add_child(t_tree *parent, t_tree *child)
 	new_size = (parent->child_count + 1) * sizeof(t_tree *);
 	parent->children = ft_realloc(parent->children, old_size, new_size);
 	if (!parent->children)
-	{
-		printf("realloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	parent->children[parent->child_count++] = child;
 }

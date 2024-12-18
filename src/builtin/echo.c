@@ -1,23 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 19:54:57 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 22:24:07 by junlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bulitin.h"
 
-int	ft_echo(char **args, t_env *env)
+int	ft_echo(char **args)
 {
 	int	newline;
 	int	i;
 
 	i = -1;
 	newline = 0;
+	if (*args == NULL)
+		return (0);
 	while (ft_strcmp("-n", args[++i]) == 0)
 		newline = 1;
 	while (args[i])
 	{
-		// if (ft_strcmp(args[i], "$?") == 0)
-		// {
-		// 	printf("tast LEC : %s\n", find_content("LAST_EXIT_STATUS", env));
-		// }
-		// else
 		printf("%s", args[i]);
-		printf(" ");
+		if (args[i + 1])
+			printf(" ");
 		if (!args[i + 1])
 		{
 			if (newline == 0)

@@ -1,5 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   replace_env.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:03:42 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:03:44 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "parser.h"
 
 char	*ft_strjoin_free2(char *s1, char *s2)
 {
@@ -15,70 +26,33 @@ char	*ft_strjoin_free2(char *s1, char *s2)
 int	is_valid_env_char(char c, int is_first)
 {
 	if (is_first)
-		return (ft_isalpha(c) || c == '_'); // 첫 글자는 영문자 또는 '_'
-	return (ft_isalnum(c) || c == '_'); // 나머지는 영문자, 숫자, '_'
+		return (ft_isalpha(c) || c == '_');
+	return (ft_isalnum(c) || c == '_');
 }
 
 void	process_env_replacement(char **value, t_env *u_envp)
 {
 	char	*input;
 	char	*result;
-	char	*env_name;
-	char	*env_value;
 	size_t	i;
-	size_t	start;
 
 	if (!value || !*value)
-		return;
-
+		return ;
 	input = *value;
 	result = ft_strdup("");
 	if (!result)
-		return;
-
+		return ;
 	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '$')
 		{
-			start = ++i;
-			if (ft_isdigit(input[i]))
-			{
-				i++;
-				continue;
-			}
-			// '$'만 있는 경우 처리
-			if (!input[i] || !is_valid_env_char(input[i], 1))
-			{
-				result = ft_strjoin_free2(result, "$");
-				continue;
-			}
-
-			while (input[i] && is_valid_env_char(input[i], i == start))
-				i++;
-			env_name = ft_substr(input, start, i - start);
-			if (!env_name)
-			{
-				free(result);
-				return;
-			}
-
-			env_value = return_env_value(env_name, u_envp);
-			if (env_value)
-				result = ft_strjoin_free2(result, env_value);
-			else
-				result = ft_strjoin_free2(result, "");
-			free(env_name);
-			if (env_value)
-				free(env_value);
+			++i;
+			handle_env_var(input, u_envp, &i, &result);
 		}
 		else
-		{
-			char tmp[2] = {input[i++], '\0'};
-			result = ft_strjoin_free2(result, tmp);
-		}
+			append_normal_char(input[i++], &result);
 	}
-
 	free(*value);
 	*value = result;
 }

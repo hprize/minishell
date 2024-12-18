@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_struct.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:10:00 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:10:01 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSER_STRUCT_H
 # define PARSER_STRUCT_H
 
-typedef struct	s_token_context
+typedef struct s_token_context
 {
 	const char	*input_p;
 	int			prev_space;
 	int			cmd_set;
 }	t_token_context;
 
-typedef enum
+typedef enum e_token_type
 {
 	TOKEN_CMD,
 	TOKEN_ARG,
@@ -18,16 +30,16 @@ typedef enum
 	TOKEN_FILENAME,
 	TOKEN_END,
 	TOKEN_INVALID
-}	token_type;
+}	t_token_type;
 
-typedef struct	s_token
+typedef struct s_token
 {
-	token_type	type;
-	char		*value;
+	t_token_type	type;
+	char			*value;
 	struct s_token	*next;
 }	t_token;
 
-typedef enum
+typedef enum e_node_type
 {
 	NODE_PIPE,
 	NODE_EXEC,
@@ -36,11 +48,11 @@ typedef enum
 	NODE_RED,
 	NODE_HEREDOC,
 	NODE_FILENAME
-}	node_type;
+}	t_node_type;
 
-typedef struct	s_tree
+typedef struct s_tree
 {
-	node_type		type;
+	t_node_type		type;
 	char			*value;
 	struct s_tree	**children;
 	int				child_count;

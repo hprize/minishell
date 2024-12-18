@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_shlvl.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:21:36 by junlee            #+#    #+#             */
+/*   Updated: 2024/12/17 22:30:05 by junlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 
 char	**copy_envp(char **envp)
 {
-	int	i;
+	int		i;
 	char	**copy;
 
 	i = 0;
@@ -10,10 +22,7 @@ char	**copy_envp(char **envp)
 		i++;
 	copy = malloc(sizeof(char *) * (i + 1));
 	if (copy == NULL)
-	{
-		strerror(errno);
-		exit(EXIT_FAILURE);
-	}
+		strerror_exit();
 	i = -1;
 	while (envp[++i])
 		copy[i] = ft_strdup(envp[i]);
@@ -21,15 +30,12 @@ char	**copy_envp(char **envp)
 	return (copy);
 }
 
-
-
 int	find_shlvl(char **envp)
 {
 	char	*shlvl;
-	int	i;
+	int		i;
 	char	*temp;
 	char	*now;
-	char	*new;
 
 	i = 0;
 	while (envp[i])
@@ -47,17 +53,20 @@ int	find_shlvl(char **envp)
 		}
 		i++;
 	}
+	return (0);
 }
 
-
-void	set_master(t_envp *master)
+void	set_master(t_envp **master, const char **envp)
 {
 	char	**c_envp;
 
-	c_envp = copy_envp(master->envp);
+	*master = ft_calloc(1, sizeof(t_envp));
+	if (*master == NULL)
+		strerror_exit();
+	(*master)->envp = (char **)envp;
+	(*master)->path_list = find_path((*master)->envp);
+	c_envp = copy_envp((*master)->envp);
 	find_shlvl(c_envp);
-	// for (int i = 0; c_envp[i]; i++)
-	// 	printf("%s\n", c_envp[i]);
-	master->envp = c_envp;
-	master->u_envp = init_env(c_envp);
+	(*master)->envp = c_envp;
+	(*master)->u_envp = init_env(c_envp);
 }

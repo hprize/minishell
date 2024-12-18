@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 01:04:26 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/01 01:04:36 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/17 16:03:59 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,3 @@ char	*ft_strcat(char *dest, const char *src)
 	dest[dest_len + i] = '\0';
 	return (dest);
 }
-

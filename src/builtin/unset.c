@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 19:55:51 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 19:55:58 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bulitin.h"
 
 int	find_unset_value(t_env *env, char *value)
@@ -12,7 +24,6 @@ int	find_unset_value(t_env *env, char *value)
 	{
 		if (ft_strncmp(cur->var->name, value, ft_strlen(value)) == 0)
 		{
-			// printf("test unset\n");
 			if (pre == NULL)
 				env = cur->next;
 			else
@@ -21,7 +32,7 @@ int	find_unset_value(t_env *env, char *value)
 			pre = cur;
 			cur = cur->next;
 			free_env(temp);
-			break;
+			break ;
 		}
 		pre = cur;
 		cur = cur->next;
@@ -31,8 +42,8 @@ int	find_unset_value(t_env *env, char *value)
 
 int	unset(char **args, t_envp *master)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*temp;
 
 	if (master->u_envp == NULL)
@@ -41,17 +52,16 @@ int	unset(char **args, t_envp *master)
 	while (args[++i])
 	{
 		find_unset_value(master->u_envp, args[i]);
-		if (ft_strcmp(args[i], "PATH") == 0)
+		if (ft_strcmp(args[i], "PATH") != 0)
+			return (0);
+		j = -1;
+		while (master->envp[++j])
 		{
-			j = -1;
-			while (master->envp[++j])
+			if (ft_strncmp(master->envp[j], "PATH", 4) == 0)
 			{
-				if (ft_strncmp(master->envp[j], "PATH", 4) == 0)
-				{
-					temp = master->envp[j];
-					master->envp[j] = ft_strdup("");
-					free(temp);
-				}
+				temp = master->envp[j];
+				master->envp[j] = ft_strdup("");
+				free(temp);
 			}
 		}
 	}

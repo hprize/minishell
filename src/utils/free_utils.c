@@ -1,14 +1,23 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:21:42 by junlee            #+#    #+#             */
+/*   Updated: 2024/12/17 20:21:43 by junlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-// ----- free 함수 -----
+#include "utils.h"
 
 void	free_tree(t_tree *node)
 {
 	int	i;
 
 	if (node == NULL)
-		return;
+		return ;
 	i = 0;
 	while (i < node->child_count)
 	{
@@ -22,7 +31,8 @@ void	free_tree(t_tree *node)
 	free(node);
 }
 
-void	free_tokens(t_token *tokens) {
+void	free_tokens(t_token *tokens)
+{
 	t_token	*next;
 
 	while (tokens != NULL)

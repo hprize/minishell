@@ -1,14 +1,24 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   interface.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:21:39 by junlee            #+#    #+#             */
+/*   Updated: 2024/12/18 21:20:41 by junlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char	*get_host_name(void)
+#include "utils.h"
+
+char	*get_host_name(void)
 {
 	int		fd;
 	char	name_leng[256];
 	char	*host;
 
-	// vscode 디버깅용 파일.
-	//fd = open("/etc/hostname", O_RDONLY);
-	fd = open("for_test_src/test_hostname", O_RDONLY);
+	fd = open("/etc/hostname", O_RDONLY);
 	ft_bzero(name_leng, 256);
 	if (fd < 0)
 	{
@@ -25,18 +35,15 @@ static char	*get_host_name(void)
 	return (host);
 }
 
-
 char	*interface(t_env *shell_envp)
 {
 	char	*result;
 	char	*temp;
-	char	*host;
 
 	result = ft_strjoin(find_content("USER", shell_envp), "@");
 	result = ft_strjoin_free(result, get_host_name());
 	result = ft_strjoin_free(result, ft_strdup(":"));
 	temp = ft_strjoin(find_content("PWD", shell_envp), "$ ");
 	result = ft_strjoin_free(result, temp);
-
 	return (result);
 }

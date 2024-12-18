@@ -1,4 +1,16 @@
-#include "utils.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   node_create_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/17 20:17:38 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 20:17:39 by hyebinle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "node_utils.h"
 
 t_env	*creat_node(char *data)
 {
@@ -39,21 +51,21 @@ void	add_node_back(t_env **head, t_env *new)
 	}
 }
 
-t_env*	new_node(t_var *var)
+t_env	*new_node(t_var *var)
 {
 	t_env	*new;
 
 	new = malloc(sizeof(t_env));
 	new->var = malloc(sizeof(t_var));
 	if (new == NULL || new->var == NULL)
-		exit(1);
+		strerror_exit();
 	new->var->name = ft_strdup(var->name);
 	if (var->content)
 		new->var->content = ft_strdup(var->content);
 	else
 		new->var->content = NULL;
-	// new->var->flag_env = var->flag_env;
-	// new->var->flag_export = var->flag_export;
+	new->var->flag_env = var->flag_env;
+	new->var->flag_export = var->flag_export;
 	new->next = NULL;
 	return (new);
 }
@@ -77,7 +89,7 @@ void	append_node(t_env **head, char *data)
 	}
 }
 
-void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
+void	append_cust_node_back(t_env **head, char *name, char *value, int flag)
 {
 	t_env	*new;
 
@@ -87,33 +99,4 @@ void	append_custom_node_back(t_env **head, char *name, char *value, int flag)
 	new->var->flag_env = flag;
 	new->var->flag_export = flag;
 	add_node_back(head, new);
-}
-
-
-void	free_node(t_env *head)
-{
-	t_env	*cur;
-	t_env	*next;
-
-	cur = head;
-	while (cur)
-	{
-		next = cur->next;
-		if (cur->var->name)
-			free(cur->var->name);
-		if (cur->var->content)
-			free(cur->var->content);
-		if (cur->var)
-			free(cur->var);
-		free(cur);
-		cur = next;
-	}
-}
-
-void	free_env(t_env *node)
-{
-	free(node->var->name);
-	free(node->var->content);
-	free(node->var);
-	free(node);
 }

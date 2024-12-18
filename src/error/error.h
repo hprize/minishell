@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   error.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 19:55:45 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 19:55:48 by hyebinle         ###   ########.fr       */
+/*   Created: 2024/12/17 19:57:11 by hyebinle          #+#    #+#             */
+/*   Updated: 2024/12/17 19:57:13 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bulitin.h"
+#ifndef ERROR_H
+# define ERROR_H
+# include "../../minishell.h"
 
-int	ft_pwd(void)
-{
-	char	cwd[1024];
+void	handle_execve_error(t_tree *node);
+void	strerror_exit(void);
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		strerror_exit();
-	return (0);
-}
+#endif
