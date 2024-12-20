@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:19:51 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:22:55 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/19 02:23:36 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ void	handle_red_exec(t_tree *root, t_envp *master, int s_stdin, int s_stdout)
 		{
 			if (setup_redirection(root->children[i], 0, i) < 0)
 			{
-				perror("minishell: failed to set redirection");
 				restore_stdio(s_stdin, s_stdout);
-				exit(1);
+				return ;
 			}
 		}
 		i++;

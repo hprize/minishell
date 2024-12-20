@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:10:20 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:10:21 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:33:39 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,10 @@ void	sig_int_heredoc(int signo)
 {
 	g_signal = signo;
 	write(1, "sig_int_heredoc_in\n", 19);
+}
+
+void	set_execute_pipe_sig(void)
+{
+	signal_all_dfl();
+	signal_handle_execve();
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:19:38 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:22:39 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/19 03:24:06 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	execute_node_command(t_tree *node, t_envp *master, int i)
 	int		les;
 
 	execute_node = find_cmd_node(node);
-	if (is_bulitin(execute_node->value) == 0)
+	if (execute_node && execute_node->value && is_bulitin(execute_node->value) == 0)
 	{
 		les = builtin_cmd(node, master, i);
 		exit(les);
@@ -94,9 +94,9 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 
 	pipe_count = pipe_node->child_count;
 	pipe_fds = malloc(sizeof(int *) * (pipe_count - 1));
-	i = -1;
 	if (!pipe_fds)
 		strerror_exit();
+	i = -1;
 	while (++i < pipe_count - 1)
 	{
 		pipe_fds[i] = malloc(sizeof(int) * 2);
@@ -110,9 +110,9 @@ void	execute_pipe(t_tree *pipe_node, t_envp *master)
 	}
 	set_all_heredoc(pipe_node, master);
 	g_signal = 0;
-	signal_all_dfl();
-	signal_handle_execve();
+	set_execute_pipe_sig();
 	gen_pipe_process(pipe_count, pipe_fds, pipe_node, master);
+	free_pipe_fds(pipe_fds, pipe_count);
 }
 
 void	execute_tree(t_tree *root, t_envp *master)

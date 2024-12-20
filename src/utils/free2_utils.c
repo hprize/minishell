@@ -6,17 +6,17 @@
 /*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:13:04 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:13:10 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/19 01:59:42 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-void	handle_no_input(t_envp *master, char *inter)
+void	handle_no_input(t_envp *master)
 {
 	replace_content(master->u_envp, "LAST_EXIT_STATUS", "130");
 	free_master(master);
-	free(inter);
+	// free(inter);
 	exit(0);
 }
 

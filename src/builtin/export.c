@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:55:41 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:23:21 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:25:02 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	value_export(char **args, t_env *env)
 	return (result);
 }
 
-int	export(t_tree *node, char **args, t_env *env)
+int	export(char **args, t_env *env)
 {
 	int	result;
 

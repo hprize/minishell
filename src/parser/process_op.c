@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_op.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:05:43 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:24:57 by hyebinle         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:33:21 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	set_len(const char *input_p)
 static void	set_op_type(t_token_context *ctx, char **op, t_token_type *type, \
 						int *len)
 {
-	*op = strndup(ctx->input_p, *len);
+	*op = ft_strndup(ctx->input_p, *len);
 	if (**op == '|' && *len == 1)
 	{
 		*type = TOKEN_PIPE;
@@ -36,7 +36,14 @@ static void	set_op_type(t_token_context *ctx, char **op, t_token_type *type, \
 		*type = TOKEN_RED;
 }
 
-void	process_op(t_token **head, t_token **current, t_token_context *ctx)
+int	error_unexpected_token(char *op)
+{
+	ft_fprintf(2, "minishell: syntax error near unexpected token `%s'\n", op);
+	free(op);
+	return (1);
+}
+
+int	process_op(t_token **head, t_token **current, t_token_context *ctx)
 {
 	int				len;
 	char			*op;
@@ -44,19 +51,19 @@ void	process_op(t_token **head, t_token **current, t_token_context *ctx)
 	t_token			*new_token;
 
 	len = set_len((ctx->input_p));
-	op = strndup(ctx->input_p, len);
 	set_op_type(ctx, &op, &type, &len);
 	ctx->input_p += len;
 	while (*(ctx->input_p) == ' ')
 		ctx->input_p++;
-	if (type == TOKEN_RED && (*(ctx->input_p) == '\0' || *(ctx->input_p) == \
-		'|' || *(ctx->input_p) == '<' || *(ctx->input_p) == '>'))
-	{
-		printf("minishell: syntax error near unexpected token 'newline'\n");
-		free(op);
-		exit(1);
-	}
+	if (type == TOKEN_PIPE && (*(ctx->input_p) == '\0' || \
+		*(ctx->input_p) == '|'))
+		return (error_unexpected_token(op));
+	if ((type == TOKEN_RED || type == TOKEN_HEREDOC) && \
+		(*(ctx->input_p) == '\0' || *(ctx->input_p) == '|' \
+		|| *(ctx->input_p) == '<' || *(ctx->input_p) == '>'))
+		return (error_unexpected_token(op));
 	new_token = create_token(type, op);
 	free(op);
 	add_token(head, current, new_token);
+	return (0);
 }

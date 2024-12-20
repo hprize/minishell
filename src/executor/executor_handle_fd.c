@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:19:48 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:22:53 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/18 21:18:34 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,24 @@
 
 void	restore_stdio(int s_stdin, int s_stdout)
 {
-	if (dup2(s_stdin, STDIN_FILENO) < 0)
-		perror("Failed to restore stdin");
-	close(s_stdin);
-	if (dup2(s_stdout, STDOUT_FILENO) < 0)
-		perror("Failed to restore stdout");
-	close(s_stdout);
+	if (s_stdin != STDIN_FILENO)
+	{
+		if (dup2(s_stdin, STDIN_FILENO) < 0)
+		{
+			close(s_stdin);
+			return ;
+		}
+		close(s_stdin);
+	}
+	if (s_stdout != STDOUT_FILENO)
+	{
+		if (dup2(s_stdout, STDOUT_FILENO) < 0)
+		{
+			close(s_stdout);
+			return ;
+		}
+		close(s_stdout);
+	}
 }
 
 void	setup_pipe_io(int i, int pipe_count, int **pipe_fds)

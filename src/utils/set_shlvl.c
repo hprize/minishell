@@ -6,7 +6,7 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:21:36 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:21:38 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/17 22:30:05 by junlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	find_shlvl(char **envp)
 	int		i;
 	char	*temp;
 	char	*now;
-	char	*new;
 
 	i = 0;
 	while (envp[i])
@@ -54,6 +53,7 @@ int	find_shlvl(char **envp)
 		}
 		i++;
 	}
+	return (0);
 }
 
 void	set_master(t_envp **master, const char **envp)
