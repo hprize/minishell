@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:21:45 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/17 20:21:47 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/19 03:14:51 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,20 @@ char	*return_absolute_path(t_tree *node, t_envp *master)
 	is_abs = strchr_is(node->value, '/');
 	path_list = find_path(master->envp);
 	if (path_list == NULL)
+	{
+		// ft_arrfree(path_list);
 		return (NULL);
+	}
 	while (path_list[++i])
 	{
 		valid_path = valid_path_fn(node->value, is_abs, path_list[i]);
 		if (access(valid_path, F_OK) == 0)
+		{
+			ft_arrfree(path_list);
 			return (valid_path);
+		}
 		free(valid_path);
 	}
+	// ft_arrfree(path_list);
 	return (NULL);
 }

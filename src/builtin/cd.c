@@ -6,7 +6,9 @@
 /*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 19:54:50 by hyebinle          #+#    #+#             */
-/*   Updated: 2024/12/17 20:58:56 by junlee           ###   ########.fr       */
+
+/*   Updated: 2024/12/19 02:14:29 by hyebinle         ###   ########.fr       */
+
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +63,10 @@ int	ft_cd(t_tree *node, char **args, t_env *env)
 	char	pwd[1024];
 
 	if (node->child_count == 0)
+	{
+		chdir(getenv("HOME"));
 		return (0);
+	}
 	else if (node->child_count != 1)
 	{
 		ft_putstr_fd("too many argument\n", 2);

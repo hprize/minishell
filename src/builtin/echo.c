@@ -17,12 +17,17 @@ int	ft_echo(char **args)
 	int	newline;
 	int	i;
 
-	i = -1;
+	i = 0;
 	newline = 0;
-	if (*args == NULL)
+
+	if (args == NULL || args[0] == NULL)
 		return (0);
-	while (ft_strcmp("-n", args[++i]) == 0)
+
+	while (args[i] && ft_strcmp("-n", args[i]) == 0)
+	{
 		newline = 1;
+		i++;
+	}
 	while (args[i])
 	{
 		printf("%s", args[i]);

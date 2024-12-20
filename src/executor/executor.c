@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:19:38 by junlee            #+#    #+#             */
-/*   Updated: 2024/12/18 21:26:13 by junlee           ###   ########.fr       */
+/*   Updated: 2024/12/19 03:24:06 by hyebinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	execute_node_command(t_tree *node, t_envp *master, int i)
 	int		les;
 
 	execute_node = find_cmd_node(node);
-	if (is_bulitin(execute_node->value) == 0)
+	if (execute_node && execute_node->value && is_bulitin(execute_node->value) == 0)
 	{
 		les = builtin_cmd(node, master, i);
 		exit(les);
