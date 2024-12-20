@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyebinle <hyebinle@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: junlee <junlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:14:24 by hyebinle          #+#    #+#             */
 /*   Updated: 2024/12/19 02:02:45 by hyebinle         ###   ########.fr       */
@@ -12,15 +12,16 @@
 
 #include "utils.h"
 
-void	free_final(t_tree *parse_tree, t_token *tokens, char *input)
+void	free_final(t_tree *parse_tree, t_token *tokens, char \
+	*inter, char *input)
 {
 	free_tree(parse_tree);
 	free_tokens(tokens);
-	// free(inter);
+	free(inter);
 	free(input);
 }
 
-void	right_input(char *input, t_envp **master)
+void	right_input(char *input, t_envp **master, char *inter)
 {
 	t_token	*tokens;
 	t_tree	*parse_tree;
@@ -30,7 +31,7 @@ void	right_input(char *input, t_envp **master)
 	if (tokens == NULL)
 	{
 		replace_content((*master)->u_envp, "LAST_EXIT_STATUS", "2");
-		// free(inter);
+		free(inter);
 		return ;
 	}
 	if (check_cmd_path(tokens, (*master)) == -1)
@@ -43,7 +44,7 @@ void	right_input(char *input, t_envp **master)
 		else
 		{
 			execute_tree(parse_tree, (*master));
-			free_final(parse_tree, tokens, input);
+			free_final(parse_tree, tokens, inter, input);
 			remove_heredoc_files();
 		}
 	}
